@@ -1,7 +1,7 @@
 package main;
 
-import ui.swing.controller.IMineController;
-import ui.swing.controller.MineController;
+import ui.controller.swing.IMineController;
+import ui.controller.swing.MineController;
 import domain.MineFacade;
 import domain.MinesWeeper;
 

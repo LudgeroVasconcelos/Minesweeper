@@ -1,4 +1,4 @@
-package ui.swing.controller;
+package ui.controller.swing;
 
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;

@@ -7,7 +7,7 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JFrame;
 
-import ui.swing.controller.IMineController;
+import ui.controller.swing.IMineController;
 
 @SuppressWarnings("serial")
 public class MineFrame extends JFrame {
