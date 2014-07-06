@@ -13,11 +13,14 @@ public class Main {
 
 			@Override
 			public void run() {
+
 				// create model
 				MineFacade mineFacade = new Minesweeper();
 
 				// create view
-				MineFrame mineFrame = new MineFrame(20, 20);
+				MineFrame mineFrame = new MineFrame(
+						MineProperties.INSTANCE.ROWS,
+						MineProperties.INSTANCE.COLUMNS);
 
 				// create controller
 				// (controller -> model) (controller -> view)
@@ -26,7 +29,7 @@ public class Main {
 
 				// (model -> controller)
 				mineController.addObserverToGrid();
-				
+
 				// (view -> controller)
 				mineController.addListenersToSquares();
 			}

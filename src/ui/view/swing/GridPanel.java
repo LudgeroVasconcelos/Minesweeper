@@ -12,26 +12,27 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public class GridPanel extends JPanel {
+public class GridPanel extends JPanel implements Iterable<MineButton> {
 
 	private final MineButton[][] buttons;
-	
+
 	private BufferedImage flagImage;
 	private BufferedImage mineImage;
 	private BufferedImage crossImage;
 
 	public GridPanel(int rows, int columns) {
 		super();
-		
+
 		setLayout(new GridLayout(rows, columns));
 		setBackground(new Color(190, 190, 190));
-		
+
 		try {
 			flagImage = ImageIO.read(getClass().getResource(
 					"images/RedFlag.png"));
@@ -48,36 +49,34 @@ public class GridPanel extends JPanel {
 		addMineButtons();
 	}
 
-
 	private void addMineButtons() {
-		for(int i = 0; i < buttons.length; i++){
-			for(int j = 0; j < buttons[i].length; j++){
+		for (int i = 0; i < buttons.length; i++) {
+			for (int j = 0; j < buttons[i].length; j++) {
 				MineButton button = new MineButton(i, j);
 				button.setBackground(new Color(220, 220, 220));
 				buttons[i][j] = button;
 				add(button);
 			}
 		}
-		
-	}
-	
-	public void addListenersToButtons(ActionListener al, MouseListener ml){
-		for(int i = 0; i < buttons.length; i++){
-			for(int j = 0; j < buttons[i].length; j++){
-				buttons[i][j].addListeners(al, ml);
-			}
-		}
-	}
-	
-	public void removeListenersFromButtons() {
-		for (int i = 0; i < buttons.length; i++) {
-			for (int j = 0; j < buttons[i].length; j++) {
-				buttons[i][j].removeListeners();
-			}
-		}
 
 	}
-	
+
+	public void addListenersToButtons(ActionListener al, MouseListener ml) {
+		Iterator<MineButton> it = iterator();
+
+		while (it.hasNext()) {
+			it.next().addListeners(al, ml);
+		}
+	}
+
+	public void removeListenersFromButtons() {
+		Iterator<MineButton> it = iterator();
+
+		while (it.hasNext()) {
+			it.next().removeListeners();
+		}
+	}
+
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -136,7 +135,7 @@ public class GridPanel extends JPanel {
 					}
 				} else if (buttons[i][j].isFlagged()) {
 					buttons[i][j].setIcon(ii);
-					
+
 				} else if (!buttons[i][j].isFlagged()) {
 					buttons[i][j].setIcon(null);
 				}
@@ -160,7 +159,6 @@ public class GridPanel extends JPanel {
 	}
 
 	public void setMine(int x, int y) {
-
 		buttons[x][y].setMine();
 	}
 
@@ -173,15 +171,6 @@ public class GridPanel extends JPanel {
 
 	}
 
-	public boolean isMined(int x, int y) {
-		return buttons[x][y].isMined();
-	}
-
-	public void setWrong(int x, int y) {
-		buttons[x][y].setWrong();
-
-	}
-	
 	private static Point getTextCenterPos(int x, int y, int width, int height,
 			FontMetrics fm, String numMinesAround) {
 
@@ -193,6 +182,18 @@ public class GridPanel extends JPanel {
 
 		return new Point(x, y);
 
+	}
+
+	public void setWrong() {
+		Iterator<MineButton> it = iterator();
+
+		while (it.hasNext()) {
+			MineButton mineButton = it.next();
+			if (!mineButton.isMined() && mineButton.isFlagged()) {
+				mineButton.setVisible(false);
+				mineButton.setWrong();
+			}
+		}
 	}
 
 	private static Color getNumColor(int n) {
@@ -226,6 +227,34 @@ public class GridPanel extends JPanel {
 		}
 
 		return c;
+	}
+
+	@Override
+	public Iterator<MineButton> iterator() {
+		Iterator<MineButton> it = new Iterator<MineButton>() {
+
+			private int i, j = 0;
+
+			@Override
+			public boolean hasNext() {
+				return i != buttons.length;
+			}
+
+			@Override
+			public MineButton next() {
+				MineButton mineButton = buttons[i][j];
+				
+				j = (j + 1) % buttons[0].length;
+				i = j == 0 ? i + 1 : i;
+				return mineButton;
+			}
+
+			@Override
+			public void remove() {
+				// TODO Auto-generated method stub
+			}
+		};
+		return it;
 	}
 
 }

@@ -6,9 +6,9 @@ import java.util.Properties;
 public enum MineProperties {
 	INSTANCE;
 	
-	private final int ROWS;
-	private final int COLUMNS;
-	private final int NUMBER_OF_MINES;
+	public final int ROWS;
+	public final int COLUMNS;
+	public final int NUMBER_OF_MINES;
 	
 	private Properties mineProperties;
 	

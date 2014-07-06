@@ -14,7 +14,7 @@ public class MineButton extends JButton {
 	private boolean mined;
 	private boolean destroyed;
 	private boolean wrong;
-	
+
 	private ActionListener al;
 	private MouseListener ml;
 
@@ -24,18 +24,19 @@ public class MineButton extends JButton {
 		this.y = y;
 	}
 
-	public void addListeners(ActionListener al, MouseListener ml){
+	public void addListeners(ActionListener al, MouseListener ml) {
 		addActionListener(al);
 		addMouseListener(ml);
-		
+
 		this.al = al;
 		this.ml = ml;
 	}
-	
-	public void removeListeners(){
+
+	public void removeListeners() {
 		removeActionListener(al);
 		removeMouseListener(ml);
 	}
+
 	public void setNumOfMinesAround(int numMinesAround) {
 		this.numberOfMinesAround = numMinesAround;
 	}
@@ -68,25 +69,22 @@ public class MineButton extends JButton {
 	public boolean isMined() {
 		return mined;
 	}
-	
-	public void destroy(){
+
+	public void destroy() {
 		destroyed = true;
 	}
-	
-	public boolean isDestroyed(){
+
+	public boolean isDestroyed() {
 		return destroyed;
 	}
 
 	public void setWrong() {
 		wrong = true;
-		
+
 	}
-	
-	public boolean isWrong(){
+
+	public boolean isWrong() {
 		return wrong;
 	}
-	
-	public void paint(){
-		
-	}
+
 }

@@ -3,6 +3,8 @@ package domain;
 import java.awt.Point;
 import java.util.Observer;
 
+import minesweeper.MineProperties;
+
 import domain.grid.Grid;
 import domain.grid.IGrid;
 import domain.random.FullyRandom;
@@ -15,12 +17,11 @@ public class Minesweeper implements MineFacade {
 	private IGrid grid;
 	private AbstractReveal ar;
 
-	private static final int ROWS = 20;
-	private static final int COLUMNS = 20;
-	private static final int NUMBER_OF_MINES = 80;
-
 	public Minesweeper() {
-		grid = new Grid(new FullyRandom(), ROWS, COLUMNS, NUMBER_OF_MINES);
+		grid = new Grid(new FullyRandom(), MineProperties.INSTANCE.ROWS,
+				MineProperties.INSTANCE.COLUMNS,
+				MineProperties.INSTANCE.NUMBER_OF_MINES);
+		
 		ar = new RevealUntilNum(grid);
 	}
 
@@ -43,20 +44,6 @@ public class Minesweeper implements MineFacade {
 			grid.reveal(p.x, p.y);
 		}
 	}
-
-//	not needed
-//	
-//	@Override
-//	public boolean isRevealed(int x, int y) {
-//		return grid.isRevealed(x, y);
-//	}
-
-//	not needed
-//	
-//	@Override
-//	public boolean isMarked(int x, int y) {
-//		return grid.isMarked(x, y);
-//	}
 
 	@Override
 	public void toggleMark(int x, int y) {

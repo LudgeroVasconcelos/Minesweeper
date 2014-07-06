@@ -58,14 +58,7 @@ public class MineFrame extends JFrame {
 		}
 		
 		// also remove buttons that have flag but are not mined
-		for(int i = 0; i < 20; i++){
-			for(int j = 0; j < 20; j++){
-				if(!grid.isMined(i, j) && grid.isFlagged(i, j)){
-					removeButton(i, j);
-					grid.setWrong(i, j);
-				}
-			}
-		}
+		grid.setWrong();
 	}
 
 }
