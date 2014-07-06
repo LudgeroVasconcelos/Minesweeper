@@ -85,13 +85,8 @@ public class GridPanel extends JPanel {
 
 		int width = buttons[0][0].getWidth();
 		int height = buttons[0][0].getHeight();
-		int iconWidth = width;
-		int iconHeight = height;
-
-		if (iconWidth > iconHeight)
-			iconWidth = iconHeight;
-		else if (iconHeight > iconWidth)
-			iconHeight = iconWidth;
+		int iconWidth = width > height ? height : width;
+		int iconHeight = height > width ? width : height;
 
 		ImageIcon ii = new ImageIcon(flagImage.getScaledInstance(iconWidth,
 				iconHeight, Image.SCALE_SMOOTH));
@@ -140,8 +135,8 @@ public class GridPanel extends JPanel {
 						g2.drawImage(crossImage, x, y, width, height, null);
 					}
 				} else if (buttons[i][j].isFlagged()) {
-
 					buttons[i][j].setIcon(ii);
+					
 				} else if (!buttons[i][j].isFlagged()) {
 					buttons[i][j].setIcon(null);
 				}

@@ -40,7 +40,6 @@ public class MineFrame extends JFrame {
 
 	public void displayNumber(int x, int y, int numMinesAround) {
 		grid.displayNumber(x, y, numMinesAround);
-		
 	}
 
 	public void toggleFlag(int x, int y) {

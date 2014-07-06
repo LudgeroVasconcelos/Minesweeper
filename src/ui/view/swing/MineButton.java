@@ -85,4 +85,8 @@ public class MineButton extends JButton {
 	public boolean isWrong(){
 		return wrong;
 	}
+	
+	public void paint(){
+		
+	}
 }

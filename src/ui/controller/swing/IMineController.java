@@ -16,9 +16,9 @@ public interface IMineController extends Observer{
 	
 	public void addObserverToGrid();
 	
-	public void addListenersToButtons();
+	public void addListenersToSquares();
 	
-	public void removeListenersFromButtons();
+	public void removeListenersFromSquares();
 
 	public void update(Observable obj, Object hint);
 	

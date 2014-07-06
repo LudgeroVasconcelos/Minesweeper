@@ -51,7 +51,7 @@ public class RevealUntilNum extends AbstractReveal {
 							stack.push(po);
 					}
 				} catch (OperationNotSupportedException e) {
-					// this can only happen in the first point, in case it's a
+					// this can only happen in the first try, in case it's a
 					// mine.
 
 					break;

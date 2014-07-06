@@ -4,7 +4,7 @@ import ui.controller.swing.IMineController;
 import ui.controller.swing.MineController;
 import ui.view.swing.MineFrame;
 import domain.MineFacade;
-import domain.MinesWeeper;
+import domain.Minesweeper;
 
 public class Main {
 
@@ -14,7 +14,7 @@ public class Main {
 			@Override
 			public void run() {
 				// create model
-				MineFacade mineFacade = new MinesWeeper();
+				MineFacade mineFacade = new Minesweeper();
 
 				// create view
 				MineFrame mineFrame = new MineFrame(20, 20);
@@ -28,7 +28,7 @@ public class Main {
 				mineController.addObserverToGrid();
 				
 				// (view -> controller)
-				mineController.addListenersToButtons();
+				mineController.addListenersToSquares();
 			}
 		});
 
