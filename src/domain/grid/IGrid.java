@@ -1,14 +1,16 @@
 package domain.grid;
 
+import java.util.Observer;
+
 import javax.naming.OperationNotSupportedException;
 
 public interface IGrid {
 
-	public void start(int x, int y);
+	public void fill(int x, int y);
 	
-	public void newGame();
+	public boolean isFilled();
 	
-	public boolean endGame();
+	public void clearGrid();
 	
 	public void reveal(int x, int y);
 	
@@ -18,11 +20,11 @@ public interface IGrid {
 	
 	public boolean isMarked(int x, int y);
 	
-	public boolean isMined(int x, int y);
-	
 	public int getNumOfMinesAround(int x, int y) throws OperationNotSupportedException;
 
 	public int getColumns();
 	
 	public int getRows();
+	
+	public void addObserver(Observer observer);
 }

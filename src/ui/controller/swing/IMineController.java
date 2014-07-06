@@ -8,13 +8,17 @@ import java.util.Observer;
 
 public interface IMineController extends Observer{
 	
-	public ActionListener newGame();
+	public ActionListener clearGrid();
 	
 	public ActionListener reveal();
 	
 	public MouseListener toggleMark();
 	
 	public void addObserverToGrid();
+	
+	public void addListenersToButtons();
+	
+	public void removeListenersFromButtons();
 
 	public void update(Observable obj, Object hint);
 	

@@ -28,31 +28,38 @@ public class RevealUntilNum extends AbstractReveal {
 	public Iterable<Point> getSquaresToReveal(int x, int y) {
 		// iterative DFS
 
-		Set<Point> list = new HashSet<Point>();
+		Set<Point> set = new HashSet<Point>();
 		Stack<Point> stack = new Stack<Point>();
 
+		if(grid.isMarked(x, y))
+			return set;
+		
 		stack.push(new Point(x, y));
 
 		while (!stack.isEmpty()) {
 			Point p = stack.pop();
-			if (!list.contains(p)) {
-				list.add(p);
+			if (!set.contains(p)) {
+				set.add(p);
 
 				try {
 					if (grid.getNumOfMinesAround(p.x, p.y) == 0) {
 
-						Iterable<Point> squaresAround = getSquaresAround(p.x, p.y);
+						Iterable<Point> squaresAround = getSquaresAround(p.x,
+								p.y);
+						
 						for (Point po : squaresAround)
 							stack.push(po);
-				 	}
+					}
 				} catch (OperationNotSupportedException e) {
-					// Contracts haven't been met
-					e.printStackTrace();
+					// this can only happen in the first point, in case it's a
+					// mine.
+
+					break;
 				}
 			}
 		}
 
-		return list;
+		return set;
 	}
 
 	private Iterable<Point> getSquaresAround(int x, int y) {
@@ -64,15 +71,10 @@ public class RevealUntilNum extends AbstractReveal {
 			for (int j = y - 1; j <= y + 1; j++)
 				if (i >= 0 && i < rows && j >= 0 && j < columns)
 					if (!(i == x && j == y))
-						try {
-							if (grid.getNumOfMinesAround(i, j) >= 0
-									&& !grid.isMarked(i, j))
-								list.add(new Point(i, j));
-						} catch (OperationNotSupportedException e) {
-							// Simply don't add to the list
-						}
+						if (!grid.isMarked(i, j))
+							list.add(new Point(i, j));
 
 		return list;
 	}
-	
+
 }

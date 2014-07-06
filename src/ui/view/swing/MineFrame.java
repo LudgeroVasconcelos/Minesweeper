@@ -7,24 +7,13 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JFrame;
 
-import ui.controller.swing.IMineController;
-
 @SuppressWarnings("serial")
 public class MineFrame extends JFrame {
 
-	private IMineController mineController;
 	private GridPanel grid;
-	
-	private ActionListener mineButtonActionListener;
-	private MouseListener mineButtonMouseListener;
 
-	public MineFrame(IMineController mineController) {
-
-		this.mineController = mineController;
-		mineButtonActionListener = this.mineController.reveal();
-		mineButtonMouseListener = this.mineController.toggleMark();
-		
-		grid = new GridPanel(mineButtonActionListener, mineButtonMouseListener);
+	public MineFrame(int rows, int columns) {
+		grid = new GridPanel(rows, columns);
 
 		setLayout(new BorderLayout());
 		setSize(500, 500);
@@ -37,6 +26,14 @@ public class MineFrame extends JFrame {
 		add(grid, BorderLayout.CENTER);
 	}
 
+	public void addListenersToButtons(ActionListener al, MouseListener ml){
+		grid.addListenersToButtons(al, ml);
+	}
+	
+	public void removeListenersFromButtons(){
+		grid.removeListenersFromButtons();
+	}
+	
 	public void removeButton(int x, int y) {
 		grid.removeButton(x, y);
 	}
@@ -52,17 +49,16 @@ public class MineFrame extends JFrame {
 	}
 
 	public void endGame(int x, int y, Iterable<Point> mines) {
-		grid.removeButtonListeners(mineButtonActionListener, mineButtonMouseListener);
 		grid.destroy(x, y);
 		
+		// remove button on every mine
 		for(Point p : mines){
 			if(!grid.isFlagged(p.x, p.y))
 				removeButton(p.x, p.y);
-			
 			grid.setMine(p.x, p.y);
 		}
 		
-		// also remove buttons which were flagged but are not mined
+		// also remove buttons that have flag but are not mined
 		for(int i = 0; i < 20; i++){
 			for(int j = 0; j < 20; j++){
 				if(!grid.isMined(i, j) && grid.isFlagged(i, j)){

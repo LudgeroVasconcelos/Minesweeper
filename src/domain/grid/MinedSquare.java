@@ -1,5 +1,5 @@
 package domain.grid;
 
-public class MinedSquare extends Square{
+class MinedSquare extends Square{
 
 }

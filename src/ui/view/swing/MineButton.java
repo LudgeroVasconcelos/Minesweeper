@@ -1,5 +1,8 @@
 package ui.view.swing;
 
+import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
+
 import javax.swing.JButton;
 
 @SuppressWarnings("serial")
@@ -11,6 +14,9 @@ public class MineButton extends JButton {
 	private boolean mined;
 	private boolean destroyed;
 	private boolean wrong;
+	
+	private ActionListener al;
+	private MouseListener ml;
 
 	public MineButton(int x, int y) {
 		super();
@@ -18,6 +24,18 @@ public class MineButton extends JButton {
 		this.y = y;
 	}
 
+	public void addListeners(ActionListener al, MouseListener ml){
+		addActionListener(al);
+		addMouseListener(ml);
+		
+		this.al = al;
+		this.ml = ml;
+	}
+	
+	public void removeListeners(){
+		removeActionListener(al);
+		removeMouseListener(ml);
+	}
 	public void setNumOfMinesAround(int numMinesAround) {
 		this.numberOfMinesAround = numMinesAround;
 	}

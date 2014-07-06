@@ -11,14 +11,14 @@ public abstract class SquareEvent extends Event{
 	}
 
 	/**
-	 * @return the x
+	 * @return the x position
 	 */
 	public int getX() {
 		return x;
 	}
 
 	/**
-	 * @return the y
+	 * @return the y position
 	 */
 	public int getY() {
 		return y;

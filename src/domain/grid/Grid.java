@@ -14,20 +14,27 @@ import domain.random.IRandom;
 public class Grid extends Observable implements IGrid {
 
 	private Square[][] grid;
+	private boolean filled;
 
+	private final int rows;
+	private final int columns;
+	
 	private IRandom random;
-	private int rows;
-	private int columns;
-	private int minesNumber;
+	private final int numOfMines;
 	private Iterable<Point> listOfMines;
 
-	public Grid(IRandom random, int rows, int columns, int minesNumber) {
+	public Grid(IRandom random, int rows, int columns, int numOfMines) {
 		this.random = random;
-		this.minesNumber = minesNumber;
+		this.numOfMines = numOfMines;
 		this.rows = rows;
 		this.columns = columns;
 
-		grid = new Square[rows][columns];
+		clearGrid();
+	}
+	
+	@Override
+	public boolean isFilled(){
+		return filled;
 	}
 
 	@Override
@@ -41,26 +48,23 @@ public class Grid extends Observable implements IGrid {
 	}
 
 	@Override
-	public void start(int x, int y) {
+	public void fill(int x, int y) {
+		filled = true;
+		
 		this.listOfMines = random.getMinesPosition(x, y, rows, columns,
-				minesNumber);
+				numOfMines);
 		
 		int[][] nums = getNums();
-		fillGrid(nums);
+		setMines(nums);
 	}
 
 	@Override
-	public void newGame() {
+	public void clearGrid() {
+		filled = false;
 		grid = new Square[rows][columns];
 	}
 
-	@Override
-	public boolean endGame() {
-
-		return false;
-	}
-
-	private void fillGrid(int[][] nums) {
+	private void setMines(int[][] nums) {
 		
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < columns; j++) {
@@ -70,7 +74,6 @@ public class Grid extends Observable implements IGrid {
 					grid[i][j] = new NormalSquare(nums[i][j]);
 			}
 		}
-
 	}
 
 	private int[][] getNums() {
@@ -92,6 +95,7 @@ public class Grid extends Observable implements IGrid {
 		return nums;
 	}
 
+	@Override
 	public void reveal(int x, int y) {
 		grid[x][y].reveal();
 
@@ -116,14 +120,14 @@ public class Grid extends Observable implements IGrid {
 		return grid[x][y].isMarked();
 	}
 
+	@Override
 	public void toggleMark(int x, int y) {
 		grid[x][y].toggleMark();
 
 		fireChangedEvent(new ToggleMarkEvent(x, y));
 	}
 
-	@Override
-	public boolean isMined(int x, int y) {
+	private boolean isMined(int x, int y) {
 		return grid[x][y] instanceof MinedSquare;
 	}
 
@@ -134,7 +138,7 @@ public class Grid extends Observable implements IGrid {
 			return ns.getNumOfMinesAround();
 		} else {
 			throw new OperationNotSupportedException(
-					"Cannot obtain number of mines around a minedSquare");
+					"Cannot obtain number of mines around a mined square");
 		}
 
 	}

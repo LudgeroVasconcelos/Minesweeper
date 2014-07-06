@@ -4,13 +4,16 @@ import java.awt.Point;
 import java.util.Observer;
 
 import domain.grid.Grid;
+import domain.grid.IGrid;
 import domain.random.FullyRandom;
+import domain.reveal.AbstractReveal;
 import domain.reveal.RevealUntilNum;
 
+// esta classe tem de ser publica não é? E a grid?
 public class MinesWeeper implements MineFacade {
 
-	Grid grid;
-	boolean started;
+	private IGrid grid;
+	private AbstractReveal ar;
 
 	private static final int ROWS = 20;
 	private static final int COLUMNS = 20;
@@ -18,55 +21,32 @@ public class MinesWeeper implements MineFacade {
 
 	public MinesWeeper() {
 		grid = new Grid(new FullyRandom(), ROWS, COLUMNS, NUMBER_OF_MINES);
+		ar = new RevealUntilNum(grid);
 	}
 
 	@Override
-	public void start(int x, int y) {
-		started = true;
-		grid.start(x, y);
+	public void clearGrid() {
+		grid.clearGrid();
 	}
 
 	@Override
-	public void newGame() {
-
-	}
-
-	@Override
-	public void endGame() {
-		started = false;
-		grid.endGame();
-	}
-
-	@Override
-	public boolean reveal(int x, int y) {
-		if (!started) {
-			start(x, y);
+	public void reveal(int x, int y) {
+		if (!grid.isFilled()) {
+			grid.fill(x, y);
 		}
 
-		if (grid.isMarked(x, y))
-			return false;
+		// será que devo ver primeiro se o quadrado x y é uma mina ou se está
+		// marcado ou deixo o revealUntilNum responsável por isso?
+		Iterable<Point> squares = ar.getSquaresToReveal(x, y);
 
-		else if (grid.isMined(x, y)) {
-			grid.reveal(x, y);
-			endGame();
-			return false;
+		for (Point p : squares) {
+			grid.reveal(p.x, p.y);
 		}
-
-		else {
-			RevealUntilNum run = new RevealUntilNum(grid);
-			Iterable<Point> squares = run.getSquaresToReveal(x, y);
-			
-			for(Point p : squares){
-				grid.reveal(p.x, p.y);
-			}
-		}
-		return true;
 	}
 
 	@Override
 	public boolean isRevealed(int x, int y) {
-		// TODO Auto-generated method stub
-		return false;
+		return grid.isRevealed(x, y);
 	}
 
 	@Override
@@ -76,20 +56,16 @@ public class MinesWeeper implements MineFacade {
 
 	@Override
 	public void toggleMark(int x, int y) {
-		if(started)
+		// aqui deveria lançar uma excepçao quando não desse para fazer
+		// toggle????? para o controller ficar a saber porque é que não deu. Ou
+		// apenas deve estar escrito nos contratos?
+		if (grid.isFilled())
 			grid.toggleMark(x, y);
-	}
-
-	@Override
-	public boolean isMined(int x, int y) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 	@Override
 	public void addObserver(Observer observer) {
 		grid.addObserver(observer);
-
 	}
 
 }
