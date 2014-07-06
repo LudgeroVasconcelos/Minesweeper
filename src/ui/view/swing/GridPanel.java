@@ -90,57 +90,56 @@ public class GridPanel extends JPanel implements Iterable<MineButton> {
 		ImageIcon ii = new ImageIcon(flagImage.getScaledInstance(iconWidth,
 				iconHeight, Image.SCALE_SMOOTH));
 
-		for (int i = 0; i < buttons.length; i++) {
-			for (int j = 0; j < buttons[i].length; j++) {
+		Iterator<MineButton> it = iterator();
+		while(it.hasNext()){
+			MineButton mb = it.next();
+			int x = mb.getX();
+			int y = mb.getY();
 
-				int x = buttons[i][j].getX();
-				int y = buttons[i][j].getY();
+			if (!mb.isVisible()) {
 
-				if (!buttons[i][j].isVisible()) {
+				g2.setColor(new Color(140, 140, 140));
+				g2.drawRect(x, y, width - 1, height - 1);
 
-					g2.setColor(new Color(140, 140, 140));
-					g2.drawRect(x, y, width - 1, height - 1);
+				int minesAround = mb.getNumOfMinesAround();
+				if (!mb.isMined() && !mb.isFlagged()
+						&& minesAround > 0) {
 
-					int minesAround = buttons[i][j].getNumOfMinesAround();
-					if (!buttons[i][j].isMined() && !buttons[i][j].isFlagged()
-							&& minesAround > 0) {
+					String numMinesAround = String.valueOf(minesAround);
 
-						String numMinesAround = String.valueOf(minesAround);
+					g2.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 15
+							+ (int) (0.2 * width) + (int) (0.2 * height)));
+					FontMetrics fm = g2.getFontMetrics();
 
-						g2.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 15
-								+ (int) (0.2 * width) + (int) (0.2 * height)));
-						FontMetrics fm = g2.getFontMetrics();
+					Point centerPos = getTextCenterPos(x, y, width, height,
+							fm, numMinesAround);
 
-						Point centerPos = getTextCenterPos(x, y, width, height,
-								fm, numMinesAround);
+					Color c = getNumColor(minesAround);
+					g2.setColor(c);
+					g2.drawString(numMinesAround, centerPos.x, centerPos.y);
 
-						Color c = getNumColor(minesAround);
-						g2.setColor(c);
-						g2.drawString(numMinesAround, centerPos.x, centerPos.y);
+				} else if (mb.isMined()
+						&& !mb.isFlagged()) {
 
-					} else if (buttons[i][j].isMined()
-							&& !buttons[i][j].isFlagged()) {
-
-						if (buttons[i][j].isDestroyed()) {
-							g2.setColor(Color.RED);
-							g2.fillRect(x, y, width, height);
-						}
-
-						g2.drawImage(mineImage, x + ((width - iconWidth) / 2),
-								y, iconWidth, iconHeight, null);
-					} else if (buttons[i][j].isWrong()) {
-						g2.drawImage(mineImage, x + ((width - iconWidth) / 2),
-								y, iconWidth, iconHeight, null);
-						g2.drawImage(crossImage, x, y, width, height, null);
+					if (mb.isDestroyed()) {
+						g2.setColor(Color.RED);
+						g2.fillRect(x, y, width, height);
 					}
-				} else if (buttons[i][j].isFlagged()) {
-					buttons[i][j].setIcon(ii);
 
-				} else if (!buttons[i][j].isFlagged()) {
-					buttons[i][j].setIcon(null);
+					g2.drawImage(mineImage, x + ((width - iconWidth) / 2),
+							y, iconWidth, iconHeight, null);
+				} else if (mb.isWrong()) {
+					g2.drawImage(mineImage, x + ((width - iconWidth) / 2),
+							y, iconWidth, iconHeight, null);
+					g2.drawImage(crossImage, x, y, width, height, null);
 				}
+			} else if (mb.isFlagged()) {
+				mb.setIcon(ii);
 
+			} else if (!mb.isFlagged()) {
+				mb.setIcon(null);
 			}
+
 		}
 	}
 
@@ -150,7 +149,6 @@ public class GridPanel extends JPanel implements Iterable<MineButton> {
 
 	public void displayNumber(int x, int y, int numMinesAround) {
 		buttons[x][y].setNumOfMinesAround(numMinesAround);
-
 	}
 
 	public void toggleFlag(int x, int y) {
