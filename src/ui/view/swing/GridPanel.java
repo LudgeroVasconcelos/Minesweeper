@@ -79,6 +79,7 @@ public class GridPanel extends JPanel implements Iterable<MineButton> {
 
 	@Override
 	public void paintComponent(Graphics g) {
+		// TODO: paint to a image instead. Paint only what needs to be changed
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 

@@ -12,6 +12,10 @@ public interface IGrid {
 	
 	public void clearGrid();
 	
+	/**
+	 * @param x
+	 * @param y
+	 */
 	public void reveal(int x, int y);
 	
 	public boolean isRevealed(int x, int y);

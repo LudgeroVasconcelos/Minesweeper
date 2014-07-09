@@ -95,6 +95,9 @@ public class Grid extends Observable implements IGrid {
 		return nums;
 	}
 
+	/* (non-Javadoc)
+	 * @see domain.grid.IGrid#reveal(int, int)
+	 */
 	@Override
 	public void reveal(int x, int y) {
 		grid[x][y].reveal();

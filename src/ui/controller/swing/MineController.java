@@ -3,6 +3,7 @@ package ui.controller.swing;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Observable;
@@ -69,13 +70,8 @@ public class MineController implements IMineController {
 	}
 
 	@Override
-	public MouseListener toggleMark() {
-		return new MouseListener() {
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-
-			}
+	public MouseAdapter toggleMark() {
+		return new MouseAdapter() {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -83,24 +79,6 @@ public class MineController implements IMineController {
 					MineButton button = (MineButton) e.getSource();
 					mineHandler.toggleMark(button.getPosX(), button.getPosY());
 				}
-
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
 
 			}
 		};
