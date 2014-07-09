@@ -25,10 +25,6 @@ public interface IGrid {
 	public boolean isMarked(int x, int y);
 	
 	public int getNumOfMinesAround(int x, int y) throws OperationNotSupportedException;
-
-	public int getColumns();
-	
-	public int getRows();
 	
 	public void addObserver(Observer observer);
 }

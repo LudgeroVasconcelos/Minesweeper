@@ -9,6 +9,8 @@ import java.util.Stack;
 
 import javax.naming.OperationNotSupportedException;
 
+import minesweeper.MineProperties;
+
 import domain.grid.IGrid;
 
 /**
@@ -31,9 +33,9 @@ public class RevealUntilNum extends AbstractReveal {
 		Set<Point> set = new HashSet<Point>();
 		Stack<Point> stack = new Stack<Point>();
 
-		if(grid.isMarked(x, y))
+		if (grid.isMarked(x, y))
 			return set;
-		
+
 		stack.push(new Point(x, y));
 
 		while (!stack.isEmpty()) {
@@ -46,7 +48,7 @@ public class RevealUntilNum extends AbstractReveal {
 
 						Iterable<Point> squaresAround = getSquaresAround(p.x,
 								p.y);
-						
+
 						for (Point po : squaresAround)
 							stack.push(po);
 					}
@@ -64,8 +66,8 @@ public class RevealUntilNum extends AbstractReveal {
 
 	private Iterable<Point> getSquaresAround(int x, int y) {
 		List<Point> list = new ArrayList<Point>();
-		int rows = grid.getRows();
-		int columns = grid.getColumns();
+		int rows = MineProperties.INSTANCE.ROWS;
+		int columns = MineProperties.INSTANCE.COLUMNS;
 
 		for (int i = x - 1; i <= x + 1; i++)
 			for (int j = y - 1; j <= y + 1; j++)
@@ -76,5 +78,4 @@ public class RevealUntilNum extends AbstractReveal {
 
 		return list;
 	}
-
 }

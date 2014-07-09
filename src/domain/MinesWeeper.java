@@ -4,10 +4,9 @@ import java.awt.Point;
 import java.util.Observer;
 
 import minesweeper.MineProperties;
-
+import domain.fill.FillRandom;
 import domain.grid.Grid;
 import domain.grid.IGrid;
-import domain.random.FullyRandom;
 import domain.reveal.AbstractReveal;
 import domain.reveal.RevealUntilNum;
 
@@ -18,9 +17,9 @@ public class Minesweeper implements MineFacade {
 	private AbstractReveal ar;
 
 	public Minesweeper() {
-		grid = new Grid(new FullyRandom(), MineProperties.INSTANCE.ROWS,
+		grid = new Grid(new FillRandom(MineProperties.INSTANCE.ROWS,
 				MineProperties.INSTANCE.COLUMNS,
-				MineProperties.INSTANCE.NUMBER_OF_MINES);
+				MineProperties.INSTANCE.NUMBER_OF_MINES));
 		
 		ar = new RevealUntilNum(grid);
 	}

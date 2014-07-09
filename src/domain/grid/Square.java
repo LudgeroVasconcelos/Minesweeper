@@ -2,7 +2,7 @@ package domain.grid;
 
 import java.util.Observable;
 
-abstract class Square extends Observable{
+public abstract class Square extends Observable{
 
 	private boolean marked;
 	private boolean revealed;

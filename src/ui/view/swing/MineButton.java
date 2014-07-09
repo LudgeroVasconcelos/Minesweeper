@@ -62,7 +62,6 @@ public class MineButton extends JButton {
 	}
 
 	public void setMine() {
-
 		mined = true;
 	}
 

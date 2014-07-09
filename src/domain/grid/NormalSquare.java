@@ -2,7 +2,7 @@ package domain.grid;
 
 
 
-class NormalSquare extends Square{
+public class NormalSquare extends Square{
 
 	private final int minesAround;
 	
