@@ -10,7 +10,6 @@ import domain.grid.IGrid;
 import domain.reveal.AbstractReveal;
 import domain.reveal.RevealUntilNum;
 
-// esta classe tem de ser publica não é? E a grid?
 public class Minesweeper implements MineFacade {
 
 	private IGrid grid;
