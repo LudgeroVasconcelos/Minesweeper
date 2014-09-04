@@ -43,8 +43,8 @@ public class Minesweeper implements MineFacade {
 
 	@Override
 	public void toggleMark(int x, int y) {
-		// aqui deveria lançar uma excepçao quando não desse para fazer
-		// toggle????? para o controller ficar a saber porque é que não deu. Ou
+		// aqui deveria lanï¿½ar uma excepï¿½ao quando nï¿½o desse para fazer
+		// toggle????? para o controller ficar a saber porque ï¿½ que nï¿½o deu. Ou
 		// apenas deve estar escrito nos contratos?
 		if (grid.isFilled())
 			grid.toggleMark(x, y);
