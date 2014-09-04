@@ -33,9 +33,7 @@ public class Minesweeper implements MineFacade {
 		if (!grid.isFilled()) {
 			grid.fill(x, y);
 		}
-
-		// será que devo ver primeiro se o quadrado x y é uma mina ou se está
-		// marcado ou deixo o revealUntilNum responsável por isso?
+		
 		Iterable<Point> squares = ar.getSquaresToReveal(x, y);
 
 		for (Point p : squares) {
