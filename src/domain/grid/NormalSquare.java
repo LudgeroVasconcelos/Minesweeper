@@ -1,11 +1,9 @@
 package domain.grid;
 
-
-
-public class NormalSquare extends Square{
+public class NormalSquare extends Square {
 
 	private final int minesAround;
-	
+
 	public NormalSquare(int minesAround) {
 		this.minesAround = minesAround;
 	}
@@ -13,6 +11,5 @@ public class NormalSquare extends Square{
 	public int getNumOfMinesAround() {
 		return minesAround;
 	}
-	
-	
+
 }

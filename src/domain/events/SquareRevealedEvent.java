@@ -1,15 +1,20 @@
 package domain.events;
 
-public class SquareRevealedEvent extends SquareEvent{
+import java.awt.Point;
+import java.util.Map.Entry;
 
-	private int numMinesAround;
-	
-	public SquareRevealedEvent(int x,int y, int numMinesAround){
+public class SquareRevealedEvent extends SquareEvent {
+
+	private Iterable<Entry<Point, Integer>> revealedSquares;
+
+	public SquareRevealedEvent(int x, int y,
+			Iterable<Entry<Point, Integer>> revealedSquares) {
 		super(x, y);
-		this.numMinesAround = numMinesAround;
+		this.revealedSquares = revealedSquares;
 	}
-	
-	public int getNumMinesAround(){
-		return numMinesAround;
+
+	public Iterable<Entry<Point, Integer>> getRevealedSquares() {
+		return revealedSquares;
 	}
+
 }

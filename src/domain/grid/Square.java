@@ -7,6 +7,8 @@ public abstract class Square extends Observable{
 	private boolean marked;
 	private boolean revealed;
 	
+	private Iterable<Square> neighbors;
+	
 	public void reveal(){
 		revealed = true;
 	}
@@ -21,6 +23,14 @@ public abstract class Square extends Observable{
 
 	public void toggleMark() {
 		marked = !marked;
+	}
+	
+	public void setNeighbors(Iterable<Square> squares){
+		this.neighbors = squares;
+	}
+	
+	public Iterable<Square> getNeighbors(){
+		return neighbors;
 	}
 	 
 }

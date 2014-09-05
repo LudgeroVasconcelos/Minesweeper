@@ -64,17 +64,16 @@ public class GridPanel extends JPanel implements Iterable<MineButton> {
 	public void addListenersToButtons(ActionListener al, MouseListener ml) {
 		Iterator<MineButton> it = iterator();
 
-		while (it.hasNext()) {
+		while (it.hasNext())
 			it.next().addListeners(al, ml);
-		}
+		
 	}
 
 	public void removeListenersFromButtons() {
 		Iterator<MineButton> it = iterator();
 
-		while (it.hasNext()) {
+		while (it.hasNext())
 			it.next().removeListeners();
-		}
 	}
 
 	@Override

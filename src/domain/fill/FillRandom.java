@@ -20,32 +20,26 @@ public class FillRandom implements IFill {
 	private int rows;
 	private int columns;
 	private int numberOfMines;
-	
-	private Iterable<Point> listOfMines;
-	
+
 	public FillRandom(int rows, int columns, int numberOfMines) {
 		this.rows = rows;
 		this.columns = columns;
 		this.numberOfMines = numberOfMines;
 	}
-	
+
 	@Override
 	public Square[][] fillGrid(int x, int y) {
 		Square[][] grid = new Square[rows][columns];
-		
-		listOfMines = setMines(grid, x, y);
-		setNormalSquares(grid);
+
+		Iterable<Point> mines = setMines(grid, x, y);
+		setNormalSquares(grid, mines);
 
 		return grid;
 	}
-	
-	public Iterable<Point> getListOfMines(){
-		return listOfMines;
-	}
-	
-	private void setNormalSquares(Square[][] grid) {
-		int[][] nums = getNums();
-		
+
+	private void setNormalSquares(Square[][] grid, Iterable<Point> mines) {
+		int[][] nums = getNums(mines);
+
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < columns; j++) {
 				if (nums[i][j] >= 0)
@@ -54,10 +48,10 @@ public class FillRandom implements IFill {
 		}
 	}
 
-	private int[][] getNums() {
+	private int[][] getNums(Iterable<Point> mines) {
 		int[][] nums = new int[rows][columns];
 
-		for (Point point : listOfMines) {
+		for (Point point : mines) {
 			for (int i = point.x - 1; i <= point.x + 1; i++) {
 				for (int j = point.y - 1; j <= point.y + 1; j++) {
 					if (i >= 0 && i < rows && j >= 0 && j < columns) {
@@ -81,10 +75,10 @@ public class FillRandom implements IFill {
 		while (generated.size() < numberOfMines) {
 			int randomInt = r.nextInt(max);
 			int i = randomInt / columns;
-			int j = randomInt - (columns * i); 
+			int j = randomInt - (columns * i);
 
 			Point p = new Point(i, j);
-			if (!pointsAround.contains(p)){
+			if (!pointsAround.contains(p)) {
 				generated.add(p);
 				grid[i][j] = new MinedSquare();
 			}
@@ -101,6 +95,5 @@ public class FillRandom implements IFill {
 		}
 		return list;
 	}
-
 
 }

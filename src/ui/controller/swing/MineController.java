@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Map.Entry;
 import java.util.Observable;
 
 import javax.swing.SwingUtilities;
@@ -17,8 +18,6 @@ import domain.events.SquareEvent;
 import domain.events.SquareRevealedEvent;
 import domain.events.ToggleMarkEvent;
 
-// aqui estão os métodos que fazem a comunicação com o domain e ui.
-// podem estar na mesma classe? qual a maneira mais correcta?
 public class MineController implements IMineController {
 
 	MineFacade mineHandler; // domain
@@ -38,7 +37,7 @@ public class MineController implements IMineController {
 	public void addListenersToSquares() {
 		mineFrame.addListenersToButtons(reveal(), toggleMark());
 	}
-	
+
 	@Override
 	public void removeListenersFromSquares() {
 		mineFrame.removeListenersFromButtons();
@@ -83,13 +82,8 @@ public class MineController implements IMineController {
 		};
 	}
 
-	private void removeButton(int x, int y) {
-		mineFrame.removeButton(x, y);
-	}
-
-	private void displayNumber(int x, int y, int numMinesAround) {
-		mineFrame.displayNumber(x, y, numMinesAround);
-
+	private void revealButtons(Iterable<Entry<Point, Integer>> revealedSquares) {
+		mineFrame.revealButtons(revealedSquares);
 	}
 
 	private void toggleFlag(int x, int y) {
@@ -106,12 +100,7 @@ public class MineController implements IMineController {
 		if (hint instanceof SquareEvent) {
 			if (hint instanceof SquareRevealedEvent) {
 				SquareRevealedEvent nsre = (SquareRevealedEvent) hint;
-				removeButton(nsre.getX(), nsre.getY());
-
-				if (nsre.getNumMinesAround() > 0) {
-					displayNumber(nsre.getX(), nsre.getY(),
-							nsre.getNumMinesAround());
-				}
+				revealButtons(nsre.getRevealedSquares());
 
 			} else if (hint instanceof ToggleMarkEvent) {
 				ToggleMarkEvent tme = (ToggleMarkEvent) hint;
@@ -119,7 +108,7 @@ public class MineController implements IMineController {
 
 			} else if (hint instanceof GameOverEvent) {
 				GameOverEvent goe = (GameOverEvent) hint;
-				
+
 				removeListenersFromSquares();
 				endGame(goe.getX(), goe.getY(), goe.getListOfMines());
 			}

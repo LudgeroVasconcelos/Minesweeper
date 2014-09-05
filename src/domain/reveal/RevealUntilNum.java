@@ -7,11 +7,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
-import javax.naming.OperationNotSupportedException;
-
 import minesweeper.MineProperties;
-
-import domain.grid.IGrid;
+import domain.grid.NormalSquare;
+import domain.grid.Square;
 
 /**
  * Reveal the squares until a square with mines around greater than zero is
@@ -20,21 +18,14 @@ import domain.grid.IGrid;
  * @author ludgero
  * 
  */
-public class RevealUntilNum extends AbstractReveal {
-
-	public RevealUntilNum(IGrid grid) {
-		super(grid);
-	}
+public class RevealUntilNum implements IReveal {
 
 	@Override
-	public Iterable<Point> getSquaresToReveal(int x, int y) {
+	public Iterable<Point> getSquaresToReveal(Square[][] grid, int x, int y) {
 		// iterative DFS
 
 		Set<Point> set = new HashSet<Point>();
 		Stack<Point> stack = new Stack<Point>();
-
-		if (grid.isMarked(x, y))
-			return set;
 
 		stack.push(new Point(x, y));
 
@@ -43,20 +34,13 @@ public class RevealUntilNum extends AbstractReveal {
 			if (!set.contains(p)) {
 				set.add(p);
 
-				try {
-					if (grid.getNumOfMinesAround(p.x, p.y) == 0) {
+				if (((NormalSquare) grid[p.x][p.y]).getNumOfMinesAround() == 0) {
 
-						Iterable<Point> squaresAround = getSquaresAround(p.x,
-								p.y);
+					Iterable<Point> squaresAround = getSquaresAround(grid, p.x,
+							p.y);
 
-						for (Point po : squaresAround)
-							stack.push(po);
-					}
-				} catch (OperationNotSupportedException e) {
-					// this can only happen in the first try, in case it's a
-					// mine.
-
-					break;
+					for (Point po : squaresAround)
+						stack.push(po);
 				}
 			}
 		}
@@ -64,7 +48,7 @@ public class RevealUntilNum extends AbstractReveal {
 		return set;
 	}
 
-	private Iterable<Point> getSquaresAround(int x, int y) {
+	private Iterable<Point> getSquaresAround(Square[][] grid, int x, int y) {
 		List<Point> list = new ArrayList<Point>();
 		int rows = MineProperties.INSTANCE.ROWS;
 		int columns = MineProperties.INSTANCE.COLUMNS;
@@ -73,7 +57,7 @@ public class RevealUntilNum extends AbstractReveal {
 			for (int j = y - 1; j <= y + 1; j++)
 				if (i >= 0 && i < rows && j >= 0 && j < columns)
 					if (!(i == x && j == y))
-						if (!grid.isMarked(i, j))
+						if (!grid[i][j].isMarked())
 							list.add(new Point(i, j));
 
 		return list;

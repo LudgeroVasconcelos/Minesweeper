@@ -1,26 +1,21 @@
 package domain;
 
-import java.awt.Point;
 import java.util.Observer;
 
 import minesweeper.MineProperties;
 import domain.fill.FillRandom;
 import domain.grid.Grid;
 import domain.grid.IGrid;
-import domain.reveal.AbstractReveal;
 import domain.reveal.RevealUntilNum;
 
 public class Minesweeper implements MineFacade {
 
 	private IGrid grid;
-	private AbstractReveal ar;
 
 	public Minesweeper() {
 		grid = new Grid(new FillRandom(MineProperties.INSTANCE.ROWS,
 				MineProperties.INSTANCE.COLUMNS,
-				MineProperties.INSTANCE.NUMBER_OF_MINES));
-		
-		ar = new RevealUntilNum(grid);
+				MineProperties.INSTANCE.NUMBER_OF_MINES), new RevealUntilNum());
 	}
 
 	@Override
@@ -33,19 +28,12 @@ public class Minesweeper implements MineFacade {
 		if (!grid.isFilled()) {
 			grid.fill(x, y);
 		}
-		
-		Iterable<Point> squares = ar.getSquaresToReveal(x, y);
 
-		for (Point p : squares) {
-			grid.reveal(p.x, p.y);
-		}
+		grid.reveal(x, y);
 	}
 
 	@Override
 	public void toggleMark(int x, int y) {
-		// aqui deveria lan�ar uma excep�ao quando n�o desse para fazer
-		// toggle????? para o controller ficar a saber porque � que n�o deu. Ou
-		// apenas deve estar escrito nos contratos?
 		if (grid.isFilled())
 			grid.toggleMark(x, y);
 	}

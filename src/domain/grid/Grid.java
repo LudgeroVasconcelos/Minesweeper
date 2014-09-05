@@ -1,35 +1,42 @@
 package domain.grid;
 
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Observable;
-
-import javax.naming.OperationNotSupportedException;
 
 import domain.events.Event;
 import domain.events.GameOverEvent;
 import domain.events.SquareRevealedEvent;
 import domain.events.ToggleMarkEvent;
 import domain.fill.IFill;
+import domain.reveal.IReveal;
 
 public class Grid extends Observable implements IGrid {
 
 	private Square[][] grid;
 	private boolean filled;
 	private IFill filler;
-	
-	public Grid(IFill filler) {
+	private IReveal ar;
+
+	public Grid(IFill filler, IReveal ar) {
 		this.filler = filler;
+		this.ar = ar;
+
 		clearGrid();
 	}
-	
+
 	@Override
-	public boolean isFilled(){
+	public boolean isFilled() {
 		return filled;
 	}
 
 	@Override
 	public void fill(int x, int y) {
-		filled = true;
 		this.grid = filler.fillGrid(x, y);
+		filled = true;
 	}
 
 	@Override
@@ -38,22 +45,50 @@ public class Grid extends Observable implements IGrid {
 		grid = null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see domain.grid.IGrid#reveal(int, int)
 	 */
 	@Override
 	public void reveal(int x, int y) {
+		if (grid[x][y].isMarked())
+			return;
+
 		grid[x][y].reveal();
 
 		Event event;
-		if (isMined(x, y)) {
-			event = new GameOverEvent(x, y, filler.getListOfMines());
+		if (grid[x][y] instanceof MinedSquare) {
+			event = new GameOverEvent(x, y, getMines());
+
 		} else {
-			event = new SquareRevealedEvent(x, y,
-					((NormalSquare) grid[x][y]).getNumOfMinesAround());
+			Iterable<Point> squaresToReveal = ar.getSquaresToReveal(grid, x, y);
+			Map<Point, Integer> revealedSquares = new HashMap<Point, Integer>();
+
+			for (Point p : squaresToReveal) {
+				grid[p.x][p.y].reveal();
+
+				int mines = ((NormalSquare) grid[p.x][p.y])
+						.getNumOfMinesAround();
+
+				revealedSquares.put(p, mines);
+			}
+
+			event = new SquareRevealedEvent(x, y, revealedSquares.entrySet());
 		}
 
 		fireChangedEvent(event);
+	}
+
+	private Iterable<Point> getMines() {
+		List<Point> mines = new ArrayList<Point>();
+
+		for (int i = 0; i < grid.length; i++)
+			for (int j = 0; j < grid[i].length; j++)
+				if (grid[i][j] instanceof MinedSquare)
+					mines.add(new Point(i, j));
+
+		return mines;
 	}
 
 	@Override
@@ -71,22 +106,6 @@ public class Grid extends Observable implements IGrid {
 		grid[x][y].toggleMark();
 
 		fireChangedEvent(new ToggleMarkEvent(x, y));
-	}
-
-	private boolean isMined(int x, int y) {
-		return grid[x][y] instanceof MinedSquare;
-	}
-
-	@Override
-	public int getNumOfMinesAround(int x, int y) throws OperationNotSupportedException {
-		if (grid[x][y] instanceof NormalSquare) {
-			NormalSquare ns = (NormalSquare) grid[x][y];
-			return ns.getNumOfMinesAround();
-		} else {
-			throw new OperationNotSupportedException(
-					"Cannot obtain number of mines around a mined square");
-		}
-
 	}
 
 	private void fireChangedEvent(Event event) {
