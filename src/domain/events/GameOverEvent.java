@@ -1,17 +1,19 @@
 package domain.events;
 
-import java.awt.Point;
+public class GameOverEvent extends SquareEvent {
 
-public class GameOverEvent extends SquareEvent{
+	boolean[][] mines;
 
-	Iterable<Point> listOfMines;
-	
-	public GameOverEvent(int x, int y, Iterable<Point> list) {
+	public GameOverEvent(int x, int y, boolean[][] mines) {
 		super(x, y);
-		this.listOfMines = list;
+		this.mines = mines;
 	}
-	
-	public Iterable<Point> getListOfMines(){
-		return listOfMines;
+
+	/**
+	 * @return the mines
+	 */
+	public boolean[][] getMines() {
+		return mines;
 	}
+
 }

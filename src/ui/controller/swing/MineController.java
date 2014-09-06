@@ -34,13 +34,8 @@ public class MineController implements IMineController {
 	}
 
 	@Override
-	public void addListenersToSquares() {
+	public void addListenersToButtons() {
 		mineFrame.addListenersToButtons(reveal(), toggleMark());
-	}
-
-	@Override
-	public void removeListenersFromSquares() {
-		mineFrame.removeListenersFromButtons();
 	}
 
 	@Override
@@ -90,7 +85,7 @@ public class MineController implements IMineController {
 		mineFrame.toggleFlag(x, y);
 	}
 
-	private void endGame(int x, int y, Iterable<Point> mines) {
+	private void endGame(int x, int y, boolean[][] mines) {
 		mineFrame.endGame(x, y, mines);
 	}
 
@@ -108,9 +103,7 @@ public class MineController implements IMineController {
 
 			} else if (hint instanceof GameOverEvent) {
 				GameOverEvent goe = (GameOverEvent) hint;
-
-				removeListenersFromSquares();
-				endGame(goe.getX(), goe.getY(), goe.getListOfMines());
+				endGame(goe.getX(), goe.getY(), goe.getMines());
 			}
 		}
 	}

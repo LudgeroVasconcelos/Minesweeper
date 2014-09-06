@@ -31,7 +31,7 @@ public class Main {
 				mineController.addObserverToGrid();
 
 				// (view -> controller)
-				mineController.addListenersToSquares();
+				mineController.addListenersToButtons();
 			}
 		});
 

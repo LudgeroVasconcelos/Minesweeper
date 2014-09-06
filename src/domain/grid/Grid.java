@@ -1,9 +1,7 @@
 package domain.grid;
 
 import java.awt.Point;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 
@@ -80,13 +78,13 @@ public class Grid extends Observable implements IGrid {
 		fireChangedEvent(event);
 	}
 
-	private Iterable<Point> getMines() {
-		List<Point> mines = new ArrayList<Point>();
+	private boolean[][] getMines() {
+		boolean[][] mines = new boolean[grid.length][grid[0].length];
 
 		for (int i = 0; i < grid.length; i++)
 			for (int j = 0; j < grid[i].length; j++)
 				if (grid[i][j] instanceof MinedSquare)
-					mines.add(new Point(i, j));
+					mines[i][j] = true;
 
 		return mines;
 	}

@@ -14,12 +14,16 @@ public class MineFrame extends JFrame {
 	private GridPanel grid;
 
 	public MineFrame(int rows, int columns) {
-		grid = new GridPanel(rows, columns);
+		int width = MineButtonProperties.getInstance().getWidth() * columns;
+		int height = MineButtonProperties.getInstance().getHeight() * rows;
+
+		grid = new GridPanel(rows, columns, width, height);
 
 		setLayout(new BorderLayout());
-		setSize(500, 500);
+		setSize(width, height);
 		setLocationRelativeTo(null);
 		setTitle("Minesweeper");
+		setResizable(false);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
@@ -31,38 +35,16 @@ public class MineFrame extends JFrame {
 		grid.addListenersToButtons(al, ml);
 	}
 
-	public void removeListenersFromButtons() {
-		grid.removeListenersFromButtons();
+	public void revealButtons(Iterable<Entry<Point, Integer>> revealedSquares) {
+		grid.revealButtons(revealedSquares);
 	}
 
 	public void toggleFlag(int x, int y) {
 		grid.toggleFlag(x, y);
-
 	}
 
-	public void endGame(int x, int y, Iterable<Point> mines) {
-		grid.destroy(x, y);
-
-		// remove button on every mine
-		for (Point p : mines) {
-			if (!grid.isFlagged(p.x, p.y))
-				grid.removeButton(p.x, p.y);
-			grid.setMine(p.x, p.y);
-		}
-
-		// also remove buttons that have flag but are not mined
-		grid.setWrong();
-	}
-
-	public void revealButtons(Iterable<Entry<Point, Integer>> revealedSquares) {
-		for (Entry<Point, Integer> entry : revealedSquares) {
-			Point p = entry.getKey();
-			int mines = entry.getValue();
-
-			grid.removeButton(p.x, p.y);
-			grid.displayNumber(p.x, p.y, mines);
-		}
-
+	public void endGame(int x, int y, boolean[][] mines) {
+		grid.endGame(x, y, mines);
 	}
 
 }
