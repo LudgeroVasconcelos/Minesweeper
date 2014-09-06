@@ -22,12 +22,11 @@ public class MineButton extends JButton {
 	private MouseListener ml;
 	private Graphics2D g2;
 
-	public MineButton(int x, int y, int width, int height, Graphics g2) {
+	public MineButton(int x, int y, Graphics g2) {
 		super();
 		this.x = x;
 		this.y = y;
 		this.g2 = (Graphics2D) g2;
-
 		setBackground(new Color(220, 220, 220));
 	}
 

@@ -2,7 +2,6 @@ package ui.view.swing;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionListener;
@@ -23,26 +22,27 @@ public class GridPanel extends JPanel {
 		setLayout(new GridLayout(rows, columns));
 		setSize(width, height);
 
-		initState(width, height);
+		Graphics g = initState(width, height);
 
 		buttons = new MineButton[rows][columns];
-		addMineButtons(width, height);
+		addMineButtons(width, height, g);
 	}
 
-	private void initState(int width, int height) {
+	private Graphics initState(int width, int height) {
 		state = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
-		Graphics2D g2 = (Graphics2D) state.getGraphics();
-		g2.setColor(new Color(190, 190, 190));
-		g2.fillRect(0, 0, width, height);
+		Graphics g = state.getGraphics();
+		g.setColor(new Color(190, 190, 190));
+		g.fillRect(0, 0, width, height);
+		
+		return g;
 	}
 
-	private void addMineButtons(int width, int height) {
-
+	private void addMineButtons(int width, int height, Graphics g) {
+		
 		for (int i = 0; i < buttons.length; i++) {
 			for (int j = 0; j < buttons[i].length; j++) {
-				buttons[i][j] = new MineButton(i, j, width, height,
-						state.getGraphics());
+				buttons[i][j] = new MineButton(i, j, g);
 				add(buttons[i][j]);
 			}
 		}
@@ -63,7 +63,6 @@ public class GridPanel extends JPanel {
 
 	public void toggleFlag(int x, int y) {
 		buttons[x][y].toggleFlag();
-		repaint();
 	}
 
 	public void revealButtons(Iterable<Entry<Point, Integer>> revealedSquares) {
