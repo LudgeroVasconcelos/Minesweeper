@@ -9,13 +9,11 @@ public interface IMineController extends Observer {
 
 	public ActionListener clearGrid();
 
-	public ActionListener reveal();
-
-	public MouseListener toggleMark();
+	public MouseListener squaresListener();
 
 	public void addObserverToGrid();
 
-	public void addListenersToButtons();
+	public void addListeners();
 
 	public void update(Observable obj, Object hint);
 }

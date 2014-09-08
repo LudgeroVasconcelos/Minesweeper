@@ -10,7 +10,7 @@ import java.util.Observable;
 
 import javax.swing.SwingUtilities;
 
-import ui.view.swing.MineButton;
+import minesweeper.MineProperties;
 import ui.view.swing.MineFrame;
 import domain.MineFacade;
 import domain.events.GameOverEvent;
@@ -21,7 +21,7 @@ import domain.events.ToggleMarkEvent;
 public class MineController implements IMineController {
 
 	MineFacade mineHandler; // domain
-	MineFrame mineFrame; // ui
+	MineFrame mineFrame; 	// ui
 
 	public MineController(MineFacade mineHandler, MineFrame mineFrame) {
 		this.mineHandler = mineHandler;
@@ -34,8 +34,8 @@ public class MineController implements IMineController {
 	}
 
 	@Override
-	public void addListenersToButtons() {
-		mineFrame.addListenersToButtons(reveal(), toggleMark());
+	public void addListeners() {
+		mineFrame.addSquaresListener(squaresListener());
 	}
 
 	@Override
@@ -50,28 +50,21 @@ public class MineController implements IMineController {
 	}
 
 	@Override
-	public ActionListener reveal() {
-		return new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				MineButton button = (MineButton) e.getSource();
-				mineHandler.reveal(button.getPosX(), button.getPosY());
-			}
-		};
-	}
-
-	@Override
-	public MouseAdapter toggleMark() {
+	public MouseAdapter squaresListener() {
 		return new MouseAdapter() {
-
-			@Override
 			public void mousePressed(MouseEvent e) {
 				if (SwingUtilities.isRightMouseButton(e)) {
-					MineButton button = (MineButton) e.getSource();
-					mineHandler.toggleMark(button.getPosX(), button.getPosY());
-				}
+					int y = e.getX() / MineProperties.INSTANCE.BUTTON_WIDTH;
+					int x = e.getY() / MineProperties.INSTANCE.BUTTON_HEIGHT;
 
+					mineHandler.toggleMark(x, y);
+					
+				} else if (SwingUtilities.isLeftMouseButton(e)) {
+					int y = e.getX() / MineProperties.INSTANCE.BUTTON_WIDTH;
+					int x = e.getY() / MineProperties.INSTANCE.BUTTON_HEIGHT;
+
+					mineHandler.reveal(x, y);
+				}
 			}
 		};
 	}

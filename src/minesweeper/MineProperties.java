@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.Properties;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 
 import ui.view.swing.GridPanel;
 
@@ -20,7 +19,7 @@ public enum MineProperties {
 
 	public Image MINE_IMAGE;
 	public Image CROSS_IMAGE;
-	public ImageIcon FLAG_ICON;
+	public Image FLAG_IMAGE;
 
 	public final int BUTTON_WIDTH;
 	public final int BUTTON_HEIGHT;
@@ -61,22 +60,18 @@ public enum MineProperties {
 	}
 
 	private void loadImages() {
-		Image flagImage = null;
 		try {
 			MINE_IMAGE = ImageIO.read(GridPanel.class.getResource(parseString(
 					"mine_image", "images/Mine.png")));
 			CROSS_IMAGE = ImageIO.read(GridPanel.class.getResource(parseString(
 					"cross_image", "images/Icon_cross.png")));
-			flagImage = ImageIO.read(GridPanel.class.getResource(parseString(
+			FLAG_IMAGE = ImageIO.read(GridPanel.class.getResource(parseString(
 					"flag_image", "images/RedFlag.png")));
 
 		} catch (IOException e) {
 			System.err.println("Could not load image");
 			// bad luck, no images will be shown.
 		}
-		if (flagImage != null)
-			FLAG_ICON = new ImageIcon(flagImage.getScaledInstance(
-					BUTTON_WIDTH - 3, BUTTON_HEIGHT - 3, Image.SCALE_SMOOTH));
 	}
 
 	private int parseInt(String property, int defaultValue) {

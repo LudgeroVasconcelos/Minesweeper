@@ -26,18 +26,16 @@ public class Minesweeper implements MineFacade {
 
 	@Override
 	public void reveal(int x, int y) {
-		if(grid.gameHasEnded())
-			return;
-		
-		if (!grid.isFilled()) {
+		if (!grid.isFilled())
 			grid.fill(x, y);
-		}
-		grid.reveal(x, y);
+		
+		if(!grid.hasExploded())
+			grid.reveal(x, y);
 	}
 
 	@Override
 	public void toggleMark(int x, int y) {
-		if (grid.isFilled() && !grid.gameHasEnded())
+		if (grid.isFilled() && !grid.hasExploded())
 			grid.toggleMark(x, y);
 	}
 

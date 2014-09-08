@@ -2,53 +2,54 @@ package domain.reveal;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Stack;
 
 import minesweeper.MineProperties;
 import domain.grid.NormalSquare;
 import domain.grid.Square;
 
-/**
- * Reveal the squares until a square with mines around greater than zero is
- * found
- * 
- * @author ludgero
- * 
- */
+
 public class RevealUntilNum implements IReveal {
 
+	
+	/* (non-Javadoc)
+	 * @see domain.reveal.IReveal#revealSquares(domain.grid.Square[][], int, int)
+	 */
 	@Override
-	public Iterable<Point> getSquaresToReveal(Square[][] grid, int x, int y) {
+	public Iterable<Entry<Point, Integer>> revealSquares(Square[][] grid, int x, int y) {
 		// iterative DFS
 
-		Set<Point> set = new HashSet<Point>();
+		Map<Point, Integer> map = new HashMap<Point, Integer>();
 		Stack<Point> stack = new Stack<Point>();
 
 		stack.push(new Point(x, y));
 
 		while (!stack.isEmpty()) {
 			Point p = stack.pop();
-			if (!set.contains(p)) {
-				set.add(p);
+			
+			if (!map.containsKey(p)) {
+				NormalSquare ns = (NormalSquare) grid[p.x][p.y];
+				int minesAround = ns.getNumOfMinesAround();
+				ns.reveal();
+				
+				map.put(p, minesAround);
 
-				if (((NormalSquare) grid[p.x][p.y]).getNumOfMinesAround() == 0) {
+				if (minesAround == 0) {
+					List<Point> squaresAround = getSquaresAround(grid, p.x, p.y);
 
-					Iterable<Point> squaresAround = getSquaresAround(grid, p.x,
-							p.y);
-
-					for (Point po : squaresAround)
+					for (Point po : squaresAround) 
 						stack.push(po);
 				}
 			}
 		}
-
-		return set;
+		return map.entrySet();
 	}
 
-	private Iterable<Point> getSquaresAround(Square[][] grid, int x, int y) {
+	private List<Point> getSquaresAround(Square[][] grid, int x, int y) {
 		List<Point> list = new ArrayList<Point>();
 		int rows = MineProperties.INSTANCE.ROWS;
 		int columns = MineProperties.INSTANCE.COLUMNS;

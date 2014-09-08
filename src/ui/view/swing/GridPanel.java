@@ -1,17 +1,16 @@
 package ui.view.swing;
 
-import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.GridLayout;
 import java.awt.Point;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.util.Map.Entry;
 import java.util.HashSet;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.swing.JPanel;
+
+import minesweeper.MineProperties;
 
 @SuppressWarnings("serial")
 public class GridPanel extends JPanel {
@@ -21,40 +20,31 @@ public class GridPanel extends JPanel {
 
 	private Set<Point> flaggedButtons; // helps to display mines faster
 
-	public GridPanel(int rows, int columns, int width, int height) {
+	public GridPanel(int rows, int columns) {
 		super();
-		setLayout(new GridLayout(rows, columns));
-		setSize(width, height);
+		int width = MineProperties.INSTANCE.BUTTON_WIDTH * columns;
+		int height = MineProperties.INSTANCE.BUTTON_HEIGHT * rows;
+		setPreferredSize(new Dimension(width, height));
 
-		Graphics g = initState(width, height);
+		state = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		flaggedButtons = new HashSet<Point>();
 		buttons = new MineButton[rows][columns];
-		addMineButtons(width, height, g);
+		addMineButtons(MineProperties.INSTANCE.BUTTON_WIDTH,
+				MineProperties.INSTANCE.BUTTON_HEIGHT);
 	}
 
-	private Graphics initState(int width, int height) {
-		state = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-
+	private void addMineButtons(int width, int height) {
+		int coordX = 0, coordY = 0;
 		Graphics g = state.getGraphics();
-		g.setColor(new Color(190, 190, 190));
-		g.fillRect(0, 0, width, height);
-
-		return g;
-	}
-
-	private void addMineButtons(int width, int height, Graphics g) {
 		for (int i = 0; i < buttons.length; i++) {
 			for (int j = 0; j < buttons[i].length; j++) {
-				buttons[i][j] = new MineButton(i, j, g);
-				add(buttons[i][j]);
+				buttons[i][j] = new MineButton(i, j, coordY, coordX, width,
+						height, g);
+				coordY += width;
 			}
+			coordX += height;
+			coordY = 0;
 		}
-	}
-
-	public void addListenersToButtons(ActionListener al, MouseListener ml) {
-		for (int i = 0; i < buttons.length; i++)
-			for (int j = 0; j < buttons[i].length; j++)
-				buttons[i][j].addListeners(al, ml);
 	}
 
 	@Override
@@ -70,6 +60,7 @@ public class GridPanel extends JPanel {
 			flaggedButtons.add(p);
 		else
 			flaggedButtons.remove(p);
+		repaint();
 	}
 
 	public void revealButtons(Iterable<Entry<Point, Integer>> revealedSquares) {
@@ -79,13 +70,16 @@ public class GridPanel extends JPanel {
 
 			buttons[p.x][p.y].reveal(mines);
 		}
+		repaint();
 	}
 
 	public void endGame(int x, int y, Iterable<Point> mines) {
-		buttons[x][y].exploded();
-
 		for (Point p : mines) {
-			if (!buttons[p.x][p.y].isFlagged()) {
+			if(p.x == x && p.y == y){
+				buttons[x][y].exploded();
+				buttons[x][y].setMine();
+			}
+			else if (!buttons[p.x][p.y].isFlagged()) {
 				buttons[p.x][p.y].reveal(0);
 				buttons[p.x][p.y].setMine();
 			} else
@@ -97,5 +91,6 @@ public class GridPanel extends JPanel {
 			buttons[p.x][p.y].setMine();
 			buttons[p.x][p.y].setCross();
 		}
+		repaint();
 	}
 }

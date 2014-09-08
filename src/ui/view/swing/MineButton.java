@@ -1,5 +1,6 @@
 package ui.view.swing;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -7,31 +8,30 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
-
-import javax.swing.JButton;
 
 import minesweeper.MineProperties;
 
-@SuppressWarnings("serial")
-public class MineButton extends JButton {
+public class MineButton {
 
 	private final int x, y;
+	private final int coordX, coordY;
+	private final int width, height;
+
 	private boolean flagged;
 	private Graphics2D g2;
 
-	public MineButton(int x, int y, Graphics g2) {
+	public MineButton(int x, int y, int coordX, int coordY, int width,
+			int height, Graphics g2) {
 		super();
 		this.x = x;
 		this.y = y;
-		this.g2 = (Graphics2D) g2;
-		setBackground(new Color(220, 220, 220));
-	}
+		this.coordX = coordX;
+		this.coordY = coordY;
+		this.width = width;
+		this.height = height;
 
-	public void addListeners(ActionListener al, MouseListener ml) {
-		addActionListener(al);
-		addMouseListener(ml);
+		this.g2 = (Graphics2D) g2;
+		setBackGround();
 	}
 
 	public int getPosX() {
@@ -44,11 +44,24 @@ public class MineButton extends JButton {
 
 	public void toggleFlag() {
 		if (!flagged)
-			setIcon(MineProperties.INSTANCE.FLAG_ICON);
+			drawImage(MineProperties.INSTANCE.FLAG_IMAGE);
 		else
-			setIcon(null);
+			setBackGround();
 
 		flagged = !flagged;
+	}
+
+	private void setBackGround() {
+		g2.setStroke(new BasicStroke(2));
+		g2.setColor(new Color(220, 220, 220));
+		g2.fillRect(coordX, coordY, width, height);
+		g2.setColor(new Color(255, 255, 255));
+		g2.drawLine(coordX, coordY + 1, coordX + width, coordY + 1);
+		g2.drawLine(coordX + 1, coordY, coordX + 1, coordY + height);
+		g2.setColor(new Color(140, 140, 140));
+		g2.drawLine(coordX, coordY + height - 1, coordX + width, coordY + height - 1);
+		g2.drawLine(coordX + width - 1, coordY, coordX + width - 1, coordY + height);
+		g2.setStroke(new BasicStroke(1));
 	}
 
 	public boolean isFlagged() {
@@ -57,14 +70,14 @@ public class MineButton extends JButton {
 
 	public void exploded() {
 		g2.setColor(Color.RED);
-		g2.fillRect(getX(), getY(), getWidth(), getHeight());
+		g2.fillRect(coordX, coordY, width, height);
 	}
 
 	public void reveal(int mines) {
-		setVisible(false);
-
-		g2.setColor(new Color(150, 150, 150));
-		g2.drawRect(getX(), getY(), getWidth() - 1, getHeight() - 1);
+		g2.setColor(new Color(190, 190, 190));
+		g2.fillRect(coordX, coordY, width, height);
+		g2.setColor(new Color(140, 140, 140));
+		g2.drawRect(coordX, coordY, width, height);
 
 		if (mines > 0)
 			drawNumber(mines);
@@ -95,13 +108,13 @@ public class MineButton extends JButton {
 		int textWidth = fm.stringWidth(mines);
 		int textHeight = fm.getHeight();
 
-		int x = getX() + (getWidth() - textWidth) / 2;
-		int y = getY() + ((getHeight() - textHeight) / 2) + fm.getAscent();
+		int x = coordX + (width - textWidth) / 2;
+		int y = coordY + ((height - textHeight) / 2) + fm.getAscent();
 
 		return new Point(x, y);
 	}
 
 	private void drawImage(Image img) {
-		g2.drawImage(img, getX(), getY(), getWidth(), getHeight(), null);
+		g2.drawImage(img, coordX, coordY, width, height, null);
 	}
 }

@@ -2,9 +2,8 @@ package domain.grid;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Observable;
 
 import domain.events.Event;
@@ -18,15 +17,13 @@ public class Grid extends Observable implements IGrid {
 
 	private Square[][] grid;
 	private boolean filled;
-	private boolean ended;
+	private boolean exploded;
 	private IFill filler;
 	private IReveal ar;
 
 	public Grid(IFill filler, IReveal ar) {
 		this.filler = filler;
 		this.ar = ar;
-
-		clearGrid();
 	}
 
 	@Override
@@ -43,6 +40,7 @@ public class Grid extends Observable implements IGrid {
 	@Override
 	public void clearGrid() {
 		filled = false;
+		exploded = false;
 		grid = null;
 	}
 
@@ -54,28 +52,19 @@ public class Grid extends Observable implements IGrid {
 	@Override
 	public void reveal(int x, int y) {
 		if (grid[x][y].isMarked())
-			return ;
+			return;
+		
 		grid[x][y].reveal();
 		
 		Event event;
 		if (grid[x][y] instanceof MinedSquare) {
 			event = new GameOverEvent(x, y, getMines());
-			ended = true;
+			exploded = true;
+			
 		} else {
-			Iterable<Point> squaresToReveal = ar.getSquaresToReveal(grid, x, y);
-			Map<Point, Integer> revealedSquares = new HashMap<Point, Integer>();
-
-			for (Point p : squaresToReveal) {
-				grid[p.x][p.y].reveal();
-
-				int mines = ((NormalSquare) grid[p.x][p.y])
-						.getNumOfMinesAround();
-
-				revealedSquares.put(p, mines);
-			}
-			event = new SquareRevealedEvent(x, y, revealedSquares.entrySet());
+			Iterable<Entry<Point, Integer>> revealed = ar.revealSquares(grid, x, y);
+			event = new SquareRevealedEvent(x, y, revealed);
 		}
-
 		fireChangedEvent(event);
 	}
 
@@ -92,8 +81,10 @@ public class Grid extends Observable implements IGrid {
 
 	@Override
 	public void toggleMark(int x, int y) {
-		grid[x][y].toggleMark();
-		fireChangedEvent(new ToggleMarkEvent(x, y));
+		if(!grid[x][y].isRevealed()){
+			grid[x][y].toggleMark();
+			fireChangedEvent(new ToggleMarkEvent(x, y));
+		}
 	}
 
 	private void fireChangedEvent(Event event) {
@@ -102,8 +93,7 @@ public class Grid extends Observable implements IGrid {
 	}
 
 	@Override
-	public boolean gameHasEnded() {
-		return ended;
+	public boolean hasExploded() {
+		return exploded;
 	}
-
 }
