@@ -18,5 +18,4 @@ public interface IMineController extends Observer {
 	public void addListenersToButtons();
 
 	public void update(Observable obj, Object hint);
-
 }

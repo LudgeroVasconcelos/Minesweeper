@@ -19,4 +19,6 @@ public interface IGrid {
 	public boolean isMarked(int x, int y);
 
 	public void addObserver(Observer observer);
+
+	public boolean gameHasEnded();
 }

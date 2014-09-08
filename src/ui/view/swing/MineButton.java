@@ -12,14 +12,13 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 
+import minesweeper.MineProperties;
+
 @SuppressWarnings("serial")
 public class MineButton extends JButton {
 
 	private final int x, y;
 	private boolean flagged;
-
-	private ActionListener al;
-	private MouseListener ml;
 	private Graphics2D g2;
 
 	public MineButton(int x, int y, Graphics g2) {
@@ -33,14 +32,6 @@ public class MineButton extends JButton {
 	public void addListeners(ActionListener al, MouseListener ml) {
 		addActionListener(al);
 		addMouseListener(ml);
-
-		this.al = al;
-		this.ml = ml;
-	}
-
-	public void removeListeners() {
-		removeActionListener(al);
-		removeMouseListener(ml);
 	}
 
 	public int getPosX() {
@@ -53,7 +44,7 @@ public class MineButton extends JButton {
 
 	public void toggleFlag() {
 		if (!flagged)
-			setIcon(MineButtonProperties.getInstance().getFlagIcon());
+			setIcon(MineProperties.INSTANCE.FLAG_ICON);
 		else
 			setIcon(null);
 
@@ -80,11 +71,11 @@ public class MineButton extends JButton {
 	}
 
 	public void setMine() {
-		drawImage(MineButtonProperties.getInstance().getMineImage());
+		drawImage(MineProperties.INSTANCE.MINE_IMAGE);
 	}
 
 	public void setCross() {
-		drawImage(MineButtonProperties.getInstance().getCrossImage());
+		drawImage(MineProperties.INSTANCE.CROSS_IMAGE);
 	}
 
 	private void drawNumber(int n) {
@@ -95,7 +86,7 @@ public class MineButton extends JButton {
 
 		Point centerPos = getTextCenterPos(fm, minesString);
 
-		Color c = MineButtonProperties.getInstance().getColor(n);
+		Color c = (MineProperties.INSTANCE.COLORS)[n - 1];
 		g2.setColor(c);
 		g2.drawString(minesString, centerPos.x, centerPos.y);
 	}

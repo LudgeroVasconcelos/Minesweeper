@@ -18,6 +18,7 @@ public class Minesweeper implements MineFacade {
 				MineProperties.INSTANCE.NUMBER_OF_MINES), new RevealUntilNum());
 	}
 
+	
 	@Override
 	public void clearGrid() {
 		grid.clearGrid();
@@ -25,16 +26,18 @@ public class Minesweeper implements MineFacade {
 
 	@Override
 	public void reveal(int x, int y) {
+		if(grid.gameHasEnded())
+			return;
+		
 		if (!grid.isFilled()) {
 			grid.fill(x, y);
 		}
-
 		grid.reveal(x, y);
 	}
 
 	@Override
 	public void toggleMark(int x, int y) {
-		if (grid.isFilled())
+		if (grid.isFilled() && !grid.gameHasEnded())
 			grid.toggleMark(x, y);
 	}
 
@@ -42,5 +45,4 @@ public class Minesweeper implements MineFacade {
 	public void addObserver(Observer observer) {
 		grid.addObserver(observer);
 	}
-
 }

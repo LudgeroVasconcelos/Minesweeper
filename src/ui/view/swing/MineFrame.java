@@ -8,14 +8,16 @@ import java.util.Map.Entry;
 
 import javax.swing.JFrame;
 
+import minesweeper.MineProperties;
+
 @SuppressWarnings("serial")
 public class MineFrame extends JFrame {
 
 	private GridPanel grid;
 
 	public MineFrame(int rows, int columns) {
-		int width = MineButtonProperties.getInstance().getWidth() * columns;
-		int height = MineButtonProperties.getInstance().getHeight() * rows;
+		int width = MineProperties.INSTANCE.BUTTON_WIDTH * columns;
+		int height = MineProperties.INSTANCE.BUTTON_HEIGHT * rows;
 
 		grid = new GridPanel(rows, columns, width, height);
 
@@ -43,7 +45,7 @@ public class MineFrame extends JFrame {
 		grid.toggleFlag(x, y);
 	}
 
-	public void endGame(int x, int y, boolean[][] mines) {
+	public void endGame(int x, int y, Iterable<Point> mines) {
 		grid.endGame(x, y, mines);
 	}
 

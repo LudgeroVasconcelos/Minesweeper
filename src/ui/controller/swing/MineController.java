@@ -59,7 +59,6 @@ public class MineController implements IMineController {
 				mineHandler.reveal(button.getPosX(), button.getPosY());
 			}
 		};
-
 	}
 
 	@Override
@@ -85,7 +84,7 @@ public class MineController implements IMineController {
 		mineFrame.toggleFlag(x, y);
 	}
 
-	private void endGame(int x, int y, boolean[][] mines) {
+	private void endGame(int x, int y, Iterable<Point> mines) {
 		mineFrame.endGame(x, y, mines);
 	}
 

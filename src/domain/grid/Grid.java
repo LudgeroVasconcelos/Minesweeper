@@ -1,7 +1,9 @@
 package domain.grid;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 
@@ -16,6 +18,7 @@ public class Grid extends Observable implements IGrid {
 
 	private Square[][] grid;
 	private boolean filled;
+	private boolean ended;
 	private IFill filler;
 	private IReveal ar;
 
@@ -51,14 +54,13 @@ public class Grid extends Observable implements IGrid {
 	@Override
 	public void reveal(int x, int y) {
 		if (grid[x][y].isMarked())
-			return;
 
 		grid[x][y].reveal();
-
+		
 		Event event;
 		if (grid[x][y] instanceof MinedSquare) {
 			event = new GameOverEvent(x, y, getMines());
-
+			ended = true;
 		} else {
 			Iterable<Point> squaresToReveal = ar.getSquaresToReveal(grid, x, y);
 			Map<Point, Integer> revealedSquares = new HashMap<Point, Integer>();
@@ -71,20 +73,19 @@ public class Grid extends Observable implements IGrid {
 
 				revealedSquares.put(p, mines);
 			}
-
 			event = new SquareRevealedEvent(x, y, revealedSquares.entrySet());
 		}
 
 		fireChangedEvent(event);
 	}
 
-	private boolean[][] getMines() {
-		boolean[][] mines = new boolean[grid.length][grid[0].length];
+	private List<Point> getMines() {
+		List<Point> mines = new ArrayList<Point>();
 
 		for (int i = 0; i < grid.length; i++)
 			for (int j = 0; j < grid[i].length; j++)
 				if (grid[i][j] instanceof MinedSquare)
-					mines[i][j] = true;
+					mines.add(new Point(i, j));
 
 		return mines;
 	}
@@ -102,13 +103,17 @@ public class Grid extends Observable implements IGrid {
 	@Override
 	public void toggleMark(int x, int y) {
 		grid[x][y].toggleMark();
-
 		fireChangedEvent(new ToggleMarkEvent(x, y));
 	}
 
 	private void fireChangedEvent(Event event) {
 		setChanged();
 		notifyObservers(event);
+	}
+
+	@Override
+	public boolean gameHasEnded() {
+		return ended;
 	}
 
 }
