@@ -42,7 +42,7 @@ public enum MineProperties {
 
 		ROWS = parseInt("rows", 20);
 		COLUMNS = parseInt("columns", 20);
-		NUMBER_OF_MINES = parseInt("number_of_mines", 20);
+		NUMBER_OF_MINES = parseInt("number_of_mines", 70);
 
 		BUTTON_WIDTH = parseInt("button_width", 25);
 		BUTTON_HEIGHT = parseInt("button_height", 25);
