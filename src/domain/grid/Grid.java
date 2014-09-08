@@ -54,7 +54,7 @@ public class Grid extends Observable implements IGrid {
 	@Override
 	public void reveal(int x, int y) {
 		if (grid[x][y].isMarked())
-
+			return ;
 		grid[x][y].reveal();
 		
 		Event event;
@@ -88,16 +88,6 @@ public class Grid extends Observable implements IGrid {
 					mines.add(new Point(i, j));
 
 		return mines;
-	}
-
-	@Override
-	public boolean isRevealed(int x, int y) {
-		return grid[x][y].isRevealed();
-	}
-
-	@Override
-	public boolean isMarked(int x, int y) {
-		return grid[x][y].isMarked();
 	}
 
 	@Override
