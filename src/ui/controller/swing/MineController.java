@@ -20,7 +20,7 @@ import domain.events.ToggleMarkEvent;
 
 public class MineController implements IMineController {
 
-	MineFacade mineHandler; // domain
+	MineFacade mineHandler;	// domain
 	MineFrame mineFrame; 	// ui
 
 	public MineController(MineFacade mineHandler, MineFrame mineFrame) {
@@ -53,6 +53,7 @@ public class MineController implements IMineController {
 	public MouseAdapter squaresListener() {
 		return new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
+				
 				if (SwingUtilities.isRightMouseButton(e)) {
 					int y = e.getX() / MineProperties.INSTANCE.BUTTON_WIDTH;
 					int x = e.getY() / MineProperties.INSTANCE.BUTTON_HEIGHT;

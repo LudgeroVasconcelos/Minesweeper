@@ -91,6 +91,10 @@ public class MineButton {
 		drawImage(MineProperties.INSTANCE.CROSS_IMAGE);
 	}
 
+	private void drawImage(Image img) {
+		g2.drawImage(img, coordX, coordY, width, height, null);
+	}
+
 	private void drawNumber(int n) {
 		String minesString = String.valueOf(n);
 
@@ -112,9 +116,5 @@ public class MineButton {
 		int y = coordY + ((height - textHeight) / 2) + fm.getAscent();
 
 		return new Point(x, y);
-	}
-
-	private void drawImage(Image img) {
-		g2.drawImage(img, coordX, coordY, width, height, null);
 	}
 }

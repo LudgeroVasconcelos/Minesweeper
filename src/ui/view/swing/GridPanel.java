@@ -36,6 +36,7 @@ public class GridPanel extends JPanel {
 	private void addMineButtons(int width, int height) {
 		int coordX = 0, coordY = 0;
 		Graphics g = state.getGraphics();
+		
 		for (int i = 0; i < buttons.length; i++) {
 			for (int j = 0; j < buttons[i].length; j++) {
 				buttons[i][j] = new MineButton(i, j, coordY, coordX, width,
@@ -85,7 +86,6 @@ public class GridPanel extends JPanel {
 			} else
 				flaggedButtons.remove(p);
 		}
-
 		for (Point p : flaggedButtons) {
 			buttons[p.x][p.y].reveal(0);
 			buttons[p.x][p.y].setMine();
