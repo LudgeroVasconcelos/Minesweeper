@@ -1,7 +1,7 @@
 package domain.reveal;
 
 import java.awt.Point;
-import java.util.Map.Entry;
+import java.util.Map;
 
 import domain.grid.Square;
 
@@ -16,6 +16,6 @@ public interface IReveal {
 	 * @param y
 	 * @return
 	 */
-	public Iterable<Entry<Point, Integer>> revealSquares(Square[][] grid,
+	public Map<Point, Integer> revealSquares(Square[][] grid,
 			int x, int y);
 }

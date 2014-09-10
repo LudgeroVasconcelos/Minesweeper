@@ -33,6 +33,7 @@ public class UpperPanel extends JPanel {
 		setBorder(new CompoundBorder(
 				BorderFactory.createBevelBorder(BevelBorder.RAISED),
 				BorderFactory.createBevelBorder(BevelBorder.LOWERED)));
+		
 		JPanel timerPanel = new JPanel();
 		timer = new JLabel();
 		setLabelOptions(timer);
@@ -44,14 +45,14 @@ public class UpperPanel extends JPanel {
 		smile = new JButton();
 		smile.setBackground(new Color(210, 210, 210));
 		smile.setPreferredSize(new Dimension(40, 40));
-		setHappyFace();
+		setFace(MineProperties.INSTANCE.SMILE_IMAGE);
 		smilePanel.add(smile);
 		add(smilePanel);
 
 		JPanel minesPanel = new JPanel();
 		remainingMines = new JLabel();
 		setLabelOptions(remainingMines);
-		setNumberOfRemainingMines(MineProperties.INSTANCE.NUMBER_OF_MINES);
+		setRemainingMines(MineProperties.INSTANCE.NUMBER_OF_MINES);
 		minesPanel.add(remainingMines);
 		add(minesPanel);
 	}
@@ -60,7 +61,36 @@ public class UpperPanel extends JPanel {
 		smile.addActionListener(clearGrid);
 	}
 
-	public void startTimer() {
+	public void startGame(){
+		startTimer();
+	}
+	
+	public void setRemainingMines(int mines) {
+		String s = String.valueOf(mines);
+		s = mines > 99 ? s
+				: mines > 9 ? "0" + s : mines < 0 ? "000" : "00" + s;
+		remainingMines.setText(s);
+	}
+
+	public void gameWon() {
+		setFace(MineProperties.INSTANCE.SMILE_HAPPY_IMAGE);
+		stopTimer();
+		setRemainingMines(0);
+	}
+
+	public void gameOver() {
+		stopTimer();
+		setFace(MineProperties.INSTANCE.SMILE_SAD_IMAGE);
+	}
+
+	public void clear() {
+		stopTimer();
+		resetTimer();
+		setRemainingMines(MineProperties.INSTANCE.NUMBER_OF_MINES);
+		setFace(MineProperties.INSTANCE.SMILE_IMAGE);
+	}
+
+	private void startTimer() {
 		t = new Timer();
 		TimerTask tt = new TimerTask() {
 
@@ -77,23 +107,20 @@ public class UpperPanel extends JPanel {
 		};
 		t.schedule(tt, 0, 1000);
 	}
-
-	public void stopTimer() {
+	
+	private void resetTimer() {
+		timer.setText("000");
+	}
+	
+	private void stopTimer() {
 		if (t != null)
 			t.cancel();
 	}
-
-	public void resetTimer() {
-		timer.setText("000");
+	
+	private void setFace(Image face) {
+		smile.setIcon(new ImageIcon(face.getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
 	}
-
-	public void setNumberOfRemainingMines(int mines) {
-		String s = String.valueOf(mines);
-		s = mines > 99 ? s
-				: mines > 9 ? "0" + s : mines < 0 ? "000" : "00" + s;
-		remainingMines.setText(s);
-	}
-
+	
 	private void setLabelOptions(JLabel label) {
 		label.setBorder(BasicBorders.getTextFieldBorder());
 		label.setFont(MineProperties.INSTANCE.DIGITAL_FONT);
@@ -101,14 +128,4 @@ public class UpperPanel extends JPanel {
 		label.setBackground(Color.BLACK);
 		label.setOpaque(true);
 	}
-
-	public void setSadFace() {
-		smile.setIcon(new ImageIcon(MineProperties.INSTANCE.SMILE_SAD_IMAGE.getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
-	}
-
-	public void setHappyFace() {
-		smile.setIcon(new ImageIcon(MineProperties.INSTANCE.SMILE_IMAGE.getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
-		
-	}
-
 }

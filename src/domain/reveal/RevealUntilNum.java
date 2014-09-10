@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Stack;
 
 import minesweeper.MineProperties;
@@ -20,7 +19,7 @@ public class RevealUntilNum implements IReveal {
 	 * @see domain.reveal.IReveal#revealSquares(domain.grid.Square[][], int, int)
 	 */
 	@Override
-	public Iterable<Entry<Point, Integer>> revealSquares(Square[][] grid, int x, int y) {
+	public Map<Point, Integer> revealSquares(Square[][] grid, int x, int y) {
 		// iterative DFS
 
 		Map<Point, Integer> map = new HashMap<Point, Integer>();
@@ -46,7 +45,7 @@ public class RevealUntilNum implements IReveal {
 				}
 			}
 		}
-		return map.entrySet();
+		return map;
 	}
 
 	private List<Point> getSquaresAround(Square[][] grid, int x, int y) {
@@ -57,8 +56,7 @@ public class RevealUntilNum implements IReveal {
 		for (int i = x - 1; i <= x + 1; i++)
 			for (int j = y - 1; j <= y + 1; j++)
 				if (i >= 0 && i < rows && j >= 0 && j < columns)
-					if (!(i == x && j == y))
-						if (!grid[i][j].isMarked())
+						if (!grid[i][j].isMarked() && !grid[i][j].isRevealed())
 							list.add(new Point(i, j));
 
 		return list;

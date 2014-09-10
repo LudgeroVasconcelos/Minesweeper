@@ -87,7 +87,7 @@ public class GridPanel extends JPanel {
 		repaint();
 	}
 	
-	public void endGame(int x, int y, Iterable<Point> mines) {
+	public void gameOver(int x, int y, Iterable<Point> mines) {
 		for (Point p : mines) {
 			if(p.x == x && p.y == y){
 				buttons[x][y].exploded();
@@ -103,6 +103,13 @@ public class GridPanel extends JPanel {
 			buttons[p.x][p.y].reveal(0);
 			buttons[p.x][p.y].setMine();
 			buttons[p.x][p.y].setCross();
+		}
+		repaint();
+	}
+
+	public void gameWon(Iterable<Point> unmarkedSquares) {
+		for(Point p : unmarkedSquares){
+			buttons[p.x][p.y].toggleFlag();
 		}
 		repaint();
 	}

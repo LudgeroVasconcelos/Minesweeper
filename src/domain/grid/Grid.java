@@ -3,12 +3,14 @@ package domain.grid;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
+import java.util.Map;
 import java.util.Observable;
 
+import minesweeper.MineProperties;
 import domain.events.ClearEvent;
 import domain.events.Event;
 import domain.events.GameOverEvent;
+import domain.events.GameWonEvent;
 import domain.events.SquareRevealedEvent;
 import domain.events.StartGameEvent;
 import domain.events.ToggleMarkEvent;
@@ -19,10 +21,11 @@ public class Grid extends Observable implements IGrid {
 
 	private Square[][] grid;
 	private boolean filled;
-	private boolean exploded;
+	private boolean gameEnded;
 	private IFill filler;
 	private IReveal ar;
-	private int flaggedMines;
+	private int flaggedSquares;
+	private int revealedSquares;
 
 	public Grid(IFill filler, IReveal ar) {
 		this.filler = filler;
@@ -44,9 +47,10 @@ public class Grid extends Observable implements IGrid {
 	@Override
 	public void clearGrid() {
 		filled = false;
-		exploded = false;
+		gameEnded = false;
 		grid = null;
-		flaggedMines = 0;
+		flaggedSquares = 0;
+		revealedSquares = 0;
 		fireChangedEvent(new ClearEvent());
 	}
 
@@ -57,22 +61,56 @@ public class Grid extends Observable implements IGrid {
 	 */
 	@Override
 	public void reveal(int x, int y) {
-		if (grid[x][y].isMarked())
+		if (grid[x][y].isMarked() || grid[x][y].isRevealed())
 			return;
-
-		grid[x][y].reveal();
 
 		Event event;
 		if (grid[x][y] instanceof MinedSquare) {
 			event = new GameOverEvent(x, y, getMines());
-			exploded = true;
+			gameEnded = true;
 
 		} else {
-			Iterable<Entry<Point, Integer>> revealed = ar.revealSquares(grid,
-					x, y);
-			event = new SquareRevealedEvent(x, y, revealed);
+			Map<Point, Integer> revealed = ar.revealSquares(grid, x, y);
+			event = new SquareRevealedEvent(x, y, revealed.entrySet());
+			revealedSquares += revealed.size();
 		}
 		fireChangedEvent(event);
+
+		if (MineProperties.INSTANCE.COLUMNS * MineProperties.INSTANCE.ROWS
+				- revealedSquares == MineProperties.INSTANCE.NUMBER_OF_MINES) {
+			gameEnded = true;
+			fireChangedEvent(new GameWonEvent(getSquaresLeft()));
+		}
+	}
+
+	@Override
+	public void toggleMark(int x, int y) {
+		if (!grid[x][y].isRevealed()) {
+			grid[x][y].toggleMark();
+
+			if (grid[x][y].isMarked())
+				flaggedSquares++;
+			else
+				flaggedSquares--;
+
+			fireChangedEvent(new ToggleMarkEvent(x, y, flaggedSquares));
+		}
+	}
+
+	@Override
+	public boolean hasEnded() {
+		return gameEnded;
+	}
+
+	private List<Point> getSquaresLeft() {
+		List<Point> unmarked = new ArrayList<Point>();
+
+		for (int i = 0; i < grid.length; i++)
+			for (int j = 0; j < grid[i].length; j++)
+				if (!grid[i][j].isMarked() && !grid[i][j].isRevealed())
+					unmarked.add(new Point(i, j));
+
+		return unmarked;
 	}
 
 	private List<Point> getMines() {
@@ -85,22 +123,7 @@ public class Grid extends Observable implements IGrid {
 
 		return mines;
 	}
-
-	@Override
-	public void toggleMark(int x, int y) {
-		if (!grid[x][y].isRevealed()) {
-			grid[x][y].toggleMark();
-			flaggedMines = grid[x][y].isMarked() ? flaggedMines + 1
-					: flaggedMines - 1;
-			fireChangedEvent(new ToggleMarkEvent(x, y, flaggedMines));
-		}
-	}
-
-	@Override
-	public boolean hasExploded() {
-		return exploded;
-	}
-
+	
 	private void fireChangedEvent(Event event) {
 		setChanged();
 		notifyObservers(event);

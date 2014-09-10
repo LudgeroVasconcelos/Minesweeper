@@ -39,21 +39,18 @@ public class MineFrame extends JFrame {
 
 	public void toggleFlag(int x, int y, int flaggedMines) {
 		grid.toggleFlag(x, y);
-		upper.setNumberOfRemainingMines(MineProperties.INSTANCE.NUMBER_OF_MINES - flaggedMines);
+		upper.setRemainingMines(MineProperties.INSTANCE.NUMBER_OF_MINES
+				- flaggedMines);
 	}
 
 	public void clearGrid() {
 		grid.clear();
-		upper.stopTimer();
-		upper.resetTimer();
-		upper.setNumberOfRemainingMines(MineProperties.INSTANCE.NUMBER_OF_MINES);
-		upper.setHappyFace();
+		upper.clear();
 	}
-	
-	public void endGame(int x, int y, Iterable<Point> mines) {
-		grid.endGame(x, y, mines);
-		upper.stopTimer();
-		upper.setSadFace();
+
+	public void gameOver(int x, int y, Iterable<Point> mines) {
+		grid.gameOver(x, y, mines);
+		upper.gameOver();
 	}
 
 	public void addSquaresListener(MouseListener squaresListener) {
@@ -65,6 +62,11 @@ public class MineFrame extends JFrame {
 	}
 
 	public void startGame() {
-		upper.startTimer();
+		upper.startGame();
+	}
+
+	public void gameWon(Iterable<Point> unmarkedSquares) {
+		grid.gameWon(unmarkedSquares);
+		upper.gameWon();
 	}
 }

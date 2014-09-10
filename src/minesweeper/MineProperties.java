@@ -24,6 +24,7 @@ public enum MineProperties {
 	public Image FLAG_IMAGE;
 	public Image SMILE_IMAGE;
 	public Image SMILE_SAD_IMAGE;
+	public Image SMILE_HAPPY_IMAGE;
 
 	public final int BUTTON_WIDTH;
 	public final int BUTTON_HEIGHT;
@@ -89,6 +90,8 @@ public enum MineProperties {
 					"smile_image", "images/smile.png")));
 			SMILE_SAD_IMAGE = ImageIO.read(MineFrame.class.getResource(parseString(
 					"smile_sad_image", "images/smile-sad.png")));
+			SMILE_HAPPY_IMAGE = ImageIO.read(MineFrame.class.getResource(parseString(
+					"smile_happy_image", "images/smile-happy.png")));
 		} catch (IOException e) {
 			System.err.println("Could not load image");
 			// bad luck, no images will be shown.

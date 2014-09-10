@@ -15,6 +15,7 @@ import ui.view.swing.MineFrame;
 import domain.MineFacade;
 import domain.events.ClearEvent;
 import domain.events.GameOverEvent;
+import domain.events.GameWonEvent;
 import domain.events.SquareEvent;
 import domain.events.SquareRevealedEvent;
 import domain.events.StartGameEvent;
@@ -85,13 +86,17 @@ public class MineController implements IMineController {
 		mineFrame.clearGrid();
 	}
 
-	private void endGame(int x, int y, Iterable<Point> mines) {
-		mineFrame.endGame(x, y, mines);
+	private void gameOver(int x, int y, Iterable<Point> mines) {
+		mineFrame.gameOver(x, y, mines);
 	}
 	
 
 	private void startGame() {
 		mineFrame.startGame();
+	}
+
+	private void gameWon(Iterable<Point> unmarkedSquares) {
+		mineFrame.gameWon(unmarkedSquares);
 	}
 
 	@Override
@@ -108,7 +113,7 @@ public class MineController implements IMineController {
 				
 			} else if (hint instanceof GameOverEvent) {
 				GameOverEvent goe = (GameOverEvent) hint;
-				endGame(goe.getX(), goe.getY(), goe.getMines());
+				gameOver(goe.getX(), goe.getY(), goe.getMines());
 			}
 		}
 		else if (hint instanceof ClearEvent) {
@@ -116,6 +121,10 @@ public class MineController implements IMineController {
 		}
 		else if (hint instanceof StartGameEvent){
 			startGame();
+		}
+		else if (hint instanceof GameWonEvent){
+			GameWonEvent gwe = (GameWonEvent) hint;
+			gameWon(gwe.getUnmarkedSquares());
 		}
 	}
 }

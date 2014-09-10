@@ -29,13 +29,13 @@ public class Minesweeper implements MineFacade {
 		if (!grid.isFilled())
 			grid.fill(x, y);
 		
-		if(!grid.hasExploded())
+		if(!grid.hasEnded())
 			grid.reveal(x, y);
 	}
 
 	@Override
 	public void toggleMark(int x, int y) {
-		if (grid.isFilled() && !grid.hasExploded())
+		if (grid.isFilled() && !grid.hasEnded())
 			grid.toggleMark(x, y);
 	}
 

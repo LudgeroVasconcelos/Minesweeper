@@ -16,5 +16,5 @@ public interface IGrid {
 
 	public void addObserver(Observer observer);
 
-	public boolean hasExploded();
+	public boolean hasEnded();
 }
