@@ -31,7 +31,7 @@ public class MineButton {
 		this.height = height;
 
 		this.g2 = (Graphics2D) g2;
-		setBackGround();
+		paint();
 	}
 
 	public int getPosX() {
@@ -46,14 +46,14 @@ public class MineButton {
 		if (!flagged)
 			drawImage(MineProperties.INSTANCE.FLAG_IMAGE);
 		else
-			setBackGround();
+			paint();
 
 		flagged = !flagged;
 	}
 
-	private void setBackGround() {
+	private void paint() {
 		g2.setStroke(new BasicStroke(2));
-		g2.setColor(new Color(220, 220, 220));
+		g2.setColor(new Color(210, 210, 210));
 		g2.fillRect(coordX, coordY, width, height);
 		g2.setColor(new Color(255, 255, 255));
 		g2.drawLine(coordX, coordY + 1, coordX + width, coordY + 1);
@@ -89,6 +89,11 @@ public class MineButton {
 
 	public void setCross() {
 		drawImage(MineProperties.INSTANCE.CROSS_IMAGE);
+	}
+	
+	public void clear() {
+		flagged = false;
+		paint();
 	}
 
 	private void drawImage(Image img) {

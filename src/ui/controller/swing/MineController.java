@@ -13,9 +13,11 @@ import javax.swing.SwingUtilities;
 import minesweeper.MineProperties;
 import ui.view.swing.MineFrame;
 import domain.MineFacade;
+import domain.events.ClearEvent;
 import domain.events.GameOverEvent;
 import domain.events.SquareEvent;
 import domain.events.SquareRevealedEvent;
+import domain.events.StartGameEvent;
 import domain.events.ToggleMarkEvent;
 
 public class MineController implements IMineController {
@@ -36,6 +38,7 @@ public class MineController implements IMineController {
 	@Override
 	public void addListeners() {
 		mineFrame.addSquaresListener(squaresListener());
+		mineFrame.addSmileListener(clearGrid());
 	}
 
 	@Override
@@ -74,12 +77,21 @@ public class MineController implements IMineController {
 		mineFrame.revealButtons(revealedSquares);
 	}
 
-	private void toggleFlag(int x, int y) {
-		mineFrame.toggleFlag(x, y);
+	private void toggleFlag(int x, int y, int flaggedMines) {
+		mineFrame.toggleFlag(x, y, flaggedMines);
+	}
+	
+	private void clearView(){
+		mineFrame.clearGrid();
 	}
 
 	private void endGame(int x, int y, Iterable<Point> mines) {
 		mineFrame.endGame(x, y, mines);
+	}
+	
+
+	private void startGame() {
+		mineFrame.startGame();
 	}
 
 	@Override
@@ -92,12 +104,18 @@ public class MineController implements IMineController {
 
 			} else if (hint instanceof ToggleMarkEvent) {
 				ToggleMarkEvent tme = (ToggleMarkEvent) hint;
-				toggleFlag(tme.getX(), tme.getY());
-
+				toggleFlag(tme.getX(), tme.getY(), tme.getNumberOfFlaggedMines());
+				
 			} else if (hint instanceof GameOverEvent) {
 				GameOverEvent goe = (GameOverEvent) hint;
 				endGame(goe.getX(), goe.getY(), goe.getMines());
 			}
+		}
+		else if (hint instanceof ClearEvent) {
+			clearView();
+		}
+		else if (hint instanceof StartGameEvent){
+			startGame();
 		}
 	}
 }

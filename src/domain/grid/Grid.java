@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Observable;
 
+import domain.events.ClearEvent;
 import domain.events.Event;
 import domain.events.GameOverEvent;
 import domain.events.SquareRevealedEvent;
+import domain.events.StartGameEvent;
 import domain.events.ToggleMarkEvent;
 import domain.fill.IFill;
 import domain.reveal.IReveal;
@@ -20,6 +22,7 @@ public class Grid extends Observable implements IGrid {
 	private boolean exploded;
 	private IFill filler;
 	private IReveal ar;
+	private int flaggedMines;
 
 	public Grid(IFill filler, IReveal ar) {
 		this.filler = filler;
@@ -35,6 +38,7 @@ public class Grid extends Observable implements IGrid {
 	public void fill(int x, int y) {
 		this.grid = filler.fillGrid(x, y);
 		filled = true;
+		fireChangedEvent(new StartGameEvent());
 	}
 
 	@Override
@@ -42,6 +46,8 @@ public class Grid extends Observable implements IGrid {
 		filled = false;
 		exploded = false;
 		grid = null;
+		flaggedMines = 0;
+		fireChangedEvent(new ClearEvent());
 	}
 
 	/*
@@ -53,16 +59,17 @@ public class Grid extends Observable implements IGrid {
 	public void reveal(int x, int y) {
 		if (grid[x][y].isMarked())
 			return;
-		
+
 		grid[x][y].reveal();
-		
+
 		Event event;
 		if (grid[x][y] instanceof MinedSquare) {
 			event = new GameOverEvent(x, y, getMines());
 			exploded = true;
-			
+
 		} else {
-			Iterable<Entry<Point, Integer>> revealed = ar.revealSquares(grid, x, y);
+			Iterable<Entry<Point, Integer>> revealed = ar.revealSquares(grid,
+					x, y);
 			event = new SquareRevealedEvent(x, y, revealed);
 		}
 		fireChangedEvent(event);
@@ -81,19 +88,21 @@ public class Grid extends Observable implements IGrid {
 
 	@Override
 	public void toggleMark(int x, int y) {
-		if(!grid[x][y].isRevealed()){
+		if (!grid[x][y].isRevealed()) {
 			grid[x][y].toggleMark();
-			fireChangedEvent(new ToggleMarkEvent(x, y));
+			flaggedMines = grid[x][y].isMarked() ? flaggedMines + 1
+					: flaggedMines - 1;
+			fireChangedEvent(new ToggleMarkEvent(x, y, flaggedMines));
 		}
-	}
-
-	private void fireChangedEvent(Event event) {
-		setChanged();
-		notifyObservers(event);
 	}
 
 	@Override
 	public boolean hasExploded() {
 		return exploded;
+	}
+
+	private void fireChangedEvent(Event event) {
+		setChanged();
+		notifyObservers(event);
 	}
 }

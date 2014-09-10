@@ -2,6 +2,7 @@ package ui.view.swing;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.HashSet;
@@ -15,7 +16,7 @@ import minesweeper.MineProperties;
 @SuppressWarnings("serial")
 public class GridPanel extends JPanel {
 
-	private final MineButton[][] buttons;
+	private MineButton[][] buttons;
 	private BufferedImage state;
 
 	private Set<Point> flaggedButtons; // helps to display mines faster
@@ -26,7 +27,7 @@ public class GridPanel extends JPanel {
 		int height = MineProperties.INSTANCE.BUTTON_HEIGHT * rows;
 		setPreferredSize(new Dimension(width, height));
 
-		state = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		state = new BufferedImage(width, height, Image.SCALE_SMOOTH);
 		flaggedButtons = new HashSet<Point>();
 		buttons = new MineButton[rows][columns];
 		addMineButtons(MineProperties.INSTANCE.BUTTON_WIDTH,
@@ -74,6 +75,18 @@ public class GridPanel extends JPanel {
 		repaint();
 	}
 
+
+	public void clear() {
+		flaggedButtons.clear();
+		
+		for(int i = 0; i < buttons.length; i++){
+			for(int j = 0; j < buttons[i].length; j++){
+				buttons[i][j].clear();
+			}
+		}
+		repaint();
+	}
+	
 	public void endGame(int x, int y, Iterable<Point> mines) {
 		for (Point p : mines) {
 			if(p.x == x && p.y == y){
