@@ -3,8 +3,6 @@ package minesweeper;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -30,7 +28,7 @@ public enum MineProperties {
 	public final int BUTTON_HEIGHT;
 
 	public final Color[] COLORS;
-	
+
 	public final Font DIGITAL_FONT;
 
 	private Properties mineProperties;
@@ -38,10 +36,12 @@ public enum MineProperties {
 	MineProperties() {
 		String propertiesFileName = "minesweeper.properties";
 		mineProperties = new Properties();
-		
+
 		try {
-			mineProperties.load(new FileInputStream(propertiesFileName));
+			mineProperties.load(getClass().getResourceAsStream(
+					propertiesFileName));
 		} catch (Exception e) {
+			System.out.println("not found");
 			// It was not able to load properties file.
 			// Bad luck, proceed with the default values
 		}
@@ -64,17 +64,15 @@ public enum MineProperties {
 		COLORS[7] = new Color(parseInt("8", 0));
 
 		String digitalFont = parseString("digital_font", "font/digital-7.ttf");
-		String fontPath = "src/ui/view/swing/" + digitalFont;
-		if(!new File(fontPath).exists())
-			fontPath = digitalFont + "ui/view/swing/" + digitalFont;
 		Font font;
 		try {
-			font = Font.createFont(Font.TRUETYPE_FONT, new File(fontPath));
+			font = Font.createFont(Font.TRUETYPE_FONT,
+					MineFrame.class.getResourceAsStream(digitalFont));
 		} catch (Exception e) {
 			font = new Font("Dialog", Font.BOLD, 30);
 		}
 		DIGITAL_FONT = font.deriveFont(60f);
-		
+
 		loadImages();
 	}
 
@@ -88,10 +86,12 @@ public enum MineProperties {
 					"flag_image", "images/RedFlag.png")));
 			SMILE_IMAGE = ImageIO.read(MineFrame.class.getResource(parseString(
 					"smile_image", "images/smile.png")));
-			SMILE_SAD_IMAGE = ImageIO.read(MineFrame.class.getResource(parseString(
-					"smile_sad_image", "images/smile-sad.png")));
-			SMILE_HAPPY_IMAGE = ImageIO.read(MineFrame.class.getResource(parseString(
-					"smile_happy_image", "images/smile-happy.png")));
+			SMILE_SAD_IMAGE = ImageIO.read(MineFrame.class
+					.getResource(parseString("smile_sad_image",
+							"images/smile-sad.png")));
+			SMILE_HAPPY_IMAGE = ImageIO.read(MineFrame.class
+					.getResource(parseString("smile_happy_image",
+							"images/smile-happy.png")));
 		} catch (IOException e) {
 			System.err.println("Could not load image");
 			// bad luck, no images will be shown.

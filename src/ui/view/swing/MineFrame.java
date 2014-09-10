@@ -23,7 +23,6 @@ public class MineFrame extends JFrame {
 		setLayout(new BorderLayout());
 		setTitle("Minesweeper");
 		setResizable(false);
-
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		add(grid, BorderLayout.CENTER);
