@@ -27,6 +27,8 @@ public class UpperPanel extends JPanel {
 	private JLabel timer;
 
 	private Timer t;
+	
+	private boolean ended;
 
 	public UpperPanel() {
 		setLayout(new GridLayout(1, 3));
@@ -76,11 +78,13 @@ public class UpperPanel extends JPanel {
 		setFace(MineProperties.INSTANCE.SMILE_HAPPY_IMAGE);
 		stopTimer();
 		setRemainingMines(0);
+		ended = true;
 	}
 
 	public void gameOver() {
 		stopTimer();
 		setFace(MineProperties.INSTANCE.SMILE_SAD_IMAGE);
+		ended = true;
 	}
 
 	public void clear() {
@@ -88,8 +92,19 @@ public class UpperPanel extends JPanel {
 		resetTimer();
 		setRemainingMines(MineProperties.INSTANCE.NUMBER_OF_MINES);
 		setFace(MineProperties.INSTANCE.SMILE_IMAGE);
+		ended = false;
 	}
 
+	public void mousePressed() {
+		if(!ended)
+			setFace(MineProperties.INSTANCE.SMILE_SURPRISED_IMAGE);
+	}
+	
+	public void mouseReleased() {
+		if(!ended)
+			setFace(MineProperties.INSTANCE.SMILE_IMAGE);
+	}
+	
 	private void startTimer() {
 		t = new Timer();
 		TimerTask tt = new TimerTask() {

@@ -68,4 +68,12 @@ public class MineFrame extends JFrame {
 		grid.gameWon(unmarkedSquares);
 		upper.gameWon();
 	}
+
+	public void mousePressed() {
+		upper.mousePressed();
+	}
+	
+	public void mouseReleased() {
+		upper.mouseReleased();
+	}
 }

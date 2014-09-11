@@ -23,6 +23,7 @@ public enum MineProperties {
 	public Image SMILE_IMAGE;
 	public Image SMILE_SAD_IMAGE;
 	public Image SMILE_HAPPY_IMAGE;
+	public Image SMILE_SURPRISED_IMAGE;
 
 	public final int BUTTON_WIDTH;
 	public final int BUTTON_HEIGHT;
@@ -41,7 +42,6 @@ public enum MineProperties {
 			mineProperties.load(getClass().getResourceAsStream(
 					propertiesFileName));
 		} catch (Exception e) {
-			System.out.println("not found");
 			// It was not able to load properties file.
 			// Bad luck, proceed with the default values
 		}
@@ -73,10 +73,6 @@ public enum MineProperties {
 		}
 		DIGITAL_FONT = font.deriveFont(60f);
 
-		loadImages();
-	}
-
-	private void loadImages() {
 		try {
 			MINE_IMAGE = ImageIO.read(MineFrame.class.getResource(parseString(
 					"mine_image", "images/Mine.png")));
@@ -92,6 +88,9 @@ public enum MineProperties {
 			SMILE_HAPPY_IMAGE = ImageIO.read(MineFrame.class
 					.getResource(parseString("smile_happy_image",
 							"images/smile-happy.png")));
+			SMILE_SURPRISED_IMAGE = ImageIO.read(MineFrame.class
+					.getResource(parseString("smile_surprised_image",
+							"images/smile-surprised.png")));
 		} catch (IOException e) {
 			System.err.println("Could not load image");
 			// bad luck, no images will be shown.

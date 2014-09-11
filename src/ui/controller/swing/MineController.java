@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Map.Entry;
 import java.util.Observable;
 
@@ -54,22 +55,32 @@ public class MineController implements IMineController {
 	}
 
 	@Override
-	public MouseAdapter squaresListener() {
+	public MouseListener squaresListener() {
 		return new MouseAdapter() {
+			
 			public void mousePressed(MouseEvent e) {
-				
 				if (SwingUtilities.isRightMouseButton(e)) {
-					int y = e.getX() / MineProperties.INSTANCE.BUTTON_WIDTH;
-					int x = e.getY() / MineProperties.INSTANCE.BUTTON_HEIGHT;
-
-					mineHandler.toggleMark(x, y);
+					Point p = getPoint(e.getX(), e.getY());
+					mineHandler.toggleMark(p.x, p.y);
 					
 				} else if (SwingUtilities.isLeftMouseButton(e)) {
-					int y = e.getX() / MineProperties.INSTANCE.BUTTON_WIDTH;
-					int x = e.getY() / MineProperties.INSTANCE.BUTTON_HEIGHT;
-
-					mineHandler.reveal(x, y);
+					mineFrame.mousePressed();
 				}
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				 if (SwingUtilities.isLeftMouseButton(e)) {
+					Point p = getPoint(e.getX(), e.getY());
+					mineHandler.reveal(p.x, p.y);
+				 }
+				 mineFrame.mouseReleased();
+			}
+			
+			public Point getPoint(int coordX, int coordY){
+				int y = coordX / MineProperties.INSTANCE.BUTTON_WIDTH;
+				int x = coordY / MineProperties.INSTANCE.BUTTON_HEIGHT;
+				return new Point(x, y);
 			}
 		};
 	}
