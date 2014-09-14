@@ -15,11 +15,14 @@ public class MineFrame extends JFrame {
 
 	private GridPanel grid;
 	private UpperPanel upper;
+	private MineMenu menu;
 
-	public MineFrame(int rows, int columns) {
-		grid = new GridPanel(rows, columns);
-		upper = new UpperPanel();
+	public MineFrame() {
+		grid = new GridPanel(MineProperties.INSTANCE.ROWS, MineProperties.INSTANCE.COLUMNS);
+		upper = new UpperPanel(MineProperties.INSTANCE.NUMBER_OF_MINES);
+		menu = new MineMenu();
 
+		setJMenuBar(menu);
 		setLayout(new BorderLayout());
 		setTitle("Minesweeper");
 		setResizable(false);
@@ -56,8 +59,9 @@ public class MineFrame extends JFrame {
 		grid.addMouseListener(squaresListener);
 	}
 
-	public void addSmileListener(ActionListener clearGrid) {
-		upper.addSmileListener(clearGrid);
+	public void addClearListener(ActionListener clearGrid) {
+		upper.addClearListener(clearGrid);
+		menu.addClearListener(clearGrid);
 	}
 
 	public void startGame() {
@@ -75,5 +79,17 @@ public class MineFrame extends JFrame {
 	
 	public void mouseReleased() {
 		upper.mouseReleased();
+	}
+
+	public void addMenuListeners(ActionListener quitListener, ActionListener diffListener){
+		menu.addQuitListener(quitListener);
+		menu.addDiffListener(diffListener);
+	}
+
+	public void resizeGrid(int rows, int columns) {
+		grid.resize(rows, columns);
+		pack();
+		repaint();
+		setLocationRelativeTo(null);
 	}
 }

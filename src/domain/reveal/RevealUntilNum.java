@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import minesweeper.MineProperties;
 import domain.grid.NormalSquare;
 import domain.grid.Square;
 
@@ -50,8 +49,8 @@ public class RevealUntilNum implements IReveal {
 
 	private List<Point> getSquaresAround(Square[][] grid, int x, int y) {
 		List<Point> list = new ArrayList<Point>();
-		int rows = MineProperties.INSTANCE.ROWS;
-		int columns = MineProperties.INSTANCE.COLUMNS;
+		int rows = grid.length;
+		int columns = grid[0].length;
 
 		for (int i = x - 1; i <= x + 1; i++)
 			for (int j = y - 1; j <= y + 1; j++)

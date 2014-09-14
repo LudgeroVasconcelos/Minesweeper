@@ -13,9 +13,9 @@ import ui.view.swing.MineFrame;
 public enum MineProperties {
 	INSTANCE;
 
-	public final int ROWS;
-	public final int COLUMNS;
-	public final int NUMBER_OF_MINES;
+	public int ROWS;
+	public int COLUMNS;
+	public int NUMBER_OF_MINES;
 
 	public Image MINE_IMAGE;
 	public Image CROSS_IMAGE;
@@ -46,9 +46,9 @@ public enum MineProperties {
 			// Bad luck, proceed with the default values
 		}
 
-		ROWS = parseInt("rows", 20);
-		COLUMNS = parseInt("columns", 20);
-		NUMBER_OF_MINES = parseInt("number_of_mines", 70);
+		ROWS = parseInt("rows", 16);
+		COLUMNS = parseInt("columns", 16);
+		NUMBER_OF_MINES = parseInt("number_of_mines", 40);
 
 		BUTTON_WIDTH = parseInt("button_width", 25);
 		BUTTON_HEIGHT = parseInt("button_height", 25);
@@ -71,7 +71,7 @@ public enum MineProperties {
 		} catch (Exception e) {
 			font = new Font("Dialog", Font.BOLD, 30);
 		}
-		DIGITAL_FONT = font.deriveFont(60f);
+		DIGITAL_FONT = font.deriveFont(50f);
 
 		try {
 			MINE_IMAGE = ImageIO.read(MineFrame.class.getResource(parseString(
@@ -108,5 +108,11 @@ public enum MineProperties {
 	private String parseString(String property, String defaultValue) {
 		String value = mineProperties.getProperty(property);
 		return value == null ? defaultValue : value;
+	}
+
+	public void setDimension(int rows, int columns, int mines) {
+		this.ROWS = rows;
+		this.COLUMNS = columns;
+		this.NUMBER_OF_MINES = mines;
 	}
 }

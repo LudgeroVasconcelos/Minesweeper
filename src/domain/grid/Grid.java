@@ -6,14 +6,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 
+import minesweeper.Difficulty;
 import minesweeper.MineProperties;
 import domain.events.ClearEvent;
 import domain.events.Event;
 import domain.events.GameOverEvent;
 import domain.events.GameWonEvent;
+import domain.events.ResizeEvent;
 import domain.events.SquareRevealedEvent;
 import domain.events.StartGameEvent;
 import domain.events.ToggleMarkEvent;
+import domain.fill.FillRandom;
 import domain.fill.IFill;
 import domain.reveal.IReveal;
 
@@ -101,6 +104,19 @@ public class Grid extends Observable implements IGrid {
 	public boolean hasEnded() {
 		return gameEnded;
 	}
+	
+
+	@Override
+	public void setDifficulty(Difficulty diff) {
+		int rows = diff.getRows();
+		int columns = diff.getColumns();
+		int mines = diff.getMines();
+		
+		MineProperties.INSTANCE.setDimension(rows, columns, mines);
+		filler = new FillRandom(rows, columns, mines);
+		fireChangedEvent(new ResizeEvent(rows, columns));
+		clearGrid();
+	}
 
 	private List<Point> getSquaresLeft() {
 		List<Point> unmarked = new ArrayList<Point>();
@@ -123,7 +139,7 @@ public class Grid extends Observable implements IGrid {
 
 		return mines;
 	}
-	
+
 	private void fireChangedEvent(Event event) {
 		setChanged();
 		notifyObservers(event);

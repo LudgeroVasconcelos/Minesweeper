@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Map.Entry;
 import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.SwingUtilities;
 
@@ -22,29 +23,23 @@ import domain.events.SquareRevealedEvent;
 import domain.events.StartGameEvent;
 import domain.events.ToggleMarkEvent;
 
-public class MineController implements IMineController {
+public class MineController implements Observer{
 
-	MineFacade mineHandler;	// domain
-	MineFrame mineFrame; 	// ui
+	private MineFacade mineHandler;	// domain
+	private MineFrame mineFrame; 	// ui
 
 	public MineController(MineFacade mineHandler, MineFrame mineFrame) {
 		this.mineHandler = mineHandler;
 		this.mineFrame = mineFrame;
 	}
 
-	@Override
-	public void addObserverToGrid() {
+	public void addObservers() {
 		mineHandler.addObserver(this);
-	}
-
-	@Override
-	public void addListeners() {
 		mineFrame.addSquaresListener(squaresListener());
-		mineFrame.addSmileListener(clearGrid());
+		mineFrame.addClearListener(clearGrid());
 	}
-
-	@Override
-	public ActionListener clearGrid() {
+	
+	private ActionListener clearGrid() {
 		return new ActionListener() {
 
 			@Override
@@ -54,8 +49,8 @@ public class MineController implements IMineController {
 		};
 	}
 
-	@Override
-	public MouseListener squaresListener() {
+
+	private MouseListener squaresListener() {
 		return new MouseAdapter() {
 			
 			public void mousePressed(MouseEvent e) {

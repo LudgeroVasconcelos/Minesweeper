@@ -2,6 +2,8 @@ package domain.grid;
 
 import java.util.Observer;
 
+import minesweeper.Difficulty;
+
 public interface IGrid {
 
 	public void fill(int x, int y);
@@ -17,4 +19,6 @@ public interface IGrid {
 	public void addObserver(Observer observer);
 
 	public boolean hasEnded();
+
+	public void setDifficulty(Difficulty diff);
 }

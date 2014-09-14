@@ -1,6 +1,6 @@
 package minesweeper;
 
-import ui.controller.swing.IMineController;
+import ui.controller.swing.MenuController;
 import ui.controller.swing.MineController;
 import ui.view.swing.MineFrame;
 import domain.MineFacade;
@@ -18,20 +18,17 @@ public class Main {
 				MineFacade mineFacade = new Minesweeper();
 
 				// create view
-				MineFrame mineFrame = new MineFrame(
-						MineProperties.INSTANCE.ROWS,
-						MineProperties.INSTANCE.COLUMNS);
+				MineFrame mineFrame = new MineFrame();
 
-				// create controller
-				// (controller -> model) (controller -> view)
-				IMineController mineController = new MineController(mineFacade,
+				// create controllers
+				MineController mineController = new MineController(mineFacade,
 						mineFrame);
 
-				// (model -> controller)
-				mineController.addObserverToGrid();
+				MenuController menuController = new MenuController(mineFacade,
+						mineFrame);
 
-				// (view -> controller)
-				mineController.addListeners();
+				mineController.addObservers();
+				menuController.addObservers();
 			}
 		});
 

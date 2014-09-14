@@ -23,15 +23,7 @@ public class GridPanel extends JPanel {
 
 	public GridPanel(int rows, int columns) {
 		super();
-		int width = MineProperties.INSTANCE.BUTTON_WIDTH * columns;
-		int height = MineProperties.INSTANCE.BUTTON_HEIGHT * rows;
-		setPreferredSize(new Dimension(width, height));
-
-		state = new BufferedImage(width, height, Image.SCALE_SMOOTH);
-		flaggedButtons = new HashSet<Point>();
-		buttons = new MineButton[rows][columns];
-		addMineButtons(MineProperties.INSTANCE.BUTTON_WIDTH,
-				MineProperties.INSTANCE.BUTTON_HEIGHT);
+		resize(rows, columns);
 	}
 
 	private void addMineButtons(int width, int height) {
@@ -112,5 +104,18 @@ public class GridPanel extends JPanel {
 			buttons[p.x][p.y].toggleFlag();
 		}
 		repaint();
+	}
+	
+	@Override
+	public void resize(int rows, int columns){
+		int width = MineProperties.INSTANCE.BUTTON_WIDTH * columns;
+		int height = MineProperties.INSTANCE.BUTTON_HEIGHT * rows;
+		setPreferredSize(new Dimension(width, height));
+		state = new BufferedImage(width, height, Image.SCALE_SMOOTH);
+
+		flaggedButtons = new HashSet<Point>();
+		buttons = new MineButton[rows][columns];
+		addMineButtons(MineProperties.INSTANCE.BUTTON_WIDTH,
+				MineProperties.INSTANCE.BUTTON_HEIGHT);
 	}
 }

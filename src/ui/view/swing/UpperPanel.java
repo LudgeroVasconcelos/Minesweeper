@@ -22,20 +22,22 @@ import minesweeper.MineProperties;
 @SuppressWarnings("serial")
 public class UpperPanel extends JPanel {
 
+	private boolean ended;
+
 	private JButton smile;
 	private JLabel remainingMines;
 	private JLabel timer;
 
 	private Timer t;
-	
-	private boolean ended;
 
-	public UpperPanel() {
-		setLayout(new GridLayout(1, 3));
+	public UpperPanel(int mines) {
+
+//		setLayout(new GridLayout(1, 3));
+		setLayout(new GridLayout(1, 3, 0, 0));
 		setBorder(new CompoundBorder(
 				BorderFactory.createBevelBorder(BevelBorder.RAISED),
 				BorderFactory.createBevelBorder(BevelBorder.LOWERED)));
-		
+
 		JPanel timerPanel = new JPanel();
 		timer = new JLabel();
 		setLabelOptions(timer);
@@ -46,7 +48,7 @@ public class UpperPanel extends JPanel {
 		JPanel smilePanel = new JPanel();
 		smile = new JButton();
 		smile.setBackground(new Color(210, 210, 210));
-		smile.setPreferredSize(new Dimension(40, 40));
+		smile.setPreferredSize(new Dimension(35, 35));
 		setFace(MineProperties.INSTANCE.SMILE_IMAGE);
 		smilePanel.add(smile);
 		add(smilePanel);
@@ -59,18 +61,17 @@ public class UpperPanel extends JPanel {
 		add(minesPanel);
 	}
 
-	public void addSmileListener(ActionListener clearGrid) {
+	public void addClearListener(ActionListener clearGrid) {
 		smile.addActionListener(clearGrid);
 	}
 
-	public void startGame(){
+	public void startGame() {
 		startTimer();
 	}
-	
+
 	public void setRemainingMines(int mines) {
 		String s = String.valueOf(mines);
-		s = mines > 99 ? s
-				: mines > 9 ? "0" + s : mines < 0 ? "000" : "00" + s;
+		s = mines > 99 ? s : mines > 9 ? "0" + s : mines < 0 ? "000" : "00" + s;
 		remainingMines.setText(s);
 	}
 
@@ -96,15 +97,15 @@ public class UpperPanel extends JPanel {
 	}
 
 	public void mousePressed() {
-		if(!ended)
+		if (!ended)
 			setFace(MineProperties.INSTANCE.SMILE_SURPRISED_IMAGE);
 	}
-	
+
 	public void mouseReleased() {
-		if(!ended)
+		if (!ended)
 			setFace(MineProperties.INSTANCE.SMILE_IMAGE);
 	}
-	
+
 	private void startTimer() {
 		t = new Timer();
 		TimerTask tt = new TimerTask() {
@@ -122,20 +123,21 @@ public class UpperPanel extends JPanel {
 		};
 		t.schedule(tt, 0, 1000);
 	}
-	
+
 	private void resetTimer() {
 		timer.setText("000");
 	}
-	
+
 	private void stopTimer() {
 		if (t != null)
 			t.cancel();
 	}
-	
+
 	private void setFace(Image face) {
-		smile.setIcon(new ImageIcon(face.getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
+		smile.setIcon(new ImageIcon(face.getScaledInstance(35, 35,
+				Image.SCALE_SMOOTH)));
 	}
-	
+
 	private void setLabelOptions(JLabel label) {
 		label.setBorder(BasicBorders.getTextFieldBorder());
 		label.setFont(MineProperties.INSTANCE.DIGITAL_FONT);
