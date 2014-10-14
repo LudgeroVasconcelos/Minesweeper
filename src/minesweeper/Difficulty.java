@@ -1,35 +1,43 @@
 package minesweeper;
 
+/**
+ * This enumerator specifies the classes of difficulty of the game as well as
+ * the number of mines, rows and columns for each one.
+ * 
+ * @author Ludgero
+ * 
+ */
 public enum Difficulty {
-	BEGINNER ("Beginner", 9, 9, 10),
-	INTERMEDIATE ("Intermediate", 16, 16, 40),
-	EXPERT ("Expert", 16, 30, 99);
-	
-	private final String difficulty;
+	BEGINNER(9, 9, 10), INTERMEDIATE(16, 16, 40), EXPERT(16, 30, 99);
+
 	private final int rows;
 	private final int columns;
 	private final int mines;
-	
-	private Difficulty(String difficulty, int rows, int columns, int mines){
-		this.difficulty = difficulty;
+
+	private Difficulty(int rows, int columns, int mines) {
 		this.rows = rows;
 		this.columns = columns;
 		this.mines = mines;
 	}
-	
-	public String getDifficulty(){
-		return difficulty;
-	}
-	
-	public int getRows(){
+
+	/**
+	 * @return The number of rows of the specified Difficulty
+	 */
+	public int getRows() {
 		return rows;
 	}
-	
-	public int getColumns(){
+
+	/**
+	 * @return The number of columns of the specified Difficulty
+	 */
+	public int getColumns() {
 		return columns;
 	}
-	
-	public int getMines(){
+
+	/**
+	 * @return The number of mines of the specified Difficulty
+	 */
+	public int getMines() {
 		return mines;
 	}
 }

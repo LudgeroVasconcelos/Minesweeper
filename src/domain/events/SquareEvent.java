@@ -1,6 +1,13 @@
 package domain.events;
 
-public abstract class SquareEvent extends Event{
+/**
+ * Represents the type of events that must specify the square on which the event
+ * was fired.
+ * 
+ * @author Ludgero
+ * 
+ */
+public abstract class SquareEvent extends Event {
 
 	private final int x, y;
 
@@ -23,5 +30,5 @@ public abstract class SquareEvent extends Event{
 	public int getY() {
 		return y;
 	}
-	
+
 }

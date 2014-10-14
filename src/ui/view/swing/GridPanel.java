@@ -110,6 +110,7 @@ public class GridPanel extends JPanel {
 	public void resize(int rows, int columns){
 		int width = MineProperties.INSTANCE.BUTTON_WIDTH * columns;
 		int height = MineProperties.INSTANCE.BUTTON_HEIGHT * rows;
+		
 		setPreferredSize(new Dimension(width, height));
 		state = new BufferedImage(width, height, Image.SCALE_SMOOTH);
 

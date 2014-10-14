@@ -109,11 +109,7 @@ public class MineController implements Observer{
 	public void update(Observable obj, Object hint) {
 
 		if (hint instanceof SquareEvent) {
-			if (hint instanceof SquareRevealedEvent) {
-				SquareRevealedEvent nsre = (SquareRevealedEvent) hint;
-				revealButtons(nsre.getRevealedSquares());
-
-			} else if (hint instanceof ToggleMarkEvent) {
+			 if (hint instanceof ToggleMarkEvent) {
 				ToggleMarkEvent tme = (ToggleMarkEvent) hint;
 				toggleFlag(tme.getX(), tme.getY(), tme.getNumberOfFlaggedMines());
 				
@@ -121,6 +117,10 @@ public class MineController implements Observer{
 				GameOverEvent goe = (GameOverEvent) hint;
 				gameOver(goe.getX(), goe.getY(), goe.getMines());
 			}
+		}
+		else if (hint instanceof SquareRevealedEvent) {
+			SquareRevealedEvent nsre = (SquareRevealedEvent) hint;
+			revealButtons(nsre.getRevealedSquares());
 		}
 		else if (hint instanceof ClearEvent) {
 			clearView();

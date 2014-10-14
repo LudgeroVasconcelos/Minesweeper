@@ -10,6 +10,15 @@ import javax.imageio.ImageIO;
 
 import ui.view.swing.MineFrame;
 
+/**
+ * The properties of the game.
+ * 
+ * The Singleton pattern is used here. Only one instance of this class is needed
+ * and provides global access point.
+ * 
+ * @author Ludgero
+ * 
+ */
 public enum MineProperties {
 	INSTANCE;
 
@@ -97,6 +106,17 @@ public enum MineProperties {
 		}
 	}
 
+	/**
+	 * Tries to read the property from the properties file and converts it to an
+	 * integer. If it fails, the default value will be used.
+	 * 
+	 * @param property
+	 *            The property to be read from the properties file
+	 * @param defaultValue
+	 *            The default value for when it fails to read the file
+	 *            
+	 * @return The value of the given property
+	 */
 	private int parseInt(String property, int defaultValue) {
 		try {
 			return Integer.parseInt(mineProperties.getProperty(property));
@@ -105,11 +125,32 @@ public enum MineProperties {
 		}
 	}
 
+	/**
+	 * Tries to read the property from the properties file and converts it to a
+	 * String. If it fails, the default value will be used.
+	 * 
+	 * @param property
+	 *            The property to be read from the properties file
+	 * @param defaultValue
+	 *            The default value for when it fails to read the file
+	 *            
+	 * @return The value of the given property
+	 */
 	private String parseString(String property, String defaultValue) {
 		String value = mineProperties.getProperty(property);
 		return value == null ? defaultValue : value;
 	}
 
+	/**
+	 * Sets new properties for the number of rows, columns and mines.
+	 * 
+	 * @param rows
+	 *            The number of rows to be set
+	 * @param columns
+	 *            The number of columns to be set
+	 * @param mines
+	 *            The number of mines to be set
+	 */
 	public void setDimension(int rows, int columns, int mines) {
 		this.ROWS = rows;
 		this.COLUMNS = columns;

@@ -6,6 +6,12 @@ import ui.view.swing.MineFrame;
 import domain.MineFacade;
 import domain.Minesweeper;
 
+/**
+ * Main class. All the magic starts here.
+ * 
+ * @author Ludgero
+ *
+ */
 public class Main {
 
 	public static void main(String[] args) {
@@ -27,6 +33,7 @@ public class Main {
 				MenuController menuController = new MenuController(mineFacade,
 						mineFrame);
 
+				// establish connection between mvc components
 				mineController.addObservers();
 				menuController.addObservers();
 			}

@@ -2,23 +2,46 @@ package domain.grid;
 
 import java.util.Observable;
 
-public abstract class Square extends Observable{
+/**
+ * This class provides the operations that all extending squares must have.
+ * 
+ * @author Ludgero
+ * 
+ */
+public abstract class Square extends Observable {
 
 	private boolean marked;
 	private boolean revealed;
-	
-	public void reveal(){
+
+	/**
+	 * Reveals a square.
+	 */
+	public void reveal() {
 		revealed = true;
 	}
-	
-	public boolean isMarked(){
+
+	/**
+	 * Checks whether this square is marked or not.
+	 * 
+	 * @return true if this square is marked
+	 */
+	public boolean isMarked() {
 		return marked;
 	}
-	
-	public boolean isRevealed(){
+
+	/**
+	 * Checks whether this square is revealed.
+	 * 
+	 * @return true if this square is revealed
+	 */
+	public boolean isRevealed() {
 		return revealed;
 	}
 
+	/**
+	 * Marks this square or removes the mark depending on whether it is marked
+	 * or not.
+	 */
 	public void toggleMark() {
 		marked = !marked;
 	}

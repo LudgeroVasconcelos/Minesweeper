@@ -10,13 +10,18 @@ import java.util.Stack;
 import domain.grid.NormalSquare;
 import domain.grid.Square;
 
-
+/**
+ * This class specifies how squares are revealed.
+ * 
+ * When a square with no mines around is clicked, all squares around it are
+ * revealed. This process continues until a square with at least one mine
+ * surrounding it is revealed.
+ * 
+ * @author Ludgero
+ * 
+ */
 public class RevealUntilNum implements IReveal {
 
-	
-	/* (non-Javadoc)
-	 * @see domain.reveal.IReveal#revealSquares(domain.grid.Square[][], int, int)
-	 */
 	@Override
 	public Map<Point, Integer> revealSquares(Square[][] grid, int x, int y) {
 		// iterative DFS
@@ -28,18 +33,18 @@ public class RevealUntilNum implements IReveal {
 
 		while (!stack.isEmpty()) {
 			Point p = stack.pop();
-			
+
 			if (!map.containsKey(p)) {
 				NormalSquare ns = (NormalSquare) grid[p.x][p.y];
 				int minesAround = ns.getNumOfMinesAround();
 				ns.reveal();
-				
+
 				map.put(p, minesAround);
 
 				if (minesAround == 0) {
 					List<Point> squaresAround = getSquaresAround(grid, p.x, p.y);
 
-					for (Point po : squaresAround) 
+					for (Point po : squaresAround)
 						stack.push(po);
 				}
 			}
@@ -47,6 +52,20 @@ public class RevealUntilNum implements IReveal {
 		return map;
 	}
 
+	/**
+	 * Determines and returns a list containing the positions of squares
+	 * surrounding the given (x, y) square. The determined squares are not
+	 * marked nor revealed.
+	 * 
+	 * @param grid
+	 *            The grid containing all squares of the game
+	 * @param x
+	 *            The x coordinate of the specified square
+	 * @param y
+	 *            The y coordinate of the specified square
+	 * 
+	 * @return A list as specified.
+	 */
 	private List<Point> getSquaresAround(Square[][] grid, int x, int y) {
 		List<Point> list = new ArrayList<Point>();
 		int rows = grid.length;
@@ -55,8 +74,8 @@ public class RevealUntilNum implements IReveal {
 		for (int i = x - 1; i <= x + 1; i++)
 			for (int j = y - 1; j <= y + 1; j++)
 				if (i >= 0 && i < rows && j >= 0 && j < columns)
-						if (!grid[i][j].isMarked() && !grid[i][j].isRevealed())
-							list.add(new Point(i, j));
+					if (!grid[i][j].isMarked() && !grid[i][j].isRevealed())
+						list.add(new Point(i, j));
 
 		return list;
 	}

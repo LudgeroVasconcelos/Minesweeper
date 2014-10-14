@@ -32,7 +32,6 @@ public class UpperPanel extends JPanel {
 
 	public UpperPanel(int mines) {
 
-//		setLayout(new GridLayout(1, 3));
 		setLayout(new GridLayout(1, 3, 0, 0));
 		setBorder(new CompoundBorder(
 				BorderFactory.createBevelBorder(BevelBorder.RAISED),
@@ -72,6 +71,7 @@ public class UpperPanel extends JPanel {
 	public void setRemainingMines(int mines) {
 		String s = String.valueOf(mines);
 		s = mines > 99 ? s : mines > 9 ? "0" + s : mines < 0 ? "000" : "00" + s;
+		
 		remainingMines.setText(s);
 	}
 

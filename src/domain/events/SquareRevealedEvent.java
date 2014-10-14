@@ -3,16 +3,31 @@ package domain.events;
 import java.awt.Point;
 import java.util.Map.Entry;
 
-public class SquareRevealedEvent extends SquareEvent {
+/**
+ * This class represents the event that is fired when squares are revealed.
+ * 
+ * @author Ludgero
+ * 
+ */
+public class SquareRevealedEvent extends Event {
 
 	private Iterable<Entry<Point, Integer>> revealedSquares;
 
-	public SquareRevealedEvent(int x, int y,
-			Iterable<Entry<Point, Integer>> revealedSquares) {
-		super(x, y);
+	/**
+	 * Constructs a new square revealed event and initializes it with the
+	 * specified iterable consisting of the revealed squares.
+	 * 
+	 * @param revealedSquares
+	 *            The iterable containing the positions of the revealed squares
+	 *            and the corresponding number of neighboring mines.
+	 */
+	public SquareRevealedEvent(Iterable<Entry<Point, Integer>> revealedSquares) {
 		this.revealedSquares = revealedSquares;
 	}
 
+	/**
+	 * @return The iterable of revealed squares.
+	 */
 	public Iterable<Entry<Point, Integer>> getRevealedSquares() {
 		return revealedSquares;
 	}

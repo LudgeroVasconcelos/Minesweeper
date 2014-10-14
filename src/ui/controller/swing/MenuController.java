@@ -12,6 +12,12 @@ import ui.view.swing.MineFrame;
 import domain.MineFacade;
 import domain.events.ResizeEvent;
 
+/**
+ * The menu bar controller.
+ * 
+ * @author Ludgero
+ *
+ */
 public class MenuController implements Observer {
 
 	private MineFacade mineHandler;
@@ -34,19 +40,19 @@ public class MenuController implements Observer {
 			public void actionPerformed(ActionEvent e) {
 				JMenuItem jmi = (JMenuItem) e.getSource();
 
-				Difficulty difficulty;
+				Difficulty diff;
 				
 				switch (jmi.getText()) {
 				case "Beginner":
-					difficulty = Difficulty.BEGINNER;
+					diff = Difficulty.BEGINNER;
 					break;
 				case "Intermediate":
-					difficulty = Difficulty.INTERMEDIATE;
+					diff = Difficulty.INTERMEDIATE;
 					break;
 				default:
-					difficulty = Difficulty.EXPERT;
+					diff = Difficulty.EXPERT;
 				}
-				mineHandler.setDifficulty(difficulty);
+				mineHandler.setDifficulty(diff);
 			}
 		};
 	}

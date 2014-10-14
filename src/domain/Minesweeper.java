@@ -11,10 +11,23 @@ import domain.grid.IGrid;
 import domain.reveal.IReveal;
 import domain.reveal.RevealUntilNum;
 
+/**
+ * This class implements the interaction a user may have with the game.
+ * 
+ * The grid is set to place the mines randomly after the first square is
+ * revealed and it reveals all the squares around a square which has zero mines
+ * around.
+ * 
+ * @author Ludgero
+ * 
+ */
 public class Minesweeper implements MineFacade {
 
 	private IGrid grid;
 
+	/**
+	 * Constructs a new minesweeper game
+	 */
 	public Minesweeper() {
 		IFill filler = new FillRandom(MineProperties.INSTANCE.ROWS,
 				MineProperties.INSTANCE.COLUMNS,
@@ -35,13 +48,13 @@ public class Minesweeper implements MineFacade {
 		if (!grid.isFilled())
 			grid.fill(x, y);
 
-		if (!grid.hasEnded())
+		if (!grid.gameHasEnded())
 			grid.reveal(x, y);
 	}
 
 	@Override
 	public void toggleMark(int x, int y) {
-		if (grid.isFilled() && !grid.hasEnded())
+		if (grid.isFilled() && !grid.gameHasEnded())
 			grid.toggleMark(x, y);
 	}
 
@@ -54,6 +67,7 @@ public class Minesweeper implements MineFacade {
 	public void setDifficulty(Difficulty diff) {
 		if (diff.getRows() != MineProperties.INSTANCE.ROWS
 				|| diff.getColumns() != MineProperties.INSTANCE.COLUMNS)
+
 			grid.setDifficulty(diff);
 	}
 }

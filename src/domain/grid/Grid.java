@@ -20,19 +20,38 @@ import domain.fill.FillRandom;
 import domain.fill.IFill;
 import domain.reveal.IReveal;
 
+/**
+ * This class represents the grid of the game, contains safe and mined squares
+ * and operates on them.
+ * 
+ * @author Ludgero
+ *
+ */
 public class Grid extends Observable implements IGrid {
 
 	private Square[][] grid;
+
 	private boolean filled;
 	private boolean gameEnded;
+
 	private IFill filler;
-	private IReveal ar;
+	private IReveal revealer;
+
 	private int flaggedSquares;
 	private int revealedSquares;
 
-	public Grid(IFill filler, IReveal ar) {
+	/**
+	 * Constructs a new grid. Initializes the strategies used to fill the grid
+	 * and to reveal its squares.
+	 * 
+	 * @param filler
+	 *            A strategy to fill the grid
+	 * @param revealed
+	 *            A strategy to reveal the squares of the grid
+	 */
+	public Grid(IFill filler, IReveal revealer) {
 		this.filler = filler;
-		this.ar = ar;
+		this.revealer = revealer;
 	}
 
 	@Override
@@ -44,6 +63,7 @@ public class Grid extends Observable implements IGrid {
 	public void fill(int x, int y) {
 		this.grid = filler.fillGrid(x, y);
 		filled = true;
+
 		fireChangedEvent(new StartGameEvent());
 	}
 
@@ -54,14 +74,10 @@ public class Grid extends Observable implements IGrid {
 		grid = null;
 		flaggedSquares = 0;
 		revealedSquares = 0;
+
 		fireChangedEvent(new ClearEvent());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see domain.grid.IGrid#reveal(int, int)
-	 */
 	@Override
 	public void reveal(int x, int y) {
 		if (grid[x][y].isMarked() || grid[x][y].isRevealed())
@@ -73,8 +89,8 @@ public class Grid extends Observable implements IGrid {
 			gameEnded = true;
 
 		} else {
-			Map<Point, Integer> revealed = ar.revealSquares(grid, x, y);
-			event = new SquareRevealedEvent(x, y, revealed.entrySet());
+			Map<Point, Integer> revealed = revealer.revealSquares(grid, x, y);
+			event = new SquareRevealedEvent(revealed.entrySet());
 			revealedSquares += revealed.size();
 		}
 		fireChangedEvent(event);
@@ -101,23 +117,30 @@ public class Grid extends Observable implements IGrid {
 	}
 
 	@Override
-	public boolean hasEnded() {
+	public boolean gameHasEnded() {
 		return gameEnded;
 	}
-	
 
 	@Override
 	public void setDifficulty(Difficulty diff) {
 		int rows = diff.getRows();
 		int columns = diff.getColumns();
 		int mines = diff.getMines();
-		
+
 		MineProperties.INSTANCE.setDimension(rows, columns, mines);
 		filler = new FillRandom(rows, columns, mines);
+
 		fireChangedEvent(new ResizeEvent(rows, columns));
 		clearGrid();
 	}
 
+	/**
+	 * Determines the squares that are not marked as a mine. It is used when all
+	 * safe squares are revealed, so the squares that are left to mark can be
+	 * marked automatically.
+	 * 
+	 * @return a list containing unmarked squares positions
+	 */
 	private List<Point> getSquaresLeft() {
 		List<Point> unmarked = new ArrayList<Point>();
 
@@ -129,6 +152,12 @@ public class Grid extends Observable implements IGrid {
 		return unmarked;
 	}
 
+	/**
+	 * Determines the positions of the mines on the grid. This method is only
+	 * called when the game is lost to protect this information.
+	 * 
+	 * @return a list containing the mines positions
+	 */
 	private List<Point> getMines() {
 		List<Point> mines = new ArrayList<Point>();
 
@@ -140,6 +169,12 @@ public class Grid extends Observable implements IGrid {
 		return mines;
 	}
 
+	/**
+	 * Notifies observers of the occurrence of an event.
+	 * 
+	 * @param event
+	 *            The event to be fired.
+	 */
 	private void fireChangedEvent(Event event) {
 		setChanged();
 		notifyObservers(event);
