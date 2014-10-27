@@ -1,7 +1,7 @@
 package minesweeper;
 
 /**
- * This enumerator specifies the classes of difficulty of the game as well as
+ * This enumerator specifies the levels of difficulty of the game as well as
  * the number of mines, rows and columns for each one.
  * 
  * @author Ludgero
@@ -14,6 +14,17 @@ public enum Difficulty {
 	private final int columns;
 	private final int mines;
 
+	/**
+	 * The constructor for this enum. It automatically creates the constants
+	 * that are defined at the beginning of the enum body.
+	 * 
+	 * @param rows
+	 *            The number of rows
+	 * @param columns
+	 *            The number of columns
+	 * @param mines
+	 *            The number of mines
+	 */
 	private Difficulty(int rows, int columns, int mines) {
 		this.rows = rows;
 		this.columns = columns;

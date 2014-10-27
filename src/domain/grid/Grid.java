@@ -46,7 +46,7 @@ public class Grid extends Observable implements IGrid {
 	 * 
 	 * @param filler
 	 *            A strategy to fill the grid
-	 * @param revealed
+	 * @param revealer
 	 *            A strategy to reveal the squares of the grid
 	 */
 	public Grid(IFill filler, IReveal revealer) {
