@@ -32,20 +32,15 @@ public class MineButton {
 	 *            The x coordinate of this button on the window frame
 	 * @param coordY
 	 *            The y coordinate of this button on the window frame
-	 * @param width
-	 *            The width of this button
-	 * @param height
-	 *            The height of this button
 	 * @param g2
 	 *            The graphics where this button will be painted to
 	 */
-	public MineButton(int coordX, int coordY, int width,
-			int height, Graphics g2) {
+	public MineButton(int coordX, int coordY, Graphics g2) {
 		super();
 		this.coordX = coordX;
 		this.coordY = coordY;
-		this.width = width;
-		this.height = height;
+		this.width = MineProperties.INSTANCE.BUTTON_WIDTH;
+		this.height = MineProperties.INSTANCE.BUTTON_HEIGHT;
 
 		this.g2 = (Graphics2D) g2;
 		paint();

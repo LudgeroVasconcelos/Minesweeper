@@ -22,6 +22,9 @@ import minesweeper.MineProperties;
 @SuppressWarnings("serial")
 public class GridPanel extends JPanel {
 
+	private int rows;
+	private int columns;
+	
 	private MineButton[][] buttons;
 	private BufferedImage state;
 
@@ -39,6 +42,30 @@ public class GridPanel extends JPanel {
 		super();
 		resize(rows, columns);
 	}
+	
+	/**
+	 * Resizes this grid and initializes a new game.
+	 */
+	public void resize(int rows, int columns){
+		this.rows = rows;
+		this.columns = columns;
+		
+		init();
+	}
+	
+	/**
+	 * Initializes this grid.
+	 */
+	private void init() {
+		int width = MineProperties.INSTANCE.BUTTON_WIDTH * columns;
+		int height = MineProperties.INSTANCE.BUTTON_HEIGHT * rows;
+
+		setPreferredSize(new Dimension(width, height));
+		state = new BufferedImage(width, height, Image.SCALE_SMOOTH);
+
+		flaggedButtons = new HashSet<Point>();
+		addMineButtons();
+	}
 
 	/**
 	 * Adds square buttons to this grid.
@@ -48,16 +75,17 @@ public class GridPanel extends JPanel {
 	 * @param height
 	 *            The height of each square button
 	 */
-	private void addMineButtons(int width, int height) {
+	private void addMineButtons() {
+		buttons = new MineButton[rows][columns];
 		int coordX = 0, coordY = 0;
 		Graphics g = state.getGraphics();
 
-		for (int i = 0; i < buttons.length; i++) {
-			for (int j = 0; j < buttons[i].length; j++) {
-				buttons[i][j] = new MineButton(coordY, coordX, width, height, g);
-				coordY += width;
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < columns; j++) {
+				buttons[i][j] = new MineButton(coordY, coordX, g);
+				coordY += MineProperties.INSTANCE.BUTTON_WIDTH;
 			}
-			coordX += height;
+			coordX += MineProperties.INSTANCE.BUTTON_HEIGHT;
 			coordY = 0;
 		}
 	}
@@ -111,8 +139,8 @@ public class GridPanel extends JPanel {
 	public void clear() {
 		flaggedButtons.clear();
 
-		for (int i = 0; i < buttons.length; i++) {
-			for (int j = 0; j < buttons[i].length; j++) {
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < columns; j++) {
 				buttons[i][j].clear();
 			}
 		}
@@ -168,17 +196,4 @@ public class GridPanel extends JPanel {
 		repaint();
 	}
 
-	@Override
-	public void resize(int rows, int columns) {
-		int width = MineProperties.INSTANCE.BUTTON_WIDTH * columns;
-		int height = MineProperties.INSTANCE.BUTTON_HEIGHT * rows;
-
-		setPreferredSize(new Dimension(width, height));
-		state = new BufferedImage(width, height, Image.SCALE_SMOOTH);
-
-		flaggedButtons = new HashSet<Point>();
-		buttons = new MineButton[rows][columns];
-		addMineButtons(MineProperties.INSTANCE.BUTTON_WIDTH,
-				MineProperties.INSTANCE.BUTTON_HEIGHT);
-	}
 }

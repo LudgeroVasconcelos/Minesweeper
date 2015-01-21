@@ -8,42 +8,42 @@ import java.util.Observer;
 import javax.swing.JMenuItem;
 
 import minesweeper.Difficulty;
-import ui.view.swing.MineFrame;
-import domain.MineFacade;
+import ui.view.swing.UiFacade;
+import domain.DomainFacade;
 import domain.events.ResizeEvent;
 
 /**
  * The controller for the menu operations.
  * 
  * @author Ludgero
- *
+ * 
  */
 public class MenuController implements Observer {
 
-	private MineFacade mineHandler;
-	private MineFrame mineFrame;
+	private DomainFacade domainHandler;
+	private UiFacade uiHandler;
 
 	/**
 	 * Constructs and initializes a new controller for the menu operations.
 	 * 
-	 * @param mineHandler
+	 * @param domainHandler
 	 *            The model component of the mvc architecture pattern
-	 * @param mineFrame
+	 * @param uiHandler
 	 *            The view component of the mvc architecture pattern
 	 */
-	public MenuController(MineFacade mineHandler, MineFrame mineFrame) {
-		this.mineHandler = mineHandler;
-		this.mineFrame = mineFrame;
+	public MenuController(DomainFacade domainHandler, UiFacade uiHandler) {
+		this.domainHandler = domainHandler;
+		this.uiHandler = uiHandler;
 	}
 
 	public void addObservers() {
-		mineHandler.addObserver(this);
-		mineFrame.addMenuListeners(quitListener(), diffListener());
+		domainHandler.addObserver(this);
+		uiHandler.addMenuListeners(quitListener(), diffListener());
 	}
 
 	/**
-	 * Creates and returns a listener that will be triggered when a new difficulty is
-	 * chosen.
+	 * Creates and returns a listener that will be triggered when a new
+	 * difficulty is chosen.
 	 * 
 	 * @return The specified listener
 	 */
@@ -66,14 +66,14 @@ public class MenuController implements Observer {
 				default:
 					diff = Difficulty.EXPERT;
 				}
-				mineHandler.setDifficulty(diff);
+				domainHandler.setDifficulty(diff);
 			}
 		};
 	}
 
 	/**
-	 * Creates and returns a listener that will be triggered when the user
-	 * quits the game.
+	 * Creates and returns a listener that will be triggered when the user quits
+	 * the game.
 	 * 
 	 * @return The specified listener
 	 */
@@ -89,11 +89,12 @@ public class MenuController implements Observer {
 
 	/**
 	 * Resizes the game window to fit the given number of rows and columns.
+	 * 
 	 * @param rows
 	 * @param columns
 	 */
 	private void resizeGrid(int rows, int columns) {
-		mineFrame.resizeGrid(rows, columns);
+		uiHandler.resizeGrid(rows, columns);
 	}
 
 	@Override

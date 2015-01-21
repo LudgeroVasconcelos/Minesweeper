@@ -13,7 +13,7 @@ import javax.swing.JMenuItem;
  * 
  */
 @SuppressWarnings("serial")
-public class MineMenu extends JMenuBar {
+public class Menu extends JMenuBar {
 
 	JMenuItem newItem;
 	JMenuItem beginnerItem;
@@ -24,7 +24,7 @@ public class MineMenu extends JMenuBar {
 	/**
 	 * Constructs the menu and adds some menu items to it.
 	 */
-	public MineMenu() {
+	public Menu() {
 		JMenu jm = new JMenu("Game");
 
 		newItem = new JMenuItem("New");

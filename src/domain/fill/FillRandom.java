@@ -8,7 +8,7 @@ import java.util.Random;
 import java.util.Set;
 
 import domain.grid.MinedSquare;
-import domain.grid.NormalSquare;
+import domain.grid.SafeSquare;
 import domain.grid.Square;
 
 /**
@@ -103,7 +103,7 @@ public class FillRandom implements IFill {
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < columns; j++) {
 				if (nums[i][j] >= 0)
-					grid[i][j] = new NormalSquare(nums[i][j]);
+					grid[i][j] = new SafeSquare(nums[i][j]);
 			}
 		}
 	}

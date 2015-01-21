@@ -8,7 +8,7 @@ import java.util.Properties;
 
 import javax.imageio.ImageIO;
 
-import ui.view.swing.MineFrame;
+import ui.view.swing.UiFacade;
 
 /**
  * The properties of the game.
@@ -76,28 +76,28 @@ public enum MineProperties {
 		Font font;
 		try {
 			font = Font.createFont(Font.TRUETYPE_FONT,
-					MineFrame.class.getResourceAsStream(digitalFont));
+					UiFacade.class.getResourceAsStream(digitalFont));
 		} catch (Exception e) {
 			font = new Font("Dialog", Font.BOLD, 30);
 		}
 		DIGITAL_FONT = font.deriveFont(50f);
 
 		try {
-			MINE_IMAGE = ImageIO.read(MineFrame.class.getResource(parseString(
+			MINE_IMAGE = ImageIO.read(UiFacade.class.getResource(parseString(
 					"mine_image", "images/Mine.png")));
-			CROSS_IMAGE = ImageIO.read(MineFrame.class.getResource(parseString(
+			CROSS_IMAGE = ImageIO.read(UiFacade.class.getResource(parseString(
 					"cross_image", "images/Icon_cross.png")));
-			FLAG_IMAGE = ImageIO.read(MineFrame.class.getResource(parseString(
+			FLAG_IMAGE = ImageIO.read(UiFacade.class.getResource(parseString(
 					"flag_image", "images/RedFlag.png")));
-			SMILE_IMAGE = ImageIO.read(MineFrame.class.getResource(parseString(
+			SMILE_IMAGE = ImageIO.read(UiFacade.class.getResource(parseString(
 					"smile_image", "images/smile.png")));
-			SMILE_SAD_IMAGE = ImageIO.read(MineFrame.class
+			SMILE_SAD_IMAGE = ImageIO.read(UiFacade.class
 					.getResource(parseString("smile_sad_image",
 							"images/smile-sad.png")));
-			SMILE_HAPPY_IMAGE = ImageIO.read(MineFrame.class
+			SMILE_HAPPY_IMAGE = ImageIO.read(UiFacade.class
 					.getResource(parseString("smile_happy_image",
 							"images/smile-happy.png")));
-			SMILE_SURPRISED_IMAGE = ImageIO.read(MineFrame.class
+			SMILE_SURPRISED_IMAGE = ImageIO.read(UiFacade.class
 					.getResource(parseString("smile_surprised_image",
 							"images/smile-surprised.png")));
 		} catch (IOException e) {

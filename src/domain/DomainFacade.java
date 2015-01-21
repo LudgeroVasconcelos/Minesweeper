@@ -10,7 +10,7 @@ import minesweeper.Difficulty;
  * @author Ludgero
  * 
  */
-public interface MineFacade {
+public interface DomainFacade {
 
 	/**
 	 * Clears the grid. The game is restarted.

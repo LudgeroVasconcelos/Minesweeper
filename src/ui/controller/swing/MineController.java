@@ -13,8 +13,8 @@ import java.util.Observer;
 import javax.swing.SwingUtilities;
 
 import minesweeper.MineProperties;
-import ui.view.swing.MineFrame;
-import domain.MineFacade;
+import ui.view.swing.UiFacade;
+import domain.DomainFacade;
 import domain.events.ClearEvent;
 import domain.events.GameOverEvent;
 import domain.events.GameWonEvent;
@@ -31,22 +31,22 @@ import domain.events.ToggleMarkEvent;
  */
 public class MineController implements Observer {
 
-	private MineFacade mineHandler; // domain
-	private MineFrame mineFrame; // ui
+	private DomainFacade domainHandler;
+	private UiFacade uiHandler;
 
 	/**
 	 * Constructs and initializes a new controller that will resolve the
 	 * interaction between the given model and view layers for the main game
 	 * operations.
 	 * 
-	 * @param mineHandler
+	 * @param domainHandler
 	 *            The model component of the mvc architecture pattern
-	 * @param mineFrame
+	 * @param uiHandler
 	 *            The view component of the mvc architecture pattern
 	 */
-	public MineController(MineFacade mineHandler, MineFrame mineFrame) {
-		this.mineHandler = mineHandler;
-		this.mineFrame = mineFrame;
+	public MineController(DomainFacade domainHandler, UiFacade uiHandler) {
+		this.domainHandler = domainHandler;
+		this.uiHandler = uiHandler;
 	}
 
 	/**
@@ -54,9 +54,9 @@ public class MineController implements Observer {
 	 * from the model and view components.
 	 */
 	public void addObservers() {
-		mineHandler.addObserver(this);
-		mineFrame.addSquaresListener(squaresListener());
-		mineFrame.addClearListener(clearGrid());
+		domainHandler.addObserver(this);
+		uiHandler.addSquaresListener(squaresListener());
+		uiHandler.addClearListener(clearGrid());
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class MineController implements Observer {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				mineHandler.clearGrid();
+				domainHandler.clearGrid();
 			}
 		};
 	}
@@ -83,13 +83,14 @@ public class MineController implements Observer {
 	private MouseListener squaresListener() {
 		return new MouseAdapter() {
 
+			@Override
 			public void mousePressed(MouseEvent e) {
 				if (SwingUtilities.isRightMouseButton(e)) {
 					Point p = getPoint(e.getX(), e.getY());
-					mineHandler.toggleMark(p.x, p.y);
+					domainHandler.toggleMark(p.x, p.y);
 
 				} else if (SwingUtilities.isLeftMouseButton(e)) {
-					mineFrame.mousePressed();
+					uiHandler.mousePressed();
 				}
 			}
 
@@ -97,9 +98,9 @@ public class MineController implements Observer {
 			public void mouseReleased(MouseEvent e) {
 				if (SwingUtilities.isLeftMouseButton(e)) {
 					Point p = getPoint(e.getX(), e.getY());
-					mineHandler.reveal(p.x, p.y);
+					domainHandler.reveal(p.x, p.y);
 				}
-				mineFrame.mouseReleased();
+				uiHandler.mouseReleased();
 			}
 
 			/**
@@ -126,7 +127,7 @@ public class MineController implements Observer {
 	 *            The squares to be revealed
 	 */
 	private void revealButtons(Iterable<Entry<Point, Integer>> revealedSquares) {
-		mineFrame.revealButtons(revealedSquares);
+		uiHandler.revealButtons(revealedSquares);
 	}
 
 	/**
@@ -141,14 +142,14 @@ public class MineController implements Observer {
 	 *            The number of painted flags
 	 */
 	private void toggleFlag(int x, int y, int flaggedMines) {
-		mineFrame.toggleFlag(x, y, flaggedMines);
+		uiHandler.toggleFlag(x, y, flaggedMines);
 	}
 
 	/**
 	 * Clears the game window.
 	 */
 	private void clearView() {
-		mineFrame.clearGrid();
+		uiHandler.clearGrid();
 	}
 
 	/**
@@ -162,14 +163,14 @@ public class MineController implements Observer {
 	 *            All mines' positions
 	 */
 	private void gameOver(int x, int y, Iterable<Point> mines) {
-		mineFrame.gameOver(x, y, mines);
+		uiHandler.gameOver(x, y, mines);
 	}
 
 	/**
 	 * Starts the timer.
 	 */
 	private void startGame() {
-		mineFrame.startGame();
+		uiHandler.startGame();
 	}
 
 	/**
@@ -178,7 +179,7 @@ public class MineController implements Observer {
 	 * @param unmarkedSquares
 	 */
 	private void gameWon(Iterable<Point> unmarkedSquares) {
-		mineFrame.gameWon(unmarkedSquares);
+		uiHandler.gameWon(unmarkedSquares);
 	}
 
 	@Override

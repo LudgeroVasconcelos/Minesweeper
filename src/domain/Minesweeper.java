@@ -17,7 +17,7 @@ import domain.reveal.RevealUntilNum;
  * @author Ludgero
  * 
  */
-public class Minesweeper implements MineFacade {
+public class Minesweeper implements DomainFacade {
 
 	private IGrid grid;
 

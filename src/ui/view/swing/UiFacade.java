@@ -17,22 +17,20 @@ import minesweeper.MineProperties;
  *
  */
 @SuppressWarnings("serial")
-public class MineFrame extends JFrame {
+public class UiFacade extends JFrame {
 
 	private GridPanel grid;
 	private UpperPanel upper;
-	private MineMenu menu;
+	private Menu menu;
 
 	/**
 	 * Constructs a new game window
 	 */
-	public MineFrame() {
+	public UiFacade() {
 		grid = new GridPanel(MineProperties.INSTANCE.ROWS,
 				MineProperties.INSTANCE.COLUMNS);
-		// the upper panel contains the smile button, current number of
-		// remaining mines and a timer
 		upper = new UpperPanel(MineProperties.INSTANCE.NUMBER_OF_MINES);
-		menu = new MineMenu();
+		menu = new Menu();
 
 		setJMenuBar(menu);
 		setLayout(new BorderLayout());

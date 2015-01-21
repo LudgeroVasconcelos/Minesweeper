@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import domain.grid.NormalSquare;
+import domain.grid.SafeSquare;
 import domain.grid.Square;
 
 /**
@@ -35,7 +35,7 @@ public class RevealUntilNum implements IReveal {
 			Point p = stack.pop();
 
 			if (!map.containsKey(p)) {
-				NormalSquare ns = (NormalSquare) grid[p.x][p.y];
+				SafeSquare ns = (SafeSquare) grid[p.x][p.y];
 				int minesAround = ns.getNumOfMinesAround();
 				ns.reveal();
 

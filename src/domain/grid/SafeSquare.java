@@ -6,7 +6,7 @@ package domain.grid;
  * @author Ludgero
  * 
  */
-public class NormalSquare extends Square {
+public class SafeSquare extends Square {
 
 	private final int minesAround;
 
@@ -16,7 +16,7 @@ public class NormalSquare extends Square {
 	 * @param minesAround
 	 *            The number of mines surrounding the square to be created
 	 */
-	public NormalSquare(int minesAround) {
+	public SafeSquare(int minesAround) {
 		this.minesAround = minesAround;
 	}
 

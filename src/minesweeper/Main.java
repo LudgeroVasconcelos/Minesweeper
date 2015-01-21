@@ -2,8 +2,8 @@ package minesweeper;
 
 import ui.controller.swing.MenuController;
 import ui.controller.swing.MineController;
-import ui.view.swing.MineFrame;
-import domain.MineFacade;
+import ui.view.swing.UiFacade;
+import domain.DomainFacade;
 import domain.Minesweeper;
 
 /**
@@ -21,17 +21,17 @@ public class Main {
 			public void run() {
 
 				// create model
-				MineFacade mineFacade = new Minesweeper();
+				DomainFacade domainFacade = new Minesweeper();
 
 				// create view
-				MineFrame mineFrame = new MineFrame();
+				UiFacade uiFacade = new UiFacade();
 
 				// create controllers
-				MineController mineController = new MineController(mineFacade,
-						mineFrame);
+				MineController mineController = new MineController(domainFacade,
+						uiFacade);
 
-				MenuController menuController = new MenuController(mineFacade,
-						mineFrame);
+				MenuController menuController = new MenuController(domainFacade,
+						uiFacade);
 
 				// establish connection between mvc components
 				mineController.addObservers();
