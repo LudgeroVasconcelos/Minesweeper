@@ -131,18 +131,20 @@ public class MineController implements Observer {
 	}
 
 	/**
-	 * Paints a flag over the square at (x, y) if it is not already painted,
-	 * otherwise, the flag is erased. Updates the number of mines left.
+	 * Paints a flag over the square at (x, y) if the square is flagged,
+	 * otherwise, the flag is removed. Updates the number of mines left.
 	 * 
 	 * @param x
 	 *            The x coordinate of the clicked square
 	 * @param y
 	 *            The y coordinate of the clicked square
+	 * @param flagged
+	 *            Is this square flagged?
 	 * @param flaggedMines
-	 *            The number of painted flags
+	 *            The number of flagged squares
 	 */
-	private void toggleFlag(int x, int y, int flaggedMines) {
-		uiHandler.toggleFlag(x, y, flaggedMines);
+	private void toggleFlag(int x, int y, boolean flagged, int flaggedMines) {
+		uiHandler.toggleFlag(x, y, flagged, flaggedMines);
 	}
 
 	/**
@@ -161,9 +163,12 @@ public class MineController implements Observer {
 	 *            The y coordinate of the exploded mine
 	 * @param mines
 	 *            All mines' positions
+	 * @param mistakenMarks
+	 *            All marked squares that are not mined
 	 */
-	private void gameOver(int x, int y, Iterable<Point> mines) {
-		uiHandler.gameOver(x, y, mines);
+	private void gameOver(int x, int y, Iterable<Point> mines,
+			Iterable<Point> mistakenMarks) {
+		uiHandler.gameOver(x, y, mines, mistakenMarks);
 	}
 
 	/**
@@ -188,12 +193,13 @@ public class MineController implements Observer {
 		if (hint instanceof SquareEvent) {
 			if (hint instanceof ToggleMarkEvent) {
 				ToggleMarkEvent tme = (ToggleMarkEvent) hint;
-				toggleFlag(tme.getX(), tme.getY(),
+				toggleFlag(tme.getX(), tme.getY(), tme.isMarked(),
 						tme.getNumberOfFlaggedMines());
 
 			} else if (hint instanceof GameOverEvent) {
 				GameOverEvent goe = (GameOverEvent) hint;
-				gameOver(goe.getX(), goe.getY(), goe.getMines());
+				gameOver(goe.getX(), goe.getY(), goe.getMines(),
+						goe.getMistakenMarks());
 			}
 		} else if (hint instanceof SquareRevealedEvent) {
 			SquareRevealedEvent nsre = (SquareRevealedEvent) hint;

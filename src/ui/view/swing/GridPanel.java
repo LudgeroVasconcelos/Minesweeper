@@ -5,9 +5,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.util.HashSet;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.swing.JPanel;
 
@@ -24,11 +22,9 @@ public class GridPanel extends JPanel {
 
 	private int rows;
 	private int columns;
-	
+
 	private MineButton[][] buttons;
 	private BufferedImage state;
-
-	private Set<Point> flaggedButtons; // helps to display mines faster
 
 	/**
 	 * Constructs a new grid.
@@ -42,17 +38,17 @@ public class GridPanel extends JPanel {
 		super();
 		resize(rows, columns);
 	}
-	
+
 	/**
 	 * Resizes this grid and initializes a new game.
 	 */
-	public void resize(int rows, int columns){
+	public void resize(int rows, int columns) {
 		this.rows = rows;
 		this.columns = columns;
-		
+
 		init();
 	}
-	
+
 	/**
 	 * Initializes this grid.
 	 */
@@ -63,7 +59,6 @@ public class GridPanel extends JPanel {
 		setPreferredSize(new Dimension(width, height));
 		state = new BufferedImage(width, height, Image.SCALE_SMOOTH);
 
-		flaggedButtons = new HashSet<Point>();
 		addMineButtons();
 	}
 
@@ -82,11 +77,11 @@ public class GridPanel extends JPanel {
 
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < columns; j++) {
-				buttons[i][j] = new MineButton(coordY, coordX, g);
-				coordY += MineProperties.INSTANCE.BUTTON_WIDTH;
+				buttons[i][j] = new MineButton(coordX, coordY, g);
+				coordX += MineProperties.INSTANCE.BUTTON_WIDTH;
 			}
-			coordX += MineProperties.INSTANCE.BUTTON_HEIGHT;
-			coordY = 0;
+			coordY += MineProperties.INSTANCE.BUTTON_HEIGHT;
+			coordX = 0;
 		}
 	}
 
@@ -103,15 +98,14 @@ public class GridPanel extends JPanel {
 	 *            The x coordinate of the square to be painted
 	 * @param y
 	 *            The y coordinate of the square to be painted
+	 * @param flagged
 	 */
-	public void toggleFlag(int x, int y) {
-		buttons[x][y].toggleFlag();
-
-		Point p = new Point(x, y);
-		if (!flaggedButtons.contains(p))
-			flaggedButtons.add(p);
+	public void toggleFlag(int x, int y, boolean flagged) {
+		if (flagged)
+			buttons[x][y].setFlag();
 		else
-			flaggedButtons.remove(p);
+			buttons[x][y].removeFlag();
+
 		repaint();
 	}
 
@@ -137,20 +131,17 @@ public class GridPanel extends JPanel {
 	 * Clears the grid to return to its original state.
 	 */
 	public void clear() {
-		flaggedButtons.clear();
 
-		for (int i = 0; i < rows; i++) {
-			for (int j = 0; j < columns; j++) {
+		for (int i = 0; i < rows; i++)
+			for (int j = 0; j < columns; j++)
 				buttons[i][j].clear();
-			}
-		}
+			
 		repaint();
 	}
 
 	/**
-	 * Shows all mines' positions. A cross is painted on squares that are
-	 * wrongly flagged (wrongly flagged buttons are flagged buttons that do not
-	 * hide mines).
+	 * Shows all mines' positions. A cross is painted on flagged squares that
+	 * are not mined, meaning that those squares were flagged by mistake.
 	 * 
 	 * @param x
 	 *            The x coordinate of the exploded mine
@@ -158,27 +149,24 @@ public class GridPanel extends JPanel {
 	 *            The y coordinate of the exploded mine
 	 * @param mines
 	 *            An iterable containing all mines' positions
+	 * @param mistakenMarks
+	 *            An iterable containing the positions of squares marked by
+	 *            mistake
 	 */
-	public void gameOver(int x, int y, Iterable<Point> mines) {
+	public void gameOver(int x, int y, Iterable<Point> mines,
+			Iterable<Point> mistakenMarks) {
+
 		for (Point p : mines) {
-			if (!buttons[p.x][p.y].isFlagged()) {
-				buttons[p.x][p.y].reveal(0);
-				buttons[p.x][p.y].setMine();
-			} else
-				// after the loop, flaggedButtons will only contain buttons that
-				// are flagged but do not hide a mine
-				flaggedButtons.remove(p);
+			buttons[p.x][p.y].reveal(0);
+			buttons[p.x][p.y].setMine();
 		}
-		// now every button in flaggedButtons is wrongly flagged (they do not
-		// hide mines)
-		for (Point p : flaggedButtons) {
+
+		for (Point p : mistakenMarks) {
 			buttons[p.x][p.y].reveal(0);
 			buttons[p.x][p.y].setMine();
 			buttons[p.x][p.y].setCross();
 		}
 		buttons[x][y].exploded();
-		buttons[x][y].setMine();
-
 		repaint();
 	}
 
@@ -191,7 +179,7 @@ public class GridPanel extends JPanel {
 	 */
 	public void gameWon(Iterable<Point> unmarkedSquares) {
 		for (Point p : unmarkedSquares) {
-			buttons[p.x][p.y].toggleFlag();
+			buttons[p.x][p.y].setFlag();
 		}
 		repaint();
 	}

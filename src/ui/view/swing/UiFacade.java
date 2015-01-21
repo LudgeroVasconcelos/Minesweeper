@@ -14,7 +14,7 @@ import minesweeper.MineProperties;
  * The main UI class.
  * 
  * @author Ludgero
- *
+ * 
  */
 @SuppressWarnings("serial")
 public class UiFacade extends JFrame {
@@ -50,7 +50,8 @@ public class UiFacade extends JFrame {
 	 * 
 	 * @param revealedSquares
 	 *            The Iterable containing the positions of the revealed squares
-	 *            and the corresponding number of neighboring mines of each square
+	 *            and the corresponding number of neighboring mines of each
+	 *            square
 	 */
 	public void revealButtons(Iterable<Entry<Point, Integer>> revealedSquares) {
 		grid.revealButtons(revealedSquares);
@@ -64,11 +65,12 @@ public class UiFacade extends JFrame {
 	 *            The x coordinate of the square to be painted
 	 * @param y
 	 *            The y coordinate of the square to be painted
+	 * @param flagged
 	 * @param flaggedMines
 	 *            The number of flags on the grid after the painting
 	 */
-	public void toggleFlag(int x, int y, int flaggedMines) {
-		grid.toggleFlag(x, y);
+	public void toggleFlag(int x, int y, boolean flagged, int flaggedMines) {
+		grid.toggleFlag(x, y, flagged);
 		upper.setRemainingMines(MineProperties.INSTANCE.NUMBER_OF_MINES
 				- flaggedMines);
 	}
@@ -82,7 +84,7 @@ public class UiFacade extends JFrame {
 	}
 
 	/**
-	 * Shows where all the mines were hiding and which one got exploded. Paints
+	 * Shows where unmarked mines are hidden and which one got exploded. Paints
 	 * a sad face image on the button. Stops the timer.
 	 * 
 	 * @param x
@@ -90,10 +92,13 @@ public class UiFacade extends JFrame {
 	 * @param y
 	 *            The y coordinate of the exploded mine
 	 * @param mines
-	 *            The positions of the mines to be shown
+	 *            The positions of unmarked mines to be shown
+	 * @param mistakenMarks
+	 *            The positions of marked squares that are not mined
 	 */
-	public void gameOver(int x, int y, Iterable<Point> mines) {
-		grid.gameOver(x, y, mines);
+	public void gameOver(int x, int y, Iterable<Point> mines,
+			Iterable<Point> mistakenMarks) {
+		grid.gameOver(x, y, mines, mistakenMarks);
 		upper.gameOver();
 	}
 

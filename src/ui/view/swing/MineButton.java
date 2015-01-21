@@ -22,7 +22,6 @@ public class MineButton {
 	private final int coordX, coordY;
 	private final int width, height;
 
-	private boolean flagged;
 	private Graphics2D g2;
 
 	/**
@@ -46,17 +45,12 @@ public class MineButton {
 		paint();
 	}
 
-	/**
-	 * Paints a flag over the square at (x, y) if it is not already painted,
-	 * otherwise, the flag is erased.
-	 */
-	public void toggleFlag() {
-		if (!flagged)
-			drawImage(MineProperties.INSTANCE.FLAG_IMAGE);
-		else
-			paint();
+	public void setFlag() {
+		drawImage(MineProperties.INSTANCE.FLAG_IMAGE);
+	}
 
-		flagged = !flagged;
+	public void removeFlag() {
+		paint();
 	}
 
 	/**
@@ -78,20 +72,12 @@ public class MineButton {
 	}
 
 	/**
-	 * Checks if this square is flagged.
-	 * 
-	 * @return true if this square is flagged, false otherwise
-	 */
-	public boolean isFlagged() {
-		return flagged;
-	}
-
-	/**
 	 * This square got exploded. A red background is painted on it.
 	 */
 	public void exploded() {
 		g2.setColor(Color.RED);
 		g2.fillRect(coordX, coordY, width, height);
+		setMine();
 	}
 
 	/**
@@ -128,7 +114,6 @@ public class MineButton {
 	 * Returns this square to its original state.
 	 */
 	public void clear() {
-		flagged = false;
 		paint();
 	}
 

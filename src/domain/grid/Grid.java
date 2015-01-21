@@ -25,7 +25,7 @@ import domain.reveal.IReveal;
  * and operates on them.
  * 
  * @author Ludgero
- *
+ * 
  */
 public class Grid extends Observable implements IGrid {
 
@@ -85,7 +85,7 @@ public class Grid extends Observable implements IGrid {
 
 		Event event;
 		if (grid[x][y] instanceof MinedSquare) {
-			event = new GameOverEvent(x, y, getMines());
+			event = new GameOverEvent(x, y, getMines(), getMistakenMarks());
 			gameEnded = true;
 
 		} else {
@@ -107,12 +107,10 @@ public class Grid extends Observable implements IGrid {
 		if (!grid[x][y].isRevealed()) {
 			grid[x][y].toggleMark();
 
-			if (grid[x][y].isMarked())
-				flaggedSquares++;
-			else
-				flaggedSquares--;
+			boolean marked = grid[x][y].isMarked();
+			flaggedSquares = marked ? flaggedSquares++ : flaggedSquares--;
 
-			fireChangedEvent(new ToggleMarkEvent(x, y, flaggedSquares));
+			fireChangedEvent(new ToggleMarkEvent(x, y, marked, flaggedSquares));
 		}
 	}
 
@@ -153,22 +151,37 @@ public class Grid extends Observable implements IGrid {
 	}
 
 	/**
-	 * Determines the positions of the mines on the grid. This method is only
-	 * called when the game is lost to protect this information.
+	 * Determines the positions of the mines on the grid. Marked squares are not
+	 * considered. This method is only called when the game is lost.
 	 * 
-	 * @return a list containing the mines positions
+	 * @return a list containing the mines' positions
 	 */
 	private List<Point> getMines() {
 		List<Point> mines = new ArrayList<Point>();
 
 		for (int i = 0; i < grid.length; i++)
 			for (int j = 0; j < grid[i].length; j++)
-				if (grid[i][j] instanceof MinedSquare)
+				if (grid[i][j] instanceof MinedSquare && !grid[i][j].isMarked())
 					mines.add(new Point(i, j));
 
 		return mines;
 	}
 
+	/**
+	 * Determines the squares' positions that are marked but are not mined.
+	 * @return a list as specified.
+	 */
+	private List<Point> getMistakenMarks() {
+		List<Point> mistakes = new ArrayList<Point>();
+
+		for (int i = 0; i < grid.length; i++)
+			for (int j = 0; j < grid[i].length; j++)
+				if (grid[i][j] instanceof SafeSquare && grid[i][j].isMarked())
+					mistakes.add(new Point(i, j));
+
+		return mistakes;
+	}
+	
 	/**
 	 * Notifies observers of the occurrence of an event.
 	 * 

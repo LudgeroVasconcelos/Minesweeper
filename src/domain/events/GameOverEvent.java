@@ -10,7 +10,8 @@ import java.awt.Point;
  */
 public class GameOverEvent extends SquareEvent {
 
-	Iterable<Point> mines;
+	private Iterable<Point> mines;
+	private Iterable<Point> mistakenMarks;
 
 	/**
 	 * Constructs and initializes a new game over event.
@@ -20,11 +21,17 @@ public class GameOverEvent extends SquareEvent {
 	 * @param y
 	 *            The y coordinate of the exploded mine
 	 * @param iterable
-	 *            The Iterable containing all mines positions
+	 *            An Iterable containing all mines' positions that are not
+	 *            marked
+	 * @param mistakenMarks
+	 *            An iterable containing the squares that are marked but are not
+	 *            mined
 	 */
-	public GameOverEvent(int x, int y, Iterable<Point> iterable) {
+	public GameOverEvent(int x, int y, Iterable<Point> iterable,
+			Iterable<Point> mistakenMarks) {
 		super(x, y);
 		this.mines = iterable;
+		this.mistakenMarks = mistakenMarks;
 	}
 
 	/**
@@ -34,4 +41,7 @@ public class GameOverEvent extends SquareEvent {
 		return mines;
 	}
 
+	public Iterable<Point> getMistakenMarks() {
+		return mistakenMarks;
+	}
 }
