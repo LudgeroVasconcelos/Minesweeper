@@ -38,7 +38,7 @@ public class UpperPanel extends JPanel {
 	private Timer t;
 
 	/**
-	 * Constructs a new panel containing two labels and a button.
+	 * Constructs a new panel containing a timer, a mines' counter and a button.
 	 * 
 	 * @param mines
 	 */

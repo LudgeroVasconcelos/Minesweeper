@@ -19,9 +19,7 @@ import minesweeper.MineProperties;
  */
 public class MineButton {
 
-	private final int x, y; // button coordinates on the user system coordinates
-	private final int coordX, coordY; // button coordinates on the viewport
-	// system coordinates
+	private final int coordX, coordY;
 	private final int width, height;
 
 	private boolean flagged;
@@ -30,10 +28,6 @@ public class MineButton {
 	/**
 	 * Constructs and initializes a new button.
 	 * 
-	 * @param x
-	 *            The x coordinate of this button on the grid.
-	 * @param y
-	 *            The y coordinate of this button on the grid
 	 * @param coordX
 	 *            The x coordinate of this button on the window frame
 	 * @param coordY
@@ -45,11 +39,9 @@ public class MineButton {
 	 * @param g2
 	 *            The graphics where this button will be painted to
 	 */
-	public MineButton(int x, int y, int coordX, int coordY, int width,
+	public MineButton(int coordX, int coordY, int width,
 			int height, Graphics g2) {
 		super();
-		this.x = x;
-		this.y = y;
 		this.coordX = coordX;
 		this.coordY = coordY;
 		this.width = width;
@@ -57,24 +49,6 @@ public class MineButton {
 
 		this.g2 = (Graphics2D) g2;
 		paint();
-	}
-
-	/**
-	 * Returns the x coordinate of this button on the grid.
-	 * 
-	 * @return an integer as specified
-	 */
-	public int getPosX() {
-		return x;
-	}
-
-	/**
-	 * Returns the y coordinate of this button on the grid.
-	 * 
-	 * @return an integer as specified
-	 */
-	public int getPosY() {
-		return y;
 	}
 
 	/**

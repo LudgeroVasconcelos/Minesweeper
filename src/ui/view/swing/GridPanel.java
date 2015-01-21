@@ -17,7 +17,7 @@ import minesweeper.MineProperties;
  * This class represents the grid in the game window.
  * 
  * @author Ludgero
- *
+ * 
  */
 @SuppressWarnings("serial")
 public class GridPanel extends JPanel {
@@ -54,8 +54,7 @@ public class GridPanel extends JPanel {
 
 		for (int i = 0; i < buttons.length; i++) {
 			for (int j = 0; j < buttons[i].length; j++) {
-				buttons[i][j] = new MineButton(i, j, coordY, coordX, width,
-						height, g);
+				buttons[i][j] = new MineButton(coordY, coordX, width, height, g);
 				coordY += width;
 			}
 			coordX += height;
@@ -69,8 +68,8 @@ public class GridPanel extends JPanel {
 	}
 
 	/**
-	 * Paints a flag on the square located at (x, y) if it is not already painted,
-	 * otherwise, the flag is removed.
+	 * Paints a flag on the square located at (x, y) if it is not already
+	 * painted, otherwise, the flag is removed.
 	 * 
 	 * @param x
 	 *            The x coordinate of the square to be painted
