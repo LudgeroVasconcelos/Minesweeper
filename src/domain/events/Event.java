@@ -1,7 +1,7 @@
 package domain.events;
 
 /**
- * The class representing an event occurred in the game
+ * The class representing an event occurred in the game.
  * 
  * @author Ludgero
  *

@@ -3,7 +3,7 @@ package domain.events;
 import java.awt.Point;
 
 /**
- * Represents the game over event which is fired when a mined square is clicked
+ * Represents the game over event which is fired when a mined square is clicked.
  * 
  * @author Ludgero
  * 

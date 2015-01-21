@@ -19,6 +19,13 @@ import javax.swing.plaf.basic.BasicBorders;
 
 import minesweeper.MineProperties;
 
+/**
+ * This class represents the panel located above the grid. It contains
+ * components used to give feedback to the player.
+ * 
+ * @author Ludgero
+ * 
+ */
 @SuppressWarnings("serial")
 public class UpperPanel extends JPanel {
 
@@ -30,6 +37,11 @@ public class UpperPanel extends JPanel {
 
 	private Timer t;
 
+	/**
+	 * Constructs a new panel containing two labels and a button.
+	 * 
+	 * @param mines
+	 */
 	public UpperPanel(int mines) {
 
 		setLayout(new GridLayout(1, 3, 0, 0));
@@ -37,6 +49,7 @@ public class UpperPanel extends JPanel {
 				BorderFactory.createBevelBorder(BevelBorder.RAISED),
 				BorderFactory.createBevelBorder(BevelBorder.LOWERED)));
 
+		// timer label
 		JPanel timerPanel = new JPanel();
 		timer = new JLabel();
 		setLabelOptions(timer);
@@ -44,6 +57,7 @@ public class UpperPanel extends JPanel {
 		resetTimer();
 		add(timerPanel);
 
+		// button
 		JPanel smilePanel = new JPanel();
 		smile = new JButton();
 		smile.setBackground(new Color(210, 210, 210));
@@ -52,6 +66,7 @@ public class UpperPanel extends JPanel {
 		smilePanel.add(smile);
 		add(smilePanel);
 
+		// mines label
 		JPanel minesPanel = new JPanel();
 		remainingMines = new JLabel();
 		setLabelOptions(remainingMines);
@@ -60,53 +75,20 @@ public class UpperPanel extends JPanel {
 		add(minesPanel);
 	}
 
+	/**
+	 * Adds a clear game listener to the button.
+	 * 
+	 * @param clearGrid
+	 *            The listener to be added
+	 */
 	public void addClearListener(ActionListener clearGrid) {
 		smile.addActionListener(clearGrid);
 	}
 
+	/**
+	 * Starts the timer to be seen on the timer label.
+	 */
 	public void startGame() {
-		startTimer();
-	}
-
-	public void setRemainingMines(int mines) {
-		String s = String.valueOf(mines);
-		s = mines > 99 ? s : mines > 9 ? "0" + s : mines < 0 ? "000" : "00" + s;
-		
-		remainingMines.setText(s);
-	}
-
-	public void gameWon() {
-		setFace(MineProperties.INSTANCE.SMILE_HAPPY_IMAGE);
-		stopTimer();
-		setRemainingMines(0);
-		ended = true;
-	}
-
-	public void gameOver() {
-		stopTimer();
-		setFace(MineProperties.INSTANCE.SMILE_SAD_IMAGE);
-		ended = true;
-	}
-
-	public void clear() {
-		stopTimer();
-		resetTimer();
-		setRemainingMines(MineProperties.INSTANCE.NUMBER_OF_MINES);
-		setFace(MineProperties.INSTANCE.SMILE_IMAGE);
-		ended = false;
-	}
-
-	public void mousePressed() {
-		if (!ended)
-			setFace(MineProperties.INSTANCE.SMILE_SURPRISED_IMAGE);
-	}
-
-	public void mouseReleased() {
-		if (!ended)
-			setFace(MineProperties.INSTANCE.SMILE_IMAGE);
-	}
-
-	private void startTimer() {
 		t = new Timer();
 		TimerTask tt = new TimerTask() {
 
@@ -124,20 +106,98 @@ public class UpperPanel extends JPanel {
 		t.schedule(tt, 0, 1000);
 	}
 
+	/**
+	 * Changes the current number of remaining mines.
+	 * 
+	 * @param mines
+	 *            The integer corresponding to the number of remaining mines on
+	 *            the grid.
+	 */
+	public void setRemainingMines(int mines) {
+		String s = String.valueOf(mines);
+		s = mines > 99 ? s : mines > 9 ? "0" + s : mines < 0 ? "000" : "00" + s;
+
+		remainingMines.setText(s);
+	}
+
+	/**
+	 * Changes this panel components to a game won state
+	 */
+	public void gameWon() {
+		setFace(MineProperties.INSTANCE.SMILE_HAPPY_IMAGE);
+		stopTimer();
+		setRemainingMines(0);
+		ended = true;
+	}
+
+	/**
+	 * Changes this panel components to a game over state.
+	 */
+	public void gameOver() {
+		stopTimer();
+		setFace(MineProperties.INSTANCE.SMILE_SAD_IMAGE);
+		ended = true;
+	}
+
+	/**
+	 * Changes this panel components to a new game state.
+	 */
+	public void clear() {
+		stopTimer();
+		resetTimer();
+		setRemainingMines(MineProperties.INSTANCE.NUMBER_OF_MINES);
+		setFace(MineProperties.INSTANCE.SMILE_IMAGE);
+		ended = false;
+	}
+
+	/**
+	 * Changes the button image to a surprised face image.
+	 */
+	public void mousePressed() {
+		if (!ended)
+			setFace(MineProperties.INSTANCE.SMILE_SURPRISED_IMAGE);
+	}
+
+	/**
+	 * Changes the button image to a normal face image.
+	 */
+	public void mouseReleased() {
+		if (!ended)
+			setFace(MineProperties.INSTANCE.SMILE_IMAGE);
+	}
+
+	/**
+	 * Resets timer to 000.
+	 */
 	private void resetTimer() {
 		timer.setText("000");
 	}
 
+	/**
+	 * Stops the timer.
+	 */
 	private void stopTimer() {
 		if (t != null)
 			t.cancel();
 	}
 
+	/**
+	 * Paints an image on the button.
+	 * 
+	 * @param face
+	 *            The image that will be painted.
+	 */
 	private void setFace(Image face) {
 		smile.setIcon(new ImageIcon(face.getScaledInstance(35, 35,
 				Image.SCALE_SMOOTH)));
 	}
 
+	/**
+	 * Sets the appropriate options to a label.
+	 * 
+	 * @param label
+	 *            The label where the options will be set
+	 */
 	private void setLabelOptions(JLabel label) {
 		label.setBorder(BasicBorders.getTextFieldBorder());
 		label.setFont(MineProperties.INSTANCE.DIGITAL_FONT);

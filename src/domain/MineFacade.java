@@ -20,9 +20,12 @@ public interface MineFacade {
 	/**
 	 * Reveals the square at (x, y). Multiple squares are revealed if the square
 	 * has no mines surrounding it. If the square is mined, the game is over.
-	 * 
-	 * This method will do nothing if: 1 - the square is marked. 2 - the square
-	 * is already revealed. 3 - the game is already over.
+	 * <pre>
+	 * This method will do nothing if:
+	 * -The square is marked. 
+	 * -The square is already revealed.
+	 * -The game is already over.
+	 * </pre>
 	 * 
 	 * @param x
 	 *            The x coordinate of the square to be revealed

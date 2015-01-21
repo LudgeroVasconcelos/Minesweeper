@@ -13,7 +13,7 @@ import domain.MineFacade;
 import domain.events.ResizeEvent;
 
 /**
- * The menu bar controller.
+ * The controller for the menu operations.
  * 
  * @author Ludgero
  *
@@ -23,6 +23,14 @@ public class MenuController implements Observer {
 	private MineFacade mineHandler;
 	private MineFrame mineFrame;
 
+	/**
+	 * Constructs and initializes a new controller for the menu operations.
+	 * 
+	 * @param mineHandler
+	 *            The model component of the mvc architecture pattern
+	 * @param mineFrame
+	 *            The view component of the mvc architecture pattern
+	 */
 	public MenuController(MineFacade mineHandler, MineFrame mineFrame) {
 		this.mineHandler = mineHandler;
 		this.mineFrame = mineFrame;
@@ -33,6 +41,12 @@ public class MenuController implements Observer {
 		mineFrame.addMenuListeners(quitListener(), diffListener());
 	}
 
+	/**
+	 * Creates and returns a listener that will be triggered when a new difficulty is
+	 * chosen.
+	 * 
+	 * @return The specified listener
+	 */
 	private ActionListener diffListener() {
 		return new ActionListener() {
 
@@ -41,7 +55,7 @@ public class MenuController implements Observer {
 				JMenuItem jmi = (JMenuItem) e.getSource();
 
 				Difficulty diff;
-				
+
 				switch (jmi.getText()) {
 				case "Beginner":
 					diff = Difficulty.BEGINNER;
@@ -57,6 +71,12 @@ public class MenuController implements Observer {
 		};
 	}
 
+	/**
+	 * Creates and returns a listener that will be triggered when the user
+	 * quits the game.
+	 * 
+	 * @return The specified listener
+	 */
 	private ActionListener quitListener() {
 		return new ActionListener() {
 
@@ -67,6 +87,11 @@ public class MenuController implements Observer {
 		};
 	}
 
+	/**
+	 * Resizes the game window to fit the given number of rows and columns.
+	 * @param rows
+	 * @param columns
+	 */
 	private void resizeGrid(int rows, int columns) {
 		mineFrame.resizeGrid(rows, columns);
 	}

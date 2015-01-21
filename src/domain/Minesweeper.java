@@ -12,11 +12,7 @@ import domain.reveal.IReveal;
 import domain.reveal.RevealUntilNum;
 
 /**
- * This class implements the interaction a user may have with the game.
- * 
- * The grid is set to place the mines randomly after the first square is
- * revealed and it reveals all the squares around a square which has zero mines
- * around.
+ * This class implements the game operations.
  * 
  * @author Ludgero
  * 

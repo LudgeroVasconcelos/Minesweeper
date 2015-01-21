@@ -11,15 +11,40 @@ import java.awt.Point;
 
 import minesweeper.MineProperties;
 
+/**
+ * This class represents a square in the grid of the game window.
+ * 
+ * @author Ludgero
+ * 
+ */
 public class MineButton {
 
-	private final int x, y;
-	private final int coordX, coordY;
+	private final int x, y; // button coordinates on the user system coordinates
+	private final int coordX, coordY; // button coordinates on the viewport
+	// system coordinates
 	private final int width, height;
 
 	private boolean flagged;
 	private Graphics2D g2;
 
+	/**
+	 * Constructs and initializes a new button.
+	 * 
+	 * @param x
+	 *            The x coordinate of this button on the grid.
+	 * @param y
+	 *            The y coordinate of this button on the grid
+	 * @param coordX
+	 *            The x coordinate of this button on the window frame
+	 * @param coordY
+	 *            The y coordinate of this button on the window frame
+	 * @param width
+	 *            The width of this button
+	 * @param height
+	 *            The height of this button
+	 * @param g2
+	 *            The graphics where this button will be painted to
+	 */
 	public MineButton(int x, int y, int coordX, int coordY, int width,
 			int height, Graphics g2) {
 		super();
@@ -34,14 +59,28 @@ public class MineButton {
 		paint();
 	}
 
+	/**
+	 * Returns the x coordinate of this button on the grid.
+	 * 
+	 * @return an integer as specified
+	 */
 	public int getPosX() {
 		return x;
 	}
 
+	/**
+	 * Returns the y coordinate of this button on the grid.
+	 * 
+	 * @return an integer as specified
+	 */
 	public int getPosY() {
 		return y;
 	}
 
+	/**
+	 * Paints a flag over the square at (x, y) if it is not already painted,
+	 * otherwise, the flag is erased.
+	 */
 	public void toggleFlag() {
 		if (!flagged)
 			drawImage(MineProperties.INSTANCE.FLAG_IMAGE);
@@ -51,6 +90,9 @@ public class MineButton {
 		flagged = !flagged;
 	}
 
+	/**
+	 * This method will paint the square to its original state.
+	 */
 	private void paint() {
 		g2.setStroke(new BasicStroke(2));
 		g2.setColor(new Color(210, 210, 210));
@@ -59,20 +101,36 @@ public class MineButton {
 		g2.drawLine(coordX, coordY + 1, coordX + width, coordY + 1);
 		g2.drawLine(coordX + 1, coordY, coordX + 1, coordY + height);
 		g2.setColor(new Color(140, 140, 140));
-		g2.drawLine(coordX, coordY + height - 1, coordX + width, coordY + height - 1);
-		g2.drawLine(coordX + width - 1, coordY, coordX + width - 1, coordY + height);
+		g2.drawLine(coordX, coordY + height - 1, coordX + width, coordY
+				+ height - 1);
+		g2.drawLine(coordX + width - 1, coordY, coordX + width - 1, coordY
+				+ height);
 		g2.setStroke(new BasicStroke(1));
 	}
 
+	/**
+	 * Checks if this square is flagged.
+	 * 
+	 * @return true if this square is flagged, false otherwise
+	 */
 	public boolean isFlagged() {
 		return flagged;
 	}
 
+	/**
+	 * This square got exploded. A red background is painted on it.
+	 */
 	public void exploded() {
 		g2.setColor(Color.RED);
 		g2.fillRect(coordX, coordY, width, height);
 	}
 
+	/**
+	 * Reveals this square. Draws the number of mines surrounding this square.
+	 * 
+	 * @param mines
+	 *            The number of mines surrounding this square
+	 */
 	public void reveal(int mines) {
 		g2.setColor(new Color(190, 190, 190));
 		g2.fillRect(coordX, coordY, width, height);
@@ -83,23 +141,44 @@ public class MineButton {
 			drawNumber(mines);
 	}
 
+	/**
+	 * Draws a mine image on this square.
+	 */
 	public void setMine() {
 		drawImage(MineProperties.INSTANCE.MINE_IMAGE);
 	}
 
+	/**
+	 * Draws a cross over this square.
+	 */
 	public void setCross() {
 		drawImage(MineProperties.INSTANCE.CROSS_IMAGE);
 	}
-	
+
+	/**
+	 * Returns this square to its original state.
+	 */
 	public void clear() {
 		flagged = false;
 		paint();
 	}
 
+	/**
+	 * Draws an image on this button.
+	 * 
+	 * @param img
+	 *            The image to be drawn
+	 */
 	private void drawImage(Image img) {
 		g2.drawImage(img, coordX, coordY, width, height, null);
 	}
 
+	/**
+	 * Draws a number on this button.
+	 * 
+	 * @param n
+	 *            The number to be drawn
+	 */
 	private void drawNumber(int n) {
 		String minesString = String.valueOf(n);
 
@@ -113,6 +192,17 @@ public class MineButton {
 		g2.drawString(minesString, centerPos.x, centerPos.y);
 	}
 
+	/**
+	 * Determines the coordinates where the given string must be drawn so that
+	 * it will be centered on this square.
+	 * 
+	 * @param fm
+	 *            The FontMetrics object of the font used to draw the given text
+	 * @param mines
+	 *            The text to be drawn
+	 * 
+	 * @return The coordinates as specified
+	 */
 	private Point getTextCenterPos(FontMetrics fm, String mines) {
 		int textWidth = fm.stringWidth(mines);
 		int textHeight = fm.getHeight();

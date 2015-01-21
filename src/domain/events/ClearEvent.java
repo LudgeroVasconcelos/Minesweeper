@@ -1,7 +1,7 @@
 package domain.events;
 
 /**
- * This class represents the occurrence of an event to clear the grid
+ * This class represents the occurrence of an event to clear the grid.
  * 
  * @author Ludgero
  *
