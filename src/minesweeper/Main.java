@@ -1,7 +1,7 @@
 package minesweeper;
 
+import ui.controller.swing.GridController;
 import ui.controller.swing.MenuController;
-import ui.controller.swing.MineController;
 import ui.view.swing.UiFacade;
 import domain.DomainFacade;
 import domain.Minesweeper;
@@ -27,7 +27,7 @@ public class Main {
 				UiFacade uiFacade = new UiFacade();
 
 				// create controllers
-				MineController mineController = new MineController(domainFacade,
+				GridController mineController = new GridController(domainFacade,
 						uiFacade);
 
 				MenuController menuController = new MenuController(domainFacade,

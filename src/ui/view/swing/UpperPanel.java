@@ -62,6 +62,7 @@ public class UpperPanel extends JPanel {
 		smile = new JButton();
 		smile.setBackground(new Color(210, 210, 210));
 		smile.setPreferredSize(new Dimension(35, 35));
+		smile.setActionCommand("new");
 		setFace(MineProperties.INSTANCE.SMILE_IMAGE);
 		smilePanel.add(smile);
 		add(smilePanel);

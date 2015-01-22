@@ -28,10 +28,15 @@ public class Menu extends JMenuBar {
 		JMenu jm = new JMenu("Game");
 
 		newItem = new JMenuItem("New");
+		newItem.setActionCommand("new");
 		beginnerItem = new JMenuItem("Beginner");
+		beginnerItem.setActionCommand("difficulty");
 		intermediateItem = new JMenuItem("Intermediate");
+		intermediateItem.setActionCommand("difficulty");
 		expertItem = new JMenuItem("Expert");
+		expertItem.setActionCommand("difficulty");
 		quitItem = new JMenuItem("Quit");
+		quitItem.setActionCommand("quit");
 
 		jm.add(newItem);
 		jm.addSeparator();
@@ -45,35 +50,47 @@ public class Menu extends JMenuBar {
 	}
 
 	/**
-	 * Adds a listener to clear the game on the 'new' menu item.
+	 * Adds a listener to the 'new' menu item.
 	 * 
-	 * @param clearListener
+	 * @param listener
 	 *            The listener to be added to the appropriate menu item
 	 */
-	public void addClearListener(ActionListener clearListener) {
-		newItem.addActionListener(clearListener);
+	public void addClearListener(ActionListener listener) {
+		newItem.addActionListener(listener);
 	}
 
 	/**
-	 * Adds a listener to quit the game on the 'quit' menu item.
+	 * Adds a listener to the 'quit' menu item.
 	 * 
-	 * @param quitListener
+	 * @param listener
 	 *            The listener to be added to the appropriate menu item
 	 */
-	public void addQuitListener(ActionListener quitListener) {
-		quitItem.addActionListener(quitListener);
+	public void addQuitListener(ActionListener listener) {
+		quitItem.addActionListener(listener);
 
 	}
 
 	/**
-	 * Adds a listener to change difficulty on the difficulty menu items.
+	 * Adds a listener to the difficulty menu items.
 	 * 
-	 * @param diffListener
+	 * @param listener
 	 *            The listener to be added to the appropriate menu items
 	 */
-	public void addDiffListener(ActionListener diffListener) {
-		beginnerItem.addActionListener(diffListener);
-		intermediateItem.addActionListener(diffListener);
-		expertItem.addActionListener(diffListener);
+	public void addDiffListener(ActionListener listener) {
+		beginnerItem.addActionListener(listener);
+		intermediateItem.addActionListener(listener);
+		expertItem.addActionListener(listener);
+	}
+
+	/**
+	 * 
+	 * @param listener
+	 */
+	public void addListeners(ActionListener listener) {
+		newItem.addActionListener(listener);
+		quitItem.addActionListener(listener);
+		beginnerItem.addActionListener(listener);
+		intermediateItem.addActionListener(listener);
+		expertItem.addActionListener(listener);
 	}
 }

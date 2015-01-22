@@ -1,25 +1,21 @@
 package ui.controller.swing;
 
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.Map.Entry;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.SwingUtilities;
 
-import minesweeper.MineProperties;
+import minesweeper.Util;
 import ui.view.swing.UiFacade;
 import domain.DomainFacade;
-import domain.events.ClearEvent;
 import domain.events.GameOverEvent;
 import domain.events.GameWonEvent;
+import domain.events.RevealEvent;
 import domain.events.SquareEvent;
-import domain.events.SquareRevealedEvent;
 import domain.events.StartGameEvent;
 import domain.events.ToggleMarkEvent;
 
@@ -29,7 +25,7 @@ import domain.events.ToggleMarkEvent;
  * @author Ludgero
  * 
  */
-public class MineController implements Observer {
+public class GridController extends MouseAdapter implements Observer {
 
 	private DomainFacade domainHandler;
 	private UiFacade uiHandler;
@@ -44,7 +40,7 @@ public class MineController implements Observer {
 	 * @param uiHandler
 	 *            The view component of the mvc architecture pattern
 	 */
-	public MineController(DomainFacade domainHandler, UiFacade uiHandler) {
+	public GridController(DomainFacade domainHandler, UiFacade uiHandler) {
 		this.domainHandler = domainHandler;
 		this.uiHandler = uiHandler;
 	}
@@ -55,69 +51,27 @@ public class MineController implements Observer {
 	 */
 	public void addObservers() {
 		domainHandler.addObserver(this);
-		uiHandler.addSquaresListener(squaresListener());
-		uiHandler.addClearListener(clearGrid());
+		uiHandler.addListener(this);
 	}
 
-	/**
-	 * A listener that will be triggered when an event to clear the grid is
-	 * fired.
-	 * 
-	 * @return The listener to clear the grid
-	 */
-	private ActionListener clearGrid() {
-		return new ActionListener() {
+	@Override
+	public void mousePressed(MouseEvent e) {
+		if (SwingUtilities.isRightMouseButton(e)) {
+			Point p = Util.getPoint(e.getX(), e.getY());
+			domainHandler.toggleMark(p.x, p.y);
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				domainHandler.clearGrid();
-			}
-		};
+		} else if (SwingUtilities.isLeftMouseButton(e)) {
+			uiHandler.mousePressed();
+		}
 	}
 
-	/**
-	 * A listener that will be triggered when the user reveals a square.
-	 * 
-	 * @return The listener as specified
-	 */
-	private MouseListener squaresListener() {
-		return new MouseAdapter() {
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				if (SwingUtilities.isRightMouseButton(e)) {
-					Point p = getPoint(e.getX(), e.getY());
-					domainHandler.toggleMark(p.x, p.y);
-
-				} else if (SwingUtilities.isLeftMouseButton(e)) {
-					uiHandler.mousePressed();
-				}
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				if (SwingUtilities.isLeftMouseButton(e)) {
-					Point p = getPoint(e.getX(), e.getY());
-					domainHandler.reveal(p.x, p.y);
-				}
-				uiHandler.mouseReleased();
-			}
-
-			/**
-			 * Converts mouse coordinates to square coordinates.
-			 * 
-			 * @param coordX
-			 *            The x coordinate to be converted
-			 * @param coordY
-			 *            The y coordinate to be converted
-			 * @return a point (X, Y) with converted coordinates.
-			 */
-			public Point getPoint(int coordX, int coordY) {
-				int y = coordX / MineProperties.INSTANCE.BUTTON_WIDTH;
-				int x = coordY / MineProperties.INSTANCE.BUTTON_HEIGHT;
-				return new Point(x, y);
-			}
-		};
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		if (SwingUtilities.isLeftMouseButton(e)) {
+			Point p = Util.getPoint(e.getX(), e.getY());
+			domainHandler.reveal(p.x, p.y);
+		}
+		uiHandler.mouseReleased();
 	}
 
 	/**
@@ -145,13 +99,6 @@ public class MineController implements Observer {
 	 */
 	private void toggleFlag(int x, int y, boolean flagged, int flaggedMines) {
 		uiHandler.toggleFlag(x, y, flagged, flaggedMines);
-	}
-
-	/**
-	 * Clears the game window.
-	 */
-	private void clearView() {
-		uiHandler.clearGrid();
 	}
 
 	/**
@@ -201,11 +148,9 @@ public class MineController implements Observer {
 				gameOver(goe.getX(), goe.getY(), goe.getMines(),
 						goe.getMistakenMarks());
 			}
-		} else if (hint instanceof SquareRevealedEvent) {
-			SquareRevealedEvent nsre = (SquareRevealedEvent) hint;
+		} else if (hint instanceof RevealEvent) {
+			RevealEvent nsre = (RevealEvent) hint;
 			revealButtons(nsre.getRevealedSquares());
-		} else if (hint instanceof ClearEvent) {
-			clearView();
 		} else if (hint instanceof StartGameEvent) {
 			startGame();
 		} else if (hint instanceof GameWonEvent) {

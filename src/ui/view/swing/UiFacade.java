@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Point;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
+import java.util.EventListener;
 import java.util.Map.Entry;
 
 import javax.swing.JFrame;
@@ -35,6 +36,7 @@ public class UiFacade extends JFrame {
 		setJMenuBar(menu);
 		setLayout(new BorderLayout());
 		setTitle("Minesweeper");
+		setIconImage(MineProperties.INSTANCE.MINE_IMAGE);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -58,7 +60,7 @@ public class UiFacade extends JFrame {
 	}
 
 	/**
-	 * Paints a flag over the square at (x, y) if it is not already painted,
+	 * Paints a flag over the square at (x, y) if it is not already flagged,
 	 * otherwise, the flag is erased.
 	 * 
 	 * @param x
@@ -66,6 +68,7 @@ public class UiFacade extends JFrame {
 	 * @param y
 	 *            The y coordinate of the square to be painted
 	 * @param flagged
+	 *            Indicates whether the square at (x, y) is flagged or not
 	 * @param flaggedMines
 	 *            The number of flags on the grid after the painting
 	 */
@@ -103,28 +106,6 @@ public class UiFacade extends JFrame {
 	}
 
 	/**
-	 * Adds a mouse listener to the grid.
-	 * 
-	 * @param squaresListener
-	 *            The mouse listener to be added
-	 */
-	public void addSquaresListener(MouseListener squaresListener) {
-		grid.addMouseListener(squaresListener);
-	}
-
-	/**
-	 * Adds a listener to clear the grid. The listener is added to the smile
-	 * button and to the 'new' item menu.
-	 * 
-	 * @param clearGrid
-	 *            The listener to be added
-	 */
-	public void addClearListener(ActionListener clearGrid) {
-		upper.addClearListener(clearGrid);
-		menu.addClearListener(clearGrid);
-	}
-
-	/**
 	 * Starts the timer.
 	 */
 	public void startGame() {
@@ -133,13 +114,12 @@ public class UiFacade extends JFrame {
 
 	/**
 	 * When only mined squares are left to be revealed, i.e., the game is won,
-	 * this method will paint a flag on every square not yet painted. It also
-	 * stops the timer, sets the number of remaining mines to zero and paints a
-	 * winning image on the button.
+	 * this method will flag every square not yet flagged. It also stops the
+	 * timer, sets the number of remaining mines to zero and paints a winning
+	 * image on the button.
 	 * 
 	 * @param unmarkedSquares
-	 *            The positions of the squares that need to be painted with a
-	 *            flag
+	 *            The positions of the squares to be flagged
 	 */
 	public void gameWon(Iterable<Point> unmarkedSquares) {
 		grid.gameWon(unmarkedSquares);
@@ -161,20 +141,20 @@ public class UiFacade extends JFrame {
 	}
 
 	/**
-	 * Adds listeners for all menu items except the 'new' one which must be
-	 * added with the addClearListener method. The listeners will be fired when
-	 * a menu item is clicked.
+	 * Adds listeners to UI.
 	 * 
-	 * @param quitListener
-	 *            The action listener for the 'quit' menu item
-	 * @param diffListener
-	 *            The action listener for the 3 levels of difficulty
+	 * @param listener
+	 *            The listener to be added
 	 */
-	public void addMenuListeners(ActionListener quitListener,
-			ActionListener diffListener) {
+	public void addListener(EventListener listener) {
 
-		menu.addQuitListener(quitListener);
-		menu.addDiffListener(diffListener);
+		if(listener instanceof MouseListener){
+			grid.addMouseListener((MouseListener)listener);	
+		}
+		else if(listener instanceof ActionListener){
+			upper.addClearListener((ActionListener)listener);
+			menu.addListeners((ActionListener)listener);
+		}
 	}
 
 	/**

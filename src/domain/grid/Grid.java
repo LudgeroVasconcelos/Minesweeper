@@ -13,7 +13,7 @@ import domain.events.Event;
 import domain.events.GameOverEvent;
 import domain.events.GameWonEvent;
 import domain.events.ResizeEvent;
-import domain.events.SquareRevealedEvent;
+import domain.events.RevealEvent;
 import domain.events.StartGameEvent;
 import domain.events.ToggleMarkEvent;
 import domain.fill.FillRandom;
@@ -90,7 +90,7 @@ public class Grid extends Observable implements IGrid {
 
 		} else {
 			Map<Point, Integer> revealed = revealer.revealSquares(grid, x, y);
-			event = new SquareRevealedEvent(revealed.entrySet());
+			event = new RevealEvent(revealed.entrySet());
 			revealedSquares += revealed.size();
 		}
 		fireChangedEvent(event);
@@ -108,7 +108,7 @@ public class Grid extends Observable implements IGrid {
 			grid[x][y].toggleMark();
 
 			boolean marked = grid[x][y].isMarked();
-			flaggedSquares = marked ? flaggedSquares++ : flaggedSquares--;
+			flaggedSquares = marked ? flaggedSquares + 1 : flaggedSquares - 1;
 
 			fireChangedEvent(new ToggleMarkEvent(x, y, marked, flaggedSquares));
 		}
@@ -169,6 +169,7 @@ public class Grid extends Observable implements IGrid {
 
 	/**
 	 * Determines the squares' positions that are marked but are not mined.
+	 * 
 	 * @return a list as specified.
 	 */
 	private List<Point> getMistakenMarks() {
@@ -181,7 +182,7 @@ public class Grid extends Observable implements IGrid {
 
 		return mistakes;
 	}
-	
+
 	/**
 	 * Notifies observers of the occurrence of an event.
 	 * 

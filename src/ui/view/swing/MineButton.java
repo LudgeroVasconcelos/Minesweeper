@@ -10,6 +10,7 @@ import java.awt.Image;
 import java.awt.Point;
 
 import minesweeper.MineProperties;
+import minesweeper.Util;
 
 /**
  * This class represents a square in the grid of the game window.
@@ -139,31 +140,10 @@ public class MineButton {
 		g2.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 19));
 		FontMetrics fm = g2.getFontMetrics();
 
-		Point centerPos = getTextCenterPos(fm, minesString);
+		Point centerPos = Util.getTextCenterPos(coordX, coordY, fm, minesString);
 
 		Color c = (MineProperties.INSTANCE.COLORS)[n - 1];
 		g2.setColor(c);
 		g2.drawString(minesString, centerPos.x, centerPos.y);
-	}
-
-	/**
-	 * Determines the coordinates where the given string must be drawn so that
-	 * it will be centered on this square.
-	 * 
-	 * @param fm
-	 *            The FontMetrics object of the font used to draw the given text
-	 * @param mines
-	 *            The text to be drawn
-	 * 
-	 * @return The coordinates as specified
-	 */
-	private Point getTextCenterPos(FontMetrics fm, String mines) {
-		int textWidth = fm.stringWidth(mines);
-		int textHeight = fm.getHeight();
-
-		int x = coordX + (width - textWidth) / 2;
-		int y = coordY + ((height - textHeight) / 2) + fm.getAscent();
-
-		return new Point(x, y);
 	}
 }

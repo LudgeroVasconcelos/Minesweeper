@@ -10,6 +10,7 @@ import javax.swing.JMenuItem;
 import minesweeper.Difficulty;
 import ui.view.swing.UiFacade;
 import domain.DomainFacade;
+import domain.events.ClearEvent;
 import domain.events.ResizeEvent;
 
 /**
@@ -18,7 +19,7 @@ import domain.events.ResizeEvent;
  * @author Ludgero
  * 
  */
-public class MenuController implements Observer {
+public class MenuController implements Observer, ActionListener {
 
 	private DomainFacade domainHandler;
 	private UiFacade uiHandler;
@@ -38,53 +39,7 @@ public class MenuController implements Observer {
 
 	public void addObservers() {
 		domainHandler.addObserver(this);
-		uiHandler.addMenuListeners(quitListener(), diffListener());
-	}
-
-	/**
-	 * Creates and returns a listener that will be triggered when a new
-	 * difficulty is chosen.
-	 * 
-	 * @return The specified listener
-	 */
-	private ActionListener diffListener() {
-		return new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JMenuItem jmi = (JMenuItem) e.getSource();
-
-				Difficulty diff;
-
-				switch (jmi.getText()) {
-				case "Beginner":
-					diff = Difficulty.BEGINNER;
-					break;
-				case "Intermediate":
-					diff = Difficulty.INTERMEDIATE;
-					break;
-				default:
-					diff = Difficulty.EXPERT;
-				}
-				domainHandler.setDifficulty(diff);
-			}
-		};
-	}
-
-	/**
-	 * Creates and returns a listener that will be triggered when the user quits
-	 * the game.
-	 * 
-	 * @return The specified listener
-	 */
-	private ActionListener quitListener() {
-		return new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
-			}
-		};
+		uiHandler.addListener(this);
 	}
 
 	/**
@@ -97,12 +52,53 @@ public class MenuController implements Observer {
 		uiHandler.resizeGrid(rows, columns);
 	}
 
+	/**
+	 * Clears the game window.
+	 */
+	private void clearView() {
+		uiHandler.clearGrid();
+	}
+
+	/**
+	 * Sets a new Difficulty
+	 * 
+	 * @param diffText
+	 *            The difficulty as a String
+	 */
+	private void setDifficulty(String diffText) {
+
+		Difficulty diff = Difficulty.valueOf(diffText);
+		domainHandler.setDifficulty(diff);
+	}
+
 	@Override
 	public void update(Observable obs, Object hint) {
 		if (hint instanceof ResizeEvent) {
-			ResizeEvent re = (ResizeEvent) hint;
 
+			ResizeEvent re = (ResizeEvent) hint;
 			resizeGrid(re.getRows(), re.getColumns());
+
+		} else if (hint instanceof ClearEvent) {
+			clearView();
+		}
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		String action = e.getActionCommand();
+
+		switch (action) {
+		case "new":
+			domainHandler.clearGrid();
+			break;
+
+		case "difficulty":
+			setDifficulty(((JMenuItem) e.getSource()).getText().toUpperCase());
+			break;
+
+		case "quit":
+			System.exit(0);
+			break;
 		}
 	}
 }

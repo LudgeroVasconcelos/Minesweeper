@@ -9,7 +9,7 @@ import java.util.Map.Entry;
  * @author Ludgero
  * 
  */
-public class SquareRevealedEvent extends Event {
+public class RevealEvent extends Event {
 
 	private Iterable<Entry<Point, Integer>> revealedSquares;
 
@@ -21,7 +21,7 @@ public class SquareRevealedEvent extends Event {
 	 *            The iterable containing the positions of the revealed squares
 	 *            and the corresponding number of neighboring mines.
 	 */
-	public SquareRevealedEvent(Iterable<Entry<Point, Integer>> revealedSquares) {
+	public RevealEvent(Iterable<Entry<Point, Integer>> revealedSquares) {
 		this.revealedSquares = revealedSquares;
 	}
 

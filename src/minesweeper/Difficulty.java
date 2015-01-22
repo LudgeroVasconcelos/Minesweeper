@@ -1,8 +1,8 @@
 package minesweeper;
 
 /**
- * This enumerator specifies the levels of difficulty of the game as well as
- * the number of mines, rows and columns for each one.
+ * This enumerator specifies the levels of difficulty of the game as well as the
+ * number of mines, rows and columns for each one.
  * 
  * @author Ludgero
  * 
