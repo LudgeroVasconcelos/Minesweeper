@@ -62,14 +62,16 @@ public class MineButton {
 		g2.setColor(new Color(210, 210, 210));
 		g2.fillRect(coordX, coordY, width, height);
 		g2.setColor(new Color(255, 255, 255));
-		g2.drawLine(coordX, coordY + 1, coordX + width, coordY + 1);
-		g2.drawLine(coordX + 1, coordY, coordX + 1, coordY + height);
-		g2.setColor(new Color(140, 140, 140));
-		g2.drawLine(coordX, coordY + height - 1, coordX + width, coordY
-				+ height - 1);
-		g2.drawLine(coordX + width - 1, coordY, coordX + width - 1, coordY
-				+ height);
+		g2.drawLine(coordX + 1, coordY + 2, coordX + width - 1, coordY + 2);
+		g2.drawLine(coordX + 2, coordY + 1, coordX + 2, coordY + height - 1);
+		g2.setColor(new Color(150, 150, 150));
 		g2.setStroke(new BasicStroke(1));
+		g2.drawLine(coordX + 1, coordY + height - 1, coordX + width - 1, coordY
+				+ height - 1);
+		g2.drawLine(coordX + width - 1, coordY + 1, coordX + width - 1, coordY
+				+ height - 1);
+		g2.setColor(new Color(140, 140, 140));
+		g2.drawRect(coordX, coordY, width, height);
 	}
 
 	/**
@@ -78,6 +80,8 @@ public class MineButton {
 	public void exploded() {
 		g2.setColor(Color.RED);
 		g2.fillRect(coordX, coordY, width, height);
+		g2.setColor(new Color(140, 140, 140));
+		g2.drawRect(coordX, coordY, width, height);
 		setMine();
 	}
 

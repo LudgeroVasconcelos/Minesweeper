@@ -8,6 +8,7 @@ import java.util.EventListener;
 import java.util.Map.Entry;
 
 import javax.swing.JFrame;
+import javax.swing.UIManager;
 
 import minesweeper.MineProperties;
 
@@ -28,6 +29,12 @@ public class UiFacade extends JFrame {
 	 * Constructs a new game window
 	 */
 	public UiFacade() {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+			// just do nothing
+			e.printStackTrace();
+		}
 		grid = new GridPanel(MineProperties.INSTANCE.ROWS,
 				MineProperties.INSTANCE.COLUMNS);
 		upper = new UpperPanel(MineProperties.INSTANCE.NUMBER_OF_MINES);
