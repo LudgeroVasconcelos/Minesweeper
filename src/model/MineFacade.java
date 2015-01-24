@@ -3,6 +3,7 @@ package model;
 import java.util.Observer;
 
 import minesweeper.MineProperties;
+import minesweeper.Util;
 import model.grid.Grid;
 import model.grid.IGrid;
 import model.grid.fill.FillRandom;
@@ -19,6 +20,7 @@ import model.grid.reveal.RevealUntilNum;
 public class MineFacade implements IMineFacade {
 
 	private IGrid grid;
+	private MineTimer timer;
 
 	/**
 	 * Constructs a new minesweeper game
@@ -31,20 +33,31 @@ public class MineFacade implements IMineFacade {
 		IReveal revealer = new RevealUntilNum();
 
 		grid = new Grid(filler, revealer);
+		timer = new MineTimer();
 	}
 
 	@Override
 	public void clearGrid() {
 		grid.clearGrid();
+		timer.reset();
 	}
 
 	@Override
 	public void reveal(int x, int y) {
-		if (!grid.isFilled())
-			grid.fill(x, y);
-
-		if (!grid.gameHasEnded())
-			grid.reveal(x, y);
+		if(Util.isValid(x, y)){
+			
+			if (!grid.isFilled()){
+				grid.fill(x, y);
+				timer.start();
+			}
+	
+			if (!grid.gameHasEnded()){
+				grid.reveal(x, y);
+				
+				if(grid.gameHasEnded())
+					timer.stop();
+			}
+		}
 	}
 
 	@Override
@@ -64,5 +77,10 @@ public class MineFacade implements IMineFacade {
 				|| diff.getColumns() != MineProperties.INSTANCE.COLUMNS)
 
 			grid.setDifficulty(diff);
+	}
+
+	@Override
+	public int getCurrentTime() {
+		return timer.getCurrentTime();
 	}
 }

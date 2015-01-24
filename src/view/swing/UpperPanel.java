@@ -35,8 +35,6 @@ public class UpperPanel extends JPanel {
 	private JLabel remainingMines;
 	private JLabel timer;
 
-	private Timer t;
-
 	/**
 	 * Constructs a new panel containing a timer, a mines' counter and a button.
 	 * 
@@ -54,7 +52,6 @@ public class UpperPanel extends JPanel {
 		timer = new JLabel();
 		setLabelOptions(timer);
 		timerPanel.add(timer);
-		resetTimer();
 		add(timerPanel);
 
 		// button
@@ -88,27 +85,6 @@ public class UpperPanel extends JPanel {
 	}
 
 	/**
-	 * Starts the timer to be seen on the timer label.
-	 */
-	public void startGame() {
-		t = new Timer();
-		TimerTask tt = new TimerTask() {
-
-			@Override
-			public void run() {
-				String txt = timer.getText();
-				int n = Integer.parseInt(txt);
-				if (n < 999) {
-					txt = n < 9 ? "00" : n < 99 ? "0" : "";
-					txt += String.valueOf(n + 1);
-				}
-				timer.setText(txt);
-			}
-		};
-		t.schedule(tt, 0, 1000);
-	}
-
-	/**
 	 * Changes the current number of remaining mines.
 	 * 
 	 * @param mines
@@ -127,7 +103,6 @@ public class UpperPanel extends JPanel {
 	 */
 	public void gameWon() {
 		setFace(MineProperties.INSTANCE.SMILE_HAPPY_IMAGE);
-		stopTimer();
 		setRemainingMines(0);
 		ended = true;
 	}
@@ -136,7 +111,6 @@ public class UpperPanel extends JPanel {
 	 * Changes this panel components to a game over state.
 	 */
 	public void gameOver() {
-		stopTimer();
 		setFace(MineProperties.INSTANCE.SMILE_SAD_IMAGE);
 		ended = true;
 	}
@@ -145,8 +119,6 @@ public class UpperPanel extends JPanel {
 	 * Changes this panel components to a new game state.
 	 */
 	public void clear() {
-		stopTimer();
-		resetTimer();
 		setRemainingMines(MineProperties.INSTANCE.NUMBER_OF_MINES);
 		setFace(MineProperties.INSTANCE.SMILE_IMAGE);
 		ended = false;
@@ -168,21 +140,13 @@ public class UpperPanel extends JPanel {
 			setFace(MineProperties.INSTANCE.SMILE_IMAGE);
 	}
 
-	/**
-	 * Resets timer to 000.
-	 */
-	private void resetTimer() {
-		timer.setText("000");
-	}
 
-	/**
-	 * Stops the timer.
-	 */
-	private void stopTimer() {
-		if (t != null)
-			t.cancel();
+	public void setTime(int time){
+		String st = String.valueOf(time);
+		String timeString = time < 10 ? "00" + st : time < 100 ? "0" + st : st;
+		timer.setText(timeString);
 	}
-
+	
 	/**
 	 * Paints an image on the button.
 	 * 

@@ -37,6 +37,10 @@ public class MenuController implements Observer, ActionListener {
 		this.uiHandler = uiHandler;
 	}
 
+	/**
+	 * Adds this controller as an observer that will listen to notifications
+	 * from the model and view components.
+	 */
 	public void addObservers() {
 		domainHandler.addObserver(this);
 		uiHandler.addListener(this);

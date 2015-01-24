@@ -15,7 +15,7 @@ public final class Util {
 	};
 
 	/**
-	 * Converts mouse coordinates to square coordinates.
+	 * Converts mouse coordinates to square coordinates on the grid.
 	 * 
 	 * @param coordX
 	 *            The x coordinate to be converted
@@ -55,5 +55,19 @@ public final class Util {
 				+ fm.getAscent();
 
 		return new Point(coordX, coordY);
+	}
+
+	/**
+	 * Determines if x and y are valid square coordinates.
+	 * 
+	 * @param x
+	 *            The x coordinate to be validated
+	 * @param y
+	 *            The y coordinate to be validated
+	 * @return true if they are valid coordinates; false otherwise
+	 */
+	public static boolean isValid(int x, int y) {
+		return x >= 0 && x < MineProperties.INSTANCE.ROWS && y >= 0
+				&& y < MineProperties.INSTANCE.COLUMNS;
 	}
 }

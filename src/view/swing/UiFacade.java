@@ -113,10 +113,10 @@ public class UiFacade extends JFrame {
 	}
 
 	/**
-	 * Starts the timer.
+	 * Sets the timer.
 	 */
-	public void startGame() {
-		upper.startGame();
+	public void setTime(int time) {
+		upper.setTime(time);
 	}
 
 	/**

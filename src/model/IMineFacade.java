@@ -18,6 +18,7 @@ public interface IMineFacade {
 	/**
 	 * Reveals the square at (x, y). Multiple squares are revealed if the square
 	 * has no mines surrounding it. If the square is mined, the game is over.
+	 * 
 	 * <pre>
 	 * This method will do nothing if:
 	 * -The square is marked. 
@@ -61,4 +62,12 @@ public interface IMineFacade {
 	 *            The observer to be added.
 	 */
 	public void addObserver(Observer observer);
+
+	/**
+	 * Retrieves the time lapsed since the start of the game. Zero is returned
+	 * if the game has not started.
+	 * 
+	 * @return the time as specified
+	 */
+	public int getCurrentTime();
 }

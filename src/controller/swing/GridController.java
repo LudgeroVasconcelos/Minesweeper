@@ -119,13 +119,6 @@ public class GridController extends MouseAdapter implements Observer {
 	}
 
 	/**
-	 * Starts the timer.
-	 */
-	private void startGame() {
-		uiHandler.startGame();
-	}
-
-	/**
 	 * Configures the game window to a won state
 	 * 
 	 * @param unmarkedSquares
@@ -151,8 +144,6 @@ public class GridController extends MouseAdapter implements Observer {
 		} else if (hint instanceof RevealEvent) {
 			RevealEvent nsre = (RevealEvent) hint;
 			revealButtons(nsre.getRevealedSquares());
-		} else if (hint instanceof StartGameEvent) {
-			startGame();
 		} else if (hint instanceof GameWonEvent) {
 			GameWonEvent gwe = (GameWonEvent) hint;
 			gameWon(gwe.getUnmarkedSquares());
