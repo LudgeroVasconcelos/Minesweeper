@@ -1,10 +1,10 @@
 package minesweeper;
 
-import ui.controller.swing.GridController;
-import ui.controller.swing.MenuController;
-import ui.view.swing.UiFacade;
-import domain.DomainFacade;
-import domain.Minesweeper;
+import controller.swing.GridController;
+import controller.swing.MenuController;
+import model.IMineFacade;
+import model.MineFacade;
+import view.swing.UiFacade;
 
 /**
  * Main class. All the magic starts here.
@@ -15,22 +15,23 @@ import domain.Minesweeper;
 public class Main {
 
 	public static void main(String[] args) {
+		
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 
 			@Override
 			public void run() {
 
 				// create model
-				DomainFacade domainFacade = new Minesweeper();
+				IMineFacade mineFacade = new MineFacade();
 
 				// create view
 				UiFacade uiFacade = new UiFacade();
 
 				// create controllers
-				GridController mineController = new GridController(domainFacade,
+				GridController mineController = new GridController(mineFacade,
 						uiFacade);
 
-				MenuController menuController = new MenuController(domainFacade,
+				MenuController menuController = new MenuController(mineFacade,
 						uiFacade);
 
 				// establish connection between mvc components

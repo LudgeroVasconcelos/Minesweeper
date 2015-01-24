@@ -8,7 +8,7 @@ import java.util.Properties;
 
 import javax.imageio.ImageIO;
 
-import ui.view.swing.UiFacade;
+import view.swing.UiFacade;
 
 /**
  * The properties of the game.
