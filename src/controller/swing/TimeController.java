@@ -36,6 +36,14 @@ public class TimeController implements Observer, Runnable {
 	}
 
 	/**
+	 * Initialization.
+	 */
+	private void init(){
+		executor = Executors.newSingleThreadScheduledExecutor();
+		uiHandler.setTime(0);
+	}
+	
+	/**
 	 * Adds this controller as an observer that will listen to notifications
 	 * from the model and view components.
 	 */
@@ -49,14 +57,6 @@ public class TimeController implements Observer, Runnable {
 		uiHandler.setTime(time);
 	}
 	
-	/**
-	 * Initialization.
-	 */
-	private void init(){
-		executor = Executors.newSingleThreadScheduledExecutor();
-		uiHandler.setTime(0);
-	}
-
 	@Override
 	public void update(Observable arg0, Object hint) {
 

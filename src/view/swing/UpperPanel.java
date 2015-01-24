@@ -5,8 +5,6 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionListener;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -92,10 +90,7 @@ public class UpperPanel extends JPanel {
 	 *            the grid.
 	 */
 	public void setRemainingMines(int mines) {
-		String s = String.valueOf(mines);
-		s = mines > 99 ? s : mines > 9 ? "0" + s : mines < 0 ? "000" : "00" + s;
-
-		remainingMines.setText(s);
+		remainingMines.setText(String.format("%03d", mines));
 	}
 
 	/**
@@ -142,9 +137,7 @@ public class UpperPanel extends JPanel {
 
 
 	public void setTime(int time){
-		String st = String.valueOf(time);
-		String timeString = time < 10 ? "00" + st : time < 100 ? "0" + st : st;
-		timer.setText(timeString);
+		timer.setText(String.format("%03d", time));
 	}
 	
 	/**

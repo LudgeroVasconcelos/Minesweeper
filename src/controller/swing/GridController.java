@@ -15,7 +15,6 @@ import model.events.GameOverEvent;
 import model.events.GameWonEvent;
 import model.events.RevealEvent;
 import model.events.SquareEvent;
-import model.events.StartGameEvent;
 import model.events.ToggleMarkEvent;
 import view.swing.UiFacade;
 
