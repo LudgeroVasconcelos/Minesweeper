@@ -16,6 +16,7 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.plaf.basic.BasicBorders;
 
 import minesweeper.MineProperties;
+import model.Difficulty;
 
 /**
  * This class represents the panel located above the grid. It contains
@@ -41,14 +42,13 @@ public class UpperPanel extends JPanel {
 	public UpperPanel(int mines) {
 
 		setLayout(new GridLayout(1, 3, 0, 0));
-		setBorder(new CompoundBorder(
-				BorderFactory.createBevelBorder(BevelBorder.RAISED),
+		setBorder(new CompoundBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED),
 				BorderFactory.createBevelBorder(BevelBorder.LOWERED)));
 
 		// timer label
 		JPanel timerPanel = new JPanel();
 		timer = new JLabel();
-		setLabelOptions(timer);
+		setLabelSettings(timer);
 		timerPanel.add(timer);
 		add(timerPanel);
 
@@ -59,6 +59,7 @@ public class UpperPanel extends JPanel {
 		smile.setPreferredSize(new Dimension(35, 35));
 		smile.setBorderPainted(false);
 		smile.setActionCommand("new");
+		smile.setFocusPainted(false);
 		setFace(MineProperties.INSTANCE.SMILE_IMAGE);
 		smilePanel.add(smile);
 		add(smilePanel);
@@ -66,8 +67,8 @@ public class UpperPanel extends JPanel {
 		// mines label
 		JPanel minesPanel = new JPanel();
 		remainingMines = new JLabel();
-		setLabelOptions(remainingMines);
-		setRemainingMines(MineProperties.INSTANCE.NUMBER_OF_MINES);
+		setLabelSettings(remainingMines);
+		setRemainingMines(mines);
 		minesPanel.add(remainingMines);
 		add(minesPanel);
 	}
@@ -114,7 +115,7 @@ public class UpperPanel extends JPanel {
 	 * Changes this panel components to a new game state.
 	 */
 	public void clear() {
-		setRemainingMines(MineProperties.INSTANCE.NUMBER_OF_MINES);
+		setRemainingMines(Difficulty.getCurrentDifficulty().getMines());
 		setFace(MineProperties.INSTANCE.SMILE_IMAGE);
 		ended = false;
 	}
@@ -135,11 +136,10 @@ public class UpperPanel extends JPanel {
 			setFace(MineProperties.INSTANCE.SMILE_IMAGE);
 	}
 
-
-	public void setTime(int time){
+	public void setTime(int time) {
 		timer.setText(String.format("%03d", time));
 	}
-	
+
 	/**
 	 * Paints an image on the button.
 	 * 
@@ -147,17 +147,16 @@ public class UpperPanel extends JPanel {
 	 *            The image that will be painted.
 	 */
 	private void setFace(Image face) {
-		smile.setIcon(new ImageIcon(face.getScaledInstance(35, 35,
-				Image.SCALE_SMOOTH)));
+		smile.setIcon(new ImageIcon(face.getScaledInstance(35, 35, Image.SCALE_SMOOTH)));
 	}
 
 	/**
-	 * Sets the appropriate options to a label.
+	 * Sets the appropriate settings to a label.
 	 * 
 	 * @param label
-	 *            The label where the options will be set
+	 *            The label on which the settings are to be set
 	 */
-	private void setLabelOptions(JLabel label) {
+	private void setLabelSettings(JLabel label) {
 		label.setBorder(BasicBorders.getTextFieldBorder());
 		label.setFont(MineProperties.INSTANCE.DIGITAL_FONT);
 		label.setForeground(Color.RED);

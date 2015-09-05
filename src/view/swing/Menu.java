@@ -1,10 +1,13 @@
 package view.swing;
 
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+
+import model.Difficulty;
 
 /**
  * This class represents the game menu.
@@ -14,83 +17,68 @@ import javax.swing.JMenuItem;
  */
 @SuppressWarnings("serial")
 public class Menu extends JMenuBar {
-
-	JMenuItem newItem;
-	JMenuItem beginnerItem;
-	JMenuItem intermediateItem;
-	JMenuItem expertItem;
-	JMenuItem quitItem;
+	
+	JMenuItem gameItems[];
+	JMenuItem rankingsItems[];
 
 	/**
 	 * Constructs the menu and adds some menu items to it.
 	 */
 	public Menu() {
-		JMenu jm = new JMenu("Game");
+		gameItems = new JMenuItem[5];
+		rankingsItems = new JMenuItem[3];
+		
+		JMenu game = new JMenu("Game");
+		JMenu rankings = new JMenu("Rankings");
+		
+		game.setMnemonic(KeyEvent.VK_G);
+		rankings.setMnemonic(KeyEvent.VK_R);
+		
+		// add the 'new' jmenu item to the Game menu
+		gameItems[0] = new JMenuItem("New");
+		gameItems[0].setActionCommand("new");
+		game.add(gameItems[0]);
+		game.addSeparator();
+		
+		// add the difficulties jmenu items to the Game and Rankings menus
+		for(Difficulty dif : Difficulty.values()){
+			String difString = dif.getDifficultyName();
+			int index = dif.ordinal();
+			
+			gameItems[index + 1] = new JMenuItem(difString);
+			gameItems[index + 1].setActionCommand("difficulty");
+			game.add(gameItems[index + 1]);
+			
+			rankingsItems[index] = new JMenuItem(difString);
+			rankingsItems[index].setActionCommand("rankings");
+			rankings.add(rankingsItems[index]);
+		}
+		
+		// add the quit jmenu item to the Game menu
+		game.addSeparator();
+		gameItems[4] = new JMenuItem("Quit");
+		gameItems[4].setActionCommand("quit");
+		game.add(gameItems[4]);
 
-		newItem = new JMenuItem("New");
-		newItem.setActionCommand("new");
-		beginnerItem = new JMenuItem("Beginner");
-		beginnerItem.setActionCommand("difficulty");
-		intermediateItem = new JMenuItem("Intermediate");
-		intermediateItem.setActionCommand("difficulty");
-		expertItem = new JMenuItem("Expert");
-		expertItem.setActionCommand("difficulty");
-		quitItem = new JMenuItem("Quit");
-		quitItem.setActionCommand("quit");
-
-		jm.add(newItem);
-		jm.addSeparator();
-		jm.add(beginnerItem);
-		jm.add(intermediateItem);
-		jm.add(expertItem);
-		jm.addSeparator();
-		jm.add(quitItem);
-
-		add(jm);
+		// finally add the top level menus
+		add(game);
+		add(rankings);
 	}
 
 	/**
-	 * Adds a listener to the 'new' menu item.
+	 * Adds a listener for all menu items.
 	 * 
 	 * @param listener
-	 *            The listener to be added to the appropriate menu item
 	 */
-	public void addClearListener(ActionListener listener) {
-		newItem.addActionListener(listener);
+	public void addMenuGameListener(ActionListener listener) {
+		for(int i = 0; i < gameItems.length; i++){
+			gameItems[i].addActionListener(listener);
+		}
 	}
-
-	/**
-	 * Adds a listener to the 'quit' menu item.
-	 * 
-	 * @param listener
-	 *            The listener to be added to the appropriate menu item
-	 */
-	public void addQuitListener(ActionListener listener) {
-		quitItem.addActionListener(listener);
-
-	}
-
-	/**
-	 * Adds a listener to the difficulty menu items.
-	 * 
-	 * @param listener
-	 *            The listener to be added to the appropriate menu items
-	 */
-	public void addDiffListener(ActionListener listener) {
-		beginnerItem.addActionListener(listener);
-		intermediateItem.addActionListener(listener);
-		expertItem.addActionListener(listener);
-	}
-
-	/**
-	 * 
-	 * @param listener
-	 */
-	public void addListeners(ActionListener listener) {
-		newItem.addActionListener(listener);
-		quitItem.addActionListener(listener);
-		beginnerItem.addActionListener(listener);
-		intermediateItem.addActionListener(listener);
-		expertItem.addActionListener(listener);
+	
+	public void addMenuRankingsListener(ActionListener listener){
+		for(int i = 0; i < rankingsItems.length; i++){
+			rankingsItems[i].addActionListener(listener);
+		}
 	}
 }

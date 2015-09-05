@@ -1,54 +1,71 @@
 package model;
 
+import minesweeper.MineProperties;
+
 /**
- * This enumerator specifies the levels of difficulty of the game as well as the
- * number of mines, rows and columns for each one.
+ * This enumerator specifies the levels of difficulty of the game.
  * 
  * @author Ludgero
  * 
  */
 public enum Difficulty {
-	BEGINNER(9, 9, 10), INTERMEDIATE(16, 16, 40), EXPERT(16, 30, 99);
-
-	private final int rows;
-	private final int columns;
-	private final int mines;
-
-	/**
-	 * The constructor for this enum. It automatically creates the constants
-	 * that are defined at the beginning of the enum body.
-	 * 
-	 * @param rows
-	 *            The number of rows
-	 * @param columns
-	 *            The number of columns
-	 * @param mines
-	 *            The number of mines
-	 */
-	private Difficulty(int rows, int columns, int mines) {
-		this.rows = rows;
-		this.columns = columns;
-		this.mines = mines;
+	BEGINNER("Beginner"), INTERMEDIATE("Intermediate"), EXPERT("Expert");
+	
+	private final String name;
+	private static Difficulty current;
+	
+	Difficulty(String name){
+		this.name = name;
 	}
-
-	/**
-	 * @return The number of rows of the specified Difficulty
-	 */
+	
+	public String getDifficultyName(){
+		return name;
+	}
+	
+	public static void setDifficulty(Difficulty dif){
+		current = dif;
+	}
+	
+	public static Difficulty getCurrentDifficulty(){
+		return current;
+	}
+	
 	public int getRows() {
-		return rows;
+
+		switch (this) {
+		case BEGINNER:
+			return MineProperties.INSTANCE.ROWS_BEGINNER;
+		case INTERMEDIATE:
+			return MineProperties.INSTANCE.ROWS_INTERMEDIATE;
+		case EXPERT:
+			return MineProperties.INSTANCE.ROWS_EXPERT;
+		}
+		return 0;
 	}
 
-	/**
-	 * @return The number of columns of the specified Difficulty
-	 */
 	public int getColumns() {
-		return columns;
+
+		switch (this) {
+		case BEGINNER:
+			return MineProperties.INSTANCE.COLUMNS_BEGINNER;
+		case INTERMEDIATE:
+			return MineProperties.INSTANCE.COLUMNS_INTERMEDIATE;
+		case EXPERT:
+			return MineProperties.INSTANCE.COLUMNS_EXPERT;
+		}
+		return 0;
 	}
 
-	/**
-	 * @return The number of mines of the specified Difficulty
-	 */
 	public int getMines() {
-		return mines;
+
+		switch (this) {
+		case BEGINNER:
+			return MineProperties.INSTANCE.NUMBER_OF_MINES_BEGINNER;
+		case INTERMEDIATE:
+			return MineProperties.INSTANCE.NUMBER_OF_MINES_INTERMEDIATE;
+		case EXPERT:
+			return MineProperties.INSTANCE.NUMBER_OF_MINES_EXPERT;
+		}
+		return 0;
 	}
 }

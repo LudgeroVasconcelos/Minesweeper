@@ -3,6 +3,8 @@ package minesweeper;
 import java.awt.FontMetrics;
 import java.awt.Point;
 
+import model.Difficulty;
+
 /**
  * This class provides utility operations globally.
  * 
@@ -67,7 +69,7 @@ public final class Util {
 	 * @return true if they are valid coordinates; false otherwise
 	 */
 	public static boolean isValid(int x, int y) {
-		return x >= 0 && x < MineProperties.INSTANCE.ROWS && y >= 0
-				&& y < MineProperties.INSTANCE.COLUMNS;
+		return x >= 0 && x < Difficulty.getCurrentDifficulty().getRows() && y >= 0
+				&& y < Difficulty.getCurrentDifficulty().getColumns();
 	}
 }

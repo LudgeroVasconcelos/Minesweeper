@@ -12,6 +12,7 @@ import java.awt.Point;
 public class GameWonEvent extends Event {
 
 	private Iterable<Point> unmarkedSquares;
+	private int score;
 
 	/**
 	 * Constructs and initializes a new game won event.
@@ -21,9 +22,12 @@ public class GameWonEvent extends Event {
 	 *            are not marked. The purpose of this parameter is to let the
 	 *            observer know what squares the user didn't flag after
 	 *            finishing the game
+	 * @param score
+	 *            time lapsed, in seconds, since the start of the game
 	 */
-	public GameWonEvent(Iterable<Point> unmarkedSquares) {
+	public GameWonEvent(Iterable<Point> unmarkedSquares, int score) {
 		this.unmarkedSquares = unmarkedSquares;
+		this.score = score;
 	}
 
 	/**
@@ -32,4 +36,14 @@ public class GameWonEvent extends Event {
 	public Iterable<Point> getUnmarkedSquares() {
 		return unmarkedSquares;
 	}
+
+	/**
+	 * Returns the score of the player
+	 * 
+	 * @return score
+	 */
+	public int getScore() {
+		return score;
+	}
+
 }

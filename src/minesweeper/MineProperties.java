@@ -8,7 +8,8 @@ import java.util.Properties;
 
 import javax.imageio.ImageIO;
 
-import view.swing.UiFacade;
+import model.Difficulty;
+import view.UiFacade;
 
 /**
  * The properties of the game.
@@ -22,9 +23,19 @@ import view.swing.UiFacade;
 public enum MineProperties {
 	INSTANCE;
 
-	public int ROWS;
-	public int COLUMNS;
-	public int NUMBER_OF_MINES;
+	public final int ROWS_BEGINNER;
+	public final int COLUMNS_BEGINNER;
+	public final int NUMBER_OF_MINES_BEGINNER;
+
+	public final int ROWS_INTERMEDIATE;
+	public final int COLUMNS_INTERMEDIATE;
+	public final int NUMBER_OF_MINES_INTERMEDIATE;
+
+	public final int ROWS_EXPERT;
+	public final int COLUMNS_EXPERT;
+	public final int NUMBER_OF_MINES_EXPERT;
+
+	public Difficulty DEFAULT_DIFFICULTY;
 
 	public Image MINE_IMAGE;
 	public Image CROSS_IMAGE;
@@ -33,6 +44,7 @@ public enum MineProperties {
 	public Image SMILE_SAD_IMAGE;
 	public Image SMILE_HAPPY_IMAGE;
 	public Image SMILE_SURPRISED_IMAGE;
+	public Image RANKING_IMAGE;
 
 	public final int BUTTON_WIDTH;
 	public final int BUTTON_HEIGHT;
@@ -55,9 +67,21 @@ public enum MineProperties {
 			// Bad luck, proceed with the default values
 		}
 
-		ROWS = parseInt("rows", 16);
-		COLUMNS = parseInt("columns", 16);
-		NUMBER_OF_MINES = parseInt("number_of_mines", 40);
+		ROWS_BEGINNER = parseInt("rows_beginner", 9);
+		COLUMNS_BEGINNER = parseInt("columns_beginner", 9);
+		NUMBER_OF_MINES_BEGINNER = parseInt("number_of_mines_beginner", 10);
+
+		ROWS_INTERMEDIATE = parseInt("rows_intermediate", 16);
+		COLUMNS_INTERMEDIATE = parseInt("columns_intermediate", 16);
+		NUMBER_OF_MINES_INTERMEDIATE = parseInt("number_of_mines_intermediate",
+				40);
+
+		ROWS_EXPERT = parseInt("rows_expert", 16);
+		COLUMNS_EXPERT = parseInt("columns_expert", 30);
+		NUMBER_OF_MINES_EXPERT = parseInt("number_of_mines_expert", 99);
+
+		String dif = parseString("difficulty", "BEGINNER").toUpperCase();
+		DEFAULT_DIFFICULTY = Difficulty.valueOf(dif);
 
 		BUTTON_WIDTH = parseInt("button_width", 25);
 		BUTTON_HEIGHT = parseInt("button_height", 25);
@@ -88,7 +112,7 @@ public enum MineProperties {
 			CROSS_IMAGE = ImageIO.read(UiFacade.class.getResource(parseString(
 					"cross_image", "images/Icon_cross.png")));
 			FLAG_IMAGE = ImageIO.read(UiFacade.class.getResource(parseString(
-					"flag_image", "images/RedFlag.png")));
+					"flag_image", "images/flag.png")));
 			SMILE_IMAGE = ImageIO.read(UiFacade.class.getResource(parseString(
 					"smile_image", "images/smile.png")));
 			SMILE_SAD_IMAGE = ImageIO.read(UiFacade.class
@@ -100,6 +124,9 @@ public enum MineProperties {
 			SMILE_SURPRISED_IMAGE = ImageIO.read(UiFacade.class
 					.getResource(parseString("smile_surprised_image",
 							"images/smile-surprised.png")));
+			RANKING_IMAGE = ImageIO.read(UiFacade.class
+					.getResource(parseString("ranking_image",
+							"images/RankingIcon.png")));
 		} catch (IOException e) {
 			System.err.println("Could not load image");
 			// bad luck, no images will be shown.
@@ -114,7 +141,7 @@ public enum MineProperties {
 	 *            The property to be read from the properties file
 	 * @param defaultValue
 	 *            The default value for when it fails to read the file
-	 *            
+	 * 
 	 * @return The value of the given property
 	 */
 	private int parseInt(String property, int defaultValue) {
@@ -133,27 +160,11 @@ public enum MineProperties {
 	 *            The property to be read from the properties file
 	 * @param defaultValue
 	 *            The default value for when it fails to read the file
-	 *            
+	 * 
 	 * @return The value of the given property
 	 */
 	private String parseString(String property, String defaultValue) {
 		String value = mineProperties.getProperty(property);
 		return value == null ? defaultValue : value;
-	}
-
-	/**
-	 * Sets new properties for the number of rows, columns and mines.
-	 * 
-	 * @param rows
-	 *            The number of rows to be set
-	 * @param columns
-	 *            The number of columns to be set
-	 * @param mines
-	 *            The number of mines to be set
-	 */
-	public void setDimension(int rows, int columns, int mines) {
-		this.ROWS = rows;
-		this.COLUMNS = columns;
-		this.NUMBER_OF_MINES = mines;
 	}
 }

@@ -1,22 +1,28 @@
 package controller.swing;
 
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Map.Entry;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 
 import minesweeper.Util;
+import model.Difficulty;
 import model.IMineFacade;
-import model.events.GameOverEvent;
+import model.events.ClearEvent;
+import model.events.GameLostEvent;
 import model.events.GameWonEvent;
+import model.events.ResizeEvent;
 import model.events.RevealEvent;
 import model.events.SquareEvent;
 import model.events.ToggleMarkEvent;
-import view.swing.UiFacade;
+import view.UiFacade;
 
 /**
  * The Controller for the main game operations.
@@ -24,7 +30,7 @@ import view.swing.UiFacade;
  * @author Ludgero
  * 
  */
-public class GridController extends MouseAdapter implements Observer {
+public class GameController extends MouseAdapter implements Observer, ActionListener {
 
 	private IMineFacade domainHandler;
 	private UiFacade uiHandler;
@@ -39,7 +45,7 @@ public class GridController extends MouseAdapter implements Observer {
 	 * @param uiHandler
 	 *            The view component of the mvc architecture pattern
 	 */
-	public GridController(IMineFacade domainHandler, UiFacade uiHandler) {
+	public GameController(IMineFacade domainHandler, UiFacade uiHandler) {
 		this.domainHandler = domainHandler;
 		this.uiHandler = uiHandler;
 	}
@@ -50,7 +56,7 @@ public class GridController extends MouseAdapter implements Observer {
 	 */
 	public void addObservers() {
 		domainHandler.addObserver(this);
-		uiHandler.addListener(this);
+		uiHandler.addGameListener(this);
 	}
 
 	@Override
@@ -71,6 +77,36 @@ public class GridController extends MouseAdapter implements Observer {
 			domainHandler.reveal(p.x, p.y);
 		}
 		uiHandler.mouseReleased();
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		String action = e.getActionCommand();
+
+		switch (action) {
+		case "new":
+			domainHandler.clearGrid();
+			break;
+
+		case "difficulty":
+			setDifficulty(((JMenuItem) e.getSource()).getText().toUpperCase());
+			break;
+
+		case "quit":
+			System.exit(0);
+			break;
+		}
+	}
+
+	/**
+	 * Sets a new difficulty level.
+	 * 
+	 * @param diffText
+	 *            The difficulty as a String
+	 */
+	private void setDifficulty(String diffText) {
+		Difficulty diff = Difficulty.valueOf(diffText);
+		domainHandler.setDifficulty(diff);
 	}
 
 	/**
@@ -112,18 +148,37 @@ public class GridController extends MouseAdapter implements Observer {
 	 * @param mistakenMarks
 	 *            All marked squares that are not mined
 	 */
-	private void gameOver(int x, int y, Iterable<Point> mines,
-			Iterable<Point> mistakenMarks) {
-		uiHandler.gameOver(x, y, mines, mistakenMarks);
+	private void gameLost(int x, int y, Iterable<Point> mines, Iterable<Point> mistakenMarks) {
+		uiHandler.gameLost(x, y, mines, mistakenMarks);
 	}
 
 	/**
 	 * Configures the game window to a won state
 	 * 
 	 * @param unmarkedSquares
+	 *            A container with all squares unmarked
+	 * @param score
+	 *            The time spent playing
 	 */
-	private void gameWon(Iterable<Point> unmarkedSquares) {
-		uiHandler.gameWon(unmarkedSquares);
+	private void gameWon(Iterable<Point> unmarkedSquares, int score) {
+		uiHandler.gameWon(unmarkedSquares, score);
+	}
+
+	/**
+	 * Resizes the game window to fit the given number of rows and columns.
+	 * 
+	 * @param rows
+	 * @param columns
+	 */
+	private void resizeGrid(int rows, int columns) {
+		uiHandler.resizeGrid(rows, columns);
+	}
+
+	/**
+	 * Clears the game window.
+	 */
+	private void clearView() {
+		uiHandler.clearGrid();
 	}
 
 	@Override
@@ -132,20 +187,23 @@ public class GridController extends MouseAdapter implements Observer {
 		if (hint instanceof SquareEvent) {
 			if (hint instanceof ToggleMarkEvent) {
 				ToggleMarkEvent tme = (ToggleMarkEvent) hint;
-				toggleFlag(tme.getX(), tme.getY(), tme.isMarked(),
-						tme.getNumberOfFlaggedMines());
+				toggleFlag(tme.getX(), tme.getY(), tme.isMarked(), tme.getNumberOfFlaggedMines());
 
-			} else if (hint instanceof GameOverEvent) {
-				GameOverEvent goe = (GameOverEvent) hint;
-				gameOver(goe.getX(), goe.getY(), goe.getMines(),
-						goe.getMistakenMarks());
+			} else if (hint instanceof GameLostEvent) {
+				GameLostEvent goe = (GameLostEvent) hint;
+				gameLost(goe.getX(), goe.getY(), goe.getMines(), goe.getMistakenMarks());
 			}
 		} else if (hint instanceof RevealEvent) {
 			RevealEvent nsre = (RevealEvent) hint;
 			revealButtons(nsre.getRevealedSquares());
 		} else if (hint instanceof GameWonEvent) {
 			GameWonEvent gwe = (GameWonEvent) hint;
-			gameWon(gwe.getUnmarkedSquares());
+			gameWon(gwe.getUnmarkedSquares(), gwe.getScore());
+		} else if (hint instanceof ResizeEvent) {
+			ResizeEvent re = (ResizeEvent) hint;
+			resizeGrid(re.getRows(), re.getColumns());
+		} else if (hint instanceof ClearEvent) {
+			clearView();
 		}
 	}
 }

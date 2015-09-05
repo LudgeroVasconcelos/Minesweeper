@@ -3,7 +3,7 @@ package model;
 public final class MineTimer {
 
 	private static final int MAX = 999;
-	boolean running;
+	private boolean running;
 	private long time;
 
 	public void start() {

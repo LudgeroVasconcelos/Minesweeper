@@ -42,6 +42,7 @@ public class GridPanel extends JPanel {
 	/**
 	 * Resizes this grid and initializes a new game.
 	 */
+	@Override
 	public void resize(int rows, int columns) {
 		this.rows = rows;
 		this.columns = columns;
@@ -171,11 +172,11 @@ public class GridPanel extends JPanel {
 	}
 
 	/**
-	 * Paints flags on all squares that are not flagged and contain mines.
+	 * Paints a flag on all remaining squares that were not flagged.
 	 * 
 	 * @param unmarkedSquares
 	 *            An iterable containing the positions of the squares that are
-	 *            not flagged and contain mines
+	 *            not flagged
 	 */
 	public void gameWon(Iterable<Point> unmarkedSquares) {
 		for (Point p : unmarkedSquares) {

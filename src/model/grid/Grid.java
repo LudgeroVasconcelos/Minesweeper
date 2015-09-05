@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 
-import minesweeper.MineProperties;
 import model.Difficulty;
+import model.MineTimer;
 import model.events.ClearEvent;
 import model.events.Event;
-import model.events.GameOverEvent;
+import model.events.GameLostEvent;
 import model.events.GameWonEvent;
 import model.events.ResizeEvent;
 import model.events.RevealEvent;
@@ -27,9 +27,10 @@ import model.grid.reveal.IReveal;
  * @author Ludgero
  * 
  */
-public class Grid extends Observable implements IGrid {
+public class Grid extends Observable {
 
 	private Square[][] grid;
+	private MineTimer timer;
 
 	private boolean filled;
 	private boolean gameEnded;
@@ -48,46 +49,68 @@ public class Grid extends Observable implements IGrid {
 	 *            A strategy to fill the grid
 	 * @param revealer
 	 *            A strategy to reveal the squares of the grid
+	 * @param timer
 	 */
-	public Grid(IFill filler, IReveal revealer) {
+	public Grid(IFill filler, IReveal revealer, MineTimer timer) {
 		this.filler = filler;
 		this.revealer = revealer;
+		this.timer = timer;
 	}
 
-	@Override
+	/**
+	 * Fills the grid with mines.
+	 * 
+	 * @param x
+	 *            The x coordinate of the first clicked square
+	 * @param y
+	 *            The y coordinate of the first clicked square
+	 */
+	public void fill(int x, int y) {
+		this.grid = filler.fillGrid(x, y);
+		filled = true;
+		timer.start();
+		fireChangedEvent(new StartGameEvent());
+	}
+
+	/**
+	 * Checks whether the grid is filled.
+	 * 
+	 * @return true if the grid is filled
+	 */
 	public boolean isFilled() {
 		return filled;
 	}
 
-	@Override
-	public void fill(int x, int y) {
-		this.grid = filler.fillGrid(x, y);
-		filled = true;
-
-		fireChangedEvent(new StartGameEvent());
-	}
-
-	@Override
+	/**
+	 * Clears the grid. The game is restarted.
+	 */
 	public void clearGrid() {
 		filled = false;
 		gameEnded = false;
 		grid = null;
 		flaggedSquares = 0;
 		revealedSquares = 0;
-
+		timer.reset();
 		fireChangedEvent(new ClearEvent());
 	}
 
-	@Override
+	/**
+	 * Reveals the square at (x, y). Multiple squares are revealed if the square
+	 * has no mines surrounding it. If the square is mined, the game is over.
+	 * 
+	 * @param x
+	 *            The x coordinate of the square to be revealed
+	 * @param y
+	 *            The y coordinate of the square to be revealed
+	 */
 	public void reveal(int x, int y) {
 		if (grid[x][y].isMarked() || grid[x][y].isRevealed())
 			return;
 
 		Event event;
 		if (grid[x][y] instanceof MinedSquare) {
-			event = new GameOverEvent(x, y, getMines(), getMistakenMarks());
-			gameEnded = true;
-
+			event = new GameLostEvent(x, y, getMines(), getMistakenMarks());
+			endGame();
 		} else {
 			Map<Point, Integer> revealed = revealer.revealSquares(grid, x, y);
 			event = new RevealEvent(revealed.entrySet());
@@ -95,14 +118,21 @@ public class Grid extends Observable implements IGrid {
 		}
 		fireChangedEvent(event);
 
-		if (MineProperties.INSTANCE.COLUMNS * MineProperties.INSTANCE.ROWS
-				- revealedSquares == MineProperties.INSTANCE.NUMBER_OF_MINES) {
-			gameEnded = true;
-			fireChangedEvent(new GameWonEvent(getSquaresLeft()));
+		if (hasWon()) {
+			endGame();
+			fireChangedEvent(new GameWonEvent(getSquaresLeft(), timer.getCurrentTime()));
 		}
 	}
 
-	@Override
+	/**
+	 * Marks the square at (x, y) or removes it depending on whether the square
+	 * is marked or not.
+	 * 
+	 * @param x
+	 *            The x coordinate of the square
+	 * @param y
+	 *            The y coordinate of the square
+	 */
 	public void toggleMark(int x, int y) {
 		if (!grid[x][y].isRevealed()) {
 			grid[x][y].toggleMark();
@@ -114,18 +144,30 @@ public class Grid extends Observable implements IGrid {
 		}
 	}
 
-	@Override
+	/**
+	 * Checks whether the game has ended or not
+	 * 
+	 * @return true if the game has already ended.
+	 */
 	public boolean gameHasEnded() {
 		return gameEnded;
 	}
 
-	@Override
+	/**
+	 * Sets a new difficulty to the game. Changes the current size of the grid
+	 * and the number of mines it contains to meet the new difficulty rules
+	 * given by diff. After this, the grid is cleared.
+	 * 
+	 * @param diff
+	 *            The new difficulty to be set
+	 */
 	public void setDifficulty(Difficulty diff) {
+		Difficulty.setDifficulty(diff);
+
 		int rows = diff.getRows();
 		int columns = diff.getColumns();
 		int mines = diff.getMines();
 
-		MineProperties.INSTANCE.setDimension(rows, columns, mines);
 		filler = new FillRandom(rows, columns, mines);
 
 		fireChangedEvent(new ResizeEvent(rows, columns));
@@ -192,5 +234,25 @@ public class Grid extends Observable implements IGrid {
 	private void fireChangedEvent(Event event) {
 		setChanged();
 		notifyObservers(event);
+	}
+
+	/**
+	 * Returns the current time since the start of the game.
+	 * 
+	 * @return the current time, in seconds
+	 */
+	public int getCurrentTime() {
+		return timer.getCurrentTime();
+	}
+
+	private void endGame() {
+		gameEnded = true;
+		timer.stop();
+	}
+
+	private boolean hasWon() {
+		Difficulty dif = Difficulty.getCurrentDifficulty();
+		
+		return dif.getColumns() * dif.getRows() - revealedSquares == dif.getMines();
 	}
 }
