@@ -16,7 +16,7 @@ public class LeaderboardFacade extends Observable implements ILeaderboardFacade 
 	private static final int NUM = 100;
 	
 	
-	// keeps the last username and score for each level of difficulty
+	// stores the last username and score for each level of difficulty
 	private String savedUsernames[] = new String[Difficulty.values().length];
 	private int savedScores[] = new int[Difficulty.values().length];
 	

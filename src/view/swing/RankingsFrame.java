@@ -23,6 +23,11 @@ import com.shephertz.app42.paas.sdk.java.game.Game.Score;
 
 import minesweeper.MineProperties;
 
+/**
+ * 
+ * @author Ludgero
+ *
+ */
 @SuppressWarnings("serial")
 public class RankingsFrame extends JFrame {
 
@@ -59,6 +64,7 @@ public class RankingsFrame extends JFrame {
 	private void constructTable() {
 		dtm = new DefaultTableModel(ROWS, COLUMNS);
 		dtm.setColumnIdentifiers(COLUMNS_NAMES);
+		
 		table = new JTable();
 		table.setModel(dtm);
 		table.setDefaultRenderer(Object.class, new MyTableCellRenderer());

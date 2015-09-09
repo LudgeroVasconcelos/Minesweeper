@@ -162,18 +162,22 @@ public class Grid extends Observable {
 	 *            The new difficulty to be set
 	 */
 	public void setDifficulty(Difficulty diff) {
-		Difficulty.setDifficulty(diff);
 
 		int rows = diff.getRows();
 		int columns = diff.getColumns();
 		int mines = diff.getMines();
 
+		setDifficulty(rows, columns, mines);
+	}
+
+	public void setDifficulty(int rows, int columns, int mines) {
+		
 		filler = new FillRandom(rows, columns, mines);
 
 		fireChangedEvent(new ResizeEvent(rows, columns));
 		clearGrid();
 	}
-
+	
 	/**
 	 * Determines the squares that are not marked as a mine. It is used when all
 	 * safe squares are revealed, so the squares that are left to mark can be
@@ -255,4 +259,5 @@ public class Grid extends Observable {
 		
 		return dif.getColumns() * dif.getRows() - revealedSquares == dif.getMines();
 	}
+
 }

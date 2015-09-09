@@ -45,14 +45,28 @@ public interface IMineFacade {
 	public void toggleMark(int x, int y);
 
 	/**
-	 * Sets a new difficulty to the game. Changes the current size of the grid
-	 * and the number of mines it contains to meet the new difficulty rules
-	 * given by diff. After this, the grid is cleared.
+	 * Sets a new predefined difficulty to the game. Changes the current size of
+	 * the grid and the number of mines it contains to meet the new difficulty
+	 * rules given by diff. The grid is cleared after resizing.
 	 * 
 	 * @param diff
 	 *            The new difficulty to be set
 	 */
 	public void setDifficulty(Difficulty diff);
+
+	/**
+	 * Sets a new custom difficulty to the game. Changes the current size of the
+	 * grid and the number of mines it contains to meet the new difficulty rules
+	 * given by this method parameters. The grid is cleared after resizing.
+	 * 
+	 * @param rows
+	 *            The number of rows
+	 * @param columns
+	 *            The number of columns
+	 * @param mines
+	 *            The number of mines
+	 */
+	public void setDifficulty(int rows, int columns, int mines);
 
 	/**
 	 * Adds an observer to the grid that gets notified whenever the state of the

@@ -109,4 +109,6 @@ public abstract class UiFacade extends JFrame {
 
 	public abstract void showErrorMessage();
 
+	public abstract void showCustomDifficultyOptions();
+
 }

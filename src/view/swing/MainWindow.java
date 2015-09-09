@@ -15,6 +15,7 @@ import com.shephertz.app42.paas.sdk.java.game.Game.Score;
 
 import minesweeper.MineProperties;
 import model.Difficulty;
+import model.events.CustomDifficultyListener;
 import view.UiFacade;
 
 /**
@@ -27,9 +28,10 @@ import view.UiFacade;
 public class MainWindow extends UiFacade {
 
 	private GridPanel grid;
-	private UpperPanel upper;
+	private TopPanel top;
 	private Menu menu;
 	private RankingsFrame rankings;
+	private CustomDifFrame custom;
 
 	@Override
 	public void start() {
@@ -53,15 +55,16 @@ public class MainWindow extends UiFacade {
 
 	private void addComponents() {
 		Difficulty dif = Difficulty.getCurrentDifficulty();
-		
+
 		grid = new GridPanel(dif.getRows(), dif.getColumns());
-		upper = new UpperPanel(dif.getMines());
+		top = new TopPanel(dif.getMines());
 		menu = new Menu();
 		rankings = new RankingsFrame(grid);
+		custom = new CustomDifFrame(this);
 
 		setJMenuBar(menu);
 		add(grid, BorderLayout.CENTER);
-		add(upper, BorderLayout.NORTH);
+		add(top, BorderLayout.NORTH);
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
@@ -75,58 +78,58 @@ public class MainWindow extends UiFacade {
 	@Override
 	public void toggleFlag(int x, int y, boolean flagged, int flaggedMines) {
 		grid.toggleFlag(x, y, flagged);
-		upper.setRemainingMines(Difficulty.getCurrentDifficulty().getMines() - flaggedMines);
+		top.setRemainingMines(Difficulty.getCurrentDifficulty().getMines() - flaggedMines);
 	}
 
 	@Override
 	public void clearGrid() {
 		grid.clear();
-		upper.clear();
+		top.clear();
 	}
 
 	@Override
 	public void gameLost(int x, int y, Iterable<Point> mines, Iterable<Point> mistakenMarks) {
 		grid.gameOver(x, y, mines, mistakenMarks);
-		upper.gameOver();
+		top.gameOver();
 	}
 
 	@Override
 	public void gameWon(Iterable<Point> unmarkedSquares, int score) {
 		grid.gameWon(unmarkedSquares);
-		upper.gameWon();
-		rankings.showSubmitScoreFrame(score);
+		top.gameWon();
+		
+		if(Difficulty.getCurrentDifficulty() != Difficulty.CUSTOM)
+			rankings.showSubmitScoreFrame(score);
 	}
 
 	@Override
 	public void setTime(int time) {
-		upper.setTime(time);
+		top.setTime(time);
 	}
 
 	@Override
 	public void mousePressed() {
-		upper.mousePressed();
+		top.mousePressed();
 	}
 
 	@Override
 	public void mouseReleased() {
-		upper.mouseReleased();
+		top.mouseReleased();
 	}
 
 	@Override
 	public void resizeGrid(int rows, int columns) {
 		grid.resize(rows, columns);
-		setVisible(false);
 		pack();
-		repaint();
 		setLocationRelativeTo(null);
-		setVisible(true);
 	}
 
 	@Override
 	public void addGameListener(EventListener listener) {
 		grid.addMouseListener((MouseListener) listener);
 		menu.addMenuGameListener((ActionListener) listener);
-		upper.addClearListener((ActionListener) listener);
+		top.addClearListener((ActionListener) listener);
+		custom.addPropertyListener((CustomDifficultyListener) listener);
 	}
 
 	@Override
@@ -145,5 +148,11 @@ public class MainWindow extends UiFacade {
 		JOptionPane.showMessageDialog(this,
 				"The operation could not be completed.\nPlease check your internet connection and try again.",
 				"Network error", JOptionPane.ERROR_MESSAGE);
+	}
+
+	@Override
+	public void showCustomDifficultyOptions() {
+		custom.setLocationRelativeTo(this);
+		custom.setVisible(true);
 	}
 }

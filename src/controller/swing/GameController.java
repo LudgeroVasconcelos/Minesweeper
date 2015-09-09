@@ -16,6 +16,7 @@ import minesweeper.Util;
 import model.Difficulty;
 import model.IMineFacade;
 import model.events.ClearEvent;
+import model.events.CustomDifficultyListener;
 import model.events.GameLostEvent;
 import model.events.GameWonEvent;
 import model.events.ResizeEvent;
@@ -30,7 +31,7 @@ import view.UiFacade;
  * @author Ludgero
  * 
  */
-public class GameController extends MouseAdapter implements Observer, ActionListener {
+public class GameController extends MouseAdapter implements Observer, ActionListener, CustomDifficultyListener {
 
 	private IMineFacade domainHandler;
 	private UiFacade uiHandler;
@@ -106,7 +107,17 @@ public class GameController extends MouseAdapter implements Observer, ActionList
 	 */
 	private void setDifficulty(String diffText) {
 		Difficulty diff = Difficulty.valueOf(diffText);
-		domainHandler.setDifficulty(diff);
+		
+		if(diff == Difficulty.CUSTOM){
+			uiHandler.showCustomDifficultyOptions();
+		} else {
+			domainHandler.setDifficulty(diff);
+		}
+	}
+	
+	@Override
+	public void onCustomDifficultyTriggered(int rows, int columns, int mines) {
+		domainHandler.setDifficulty(rows, columns, mines);
 	}
 
 	/**

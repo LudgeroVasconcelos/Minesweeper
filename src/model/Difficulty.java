@@ -9,27 +9,39 @@ import minesweeper.MineProperties;
  * 
  */
 public enum Difficulty {
-	BEGINNER("Beginner"), INTERMEDIATE("Intermediate"), EXPERT("Expert");
-	
+	BEGINNER("Beginner"), INTERMEDIATE("Intermediate"), EXPERT("Expert"), CUSTOM("Custom");
+
 	private final String name;
+
 	private static Difficulty current;
-	
-	Difficulty(String name){
+
+	private static int customRows;
+	private static int customColumns;
+	private static int customMines;
+
+	Difficulty(String name) {
 		this.name = name;
 	}
-	
-	public String getDifficultyName(){
+
+	public String getDifficultyName() {
 		return name;
 	}
-	
-	public static void setDifficulty(Difficulty dif){
+
+	public static void setDifficulty(Difficulty dif) {
 		current = dif;
 	}
-	
-	public static Difficulty getCurrentDifficulty(){
+
+	public static void setDifficulty(int rows, int columns, int mines) {
+		current = Difficulty.CUSTOM;
+		customRows = rows;
+		customColumns = columns;
+		customMines = mines;
+	}
+
+	public static Difficulty getCurrentDifficulty() {
 		return current;
 	}
-	
+
 	public int getRows() {
 
 		switch (this) {
@@ -39,8 +51,9 @@ public enum Difficulty {
 			return MineProperties.INSTANCE.ROWS_INTERMEDIATE;
 		case EXPERT:
 			return MineProperties.INSTANCE.ROWS_EXPERT;
+		default:
+			return customRows;
 		}
-		return 0;
 	}
 
 	public int getColumns() {
@@ -52,8 +65,9 @@ public enum Difficulty {
 			return MineProperties.INSTANCE.COLUMNS_INTERMEDIATE;
 		case EXPERT:
 			return MineProperties.INSTANCE.COLUMNS_EXPERT;
+		default:
+			return customColumns;
 		}
-		return 0;
 	}
 
 	public int getMines() {
@@ -65,7 +79,8 @@ public enum Difficulty {
 			return MineProperties.INSTANCE.NUMBER_OF_MINES_INTERMEDIATE;
 		case EXPERT:
 			return MineProperties.INSTANCE.NUMBER_OF_MINES_EXPERT;
+		default:
+			return customMines;
 		}
-		return 0;
 	}
 }

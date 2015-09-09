@@ -66,8 +66,16 @@ public class MineFacade implements IMineFacade {
 
 	@Override
 	public void setDifficulty(Difficulty diff) {
-		if (diff != Difficulty.getCurrentDifficulty())
+		if (diff != Difficulty.getCurrentDifficulty()){
+			Difficulty.setDifficulty(diff);
 			grid.setDifficulty(diff);
+		}
+	}
+	
+	@Override
+	public void setDifficulty(int rows, int columns, int mines) {
+		Difficulty.setDifficulty(rows, columns, mines);
+		grid.setDifficulty(rows, columns, mines);
 	}
 
 	public int getCurrentTime() {

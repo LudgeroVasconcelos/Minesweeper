@@ -20,13 +20,14 @@ import model.Difficulty;
 
 /**
  * This class represents the panel located above the grid. It contains
- * components used to give feedback to the player.
+ * components used to give feedback to the player such as a timer, a counter of
+ * remaining mines and a yellow expression-faced button
  * 
  * @author Ludgero
  * 
  */
 @SuppressWarnings("serial")
-public class UpperPanel extends JPanel {
+public class TopPanel extends JPanel {
 
 	private boolean ended;
 
@@ -35,11 +36,12 @@ public class UpperPanel extends JPanel {
 	private JLabel timer;
 
 	/**
-	 * Constructs a new panel containing a timer, a mines' counter and a button.
+	 * Constructs a new panel containing a timer, a remaining mines' counter and
+	 * a button.
 	 * 
 	 * @param mines
 	 */
-	public UpperPanel(int mines) {
+	public TopPanel(int mines) {
 
 		setLayout(new GridLayout(1, 3, 0, 0));
 		setBorder(new CompoundBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED),
@@ -136,6 +138,12 @@ public class UpperPanel extends JPanel {
 			setFace(MineProperties.INSTANCE.SMILE_IMAGE);
 	}
 
+	/**
+	 * Sets the current time to the timer label.
+	 * 
+	 * @param time
+	 *            The current time to be shown
+	 */
 	public void setTime(int time) {
 		timer.setText(String.format("%03d", time));
 	}
