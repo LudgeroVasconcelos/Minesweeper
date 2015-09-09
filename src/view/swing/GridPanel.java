@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import javax.swing.JPanel;
 
 import minesweeper.MineProperties;
+import model.grid.SquareState;
 
 /**
  * This class represents the grid in the game window.
@@ -92,20 +93,22 @@ public class GridPanel extends JPanel {
 	}
 
 	/**
-	 * Paints a flag on the square located at (x, y) if it is not already
-	 * painted, otherwise, the flag is removed.
+	 * Sets the state of the square at (x, y).
 	 * 
 	 * @param x
 	 *            The x coordinate of the square to be painted
 	 * @param y
 	 *            The y coordinate of the square to be painted
-	 * @param flagged
+	 * @param state
+	 *            The state of the square
 	 */
-	public void toggleFlag(int x, int y, boolean flagged) {
-		if (flagged)
+	public void setState(int x, int y, SquareState state) {
+		buttons[x][y].clear();
+		
+		if (state == SquareState.FLAGGED)
 			buttons[x][y].setFlag();
-		else
-			buttons[x][y].removeFlag();
+		else if(state == SquareState.QUESTION)
+			buttons[x][y].setQuestionMark();
 
 		repaint();
 	}
@@ -136,7 +139,7 @@ public class GridPanel extends JPanel {
 		for (int i = 0; i < rows; i++)
 			for (int j = 0; j < columns; j++)
 				buttons[i][j].clear();
-			
+
 		repaint();
 	}
 
@@ -154,8 +157,7 @@ public class GridPanel extends JPanel {
 	 *            An iterable containing the positions of squares marked by
 	 *            mistake
 	 */
-	public void gameOver(int x, int y, Iterable<Point> mines,
-			Iterable<Point> mistakenMarks) {
+	public void gameOver(int x, int y, Iterable<Point> mines, Iterable<Point> mistakenMarks) {
 
 		for (Point p : mines) {
 			buttons[p.x][p.y].reveal(0);

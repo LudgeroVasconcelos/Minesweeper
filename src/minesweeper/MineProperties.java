@@ -40,6 +40,7 @@ public enum MineProperties {
 	public Image MINE_IMAGE;
 	public Image CROSS_IMAGE;
 	public Image FLAG_IMAGE;
+	public Image QUESTION_MARK_IMAGE;
 	public Image SMILE_IMAGE;
 	public Image SMILE_SAD_IMAGE;
 	public Image SMILE_HAPPY_IMAGE;
@@ -113,6 +114,8 @@ public enum MineProperties {
 					"cross_image", "images/Icon_cross.png")));
 			FLAG_IMAGE = ImageIO.read(UiFacade.class.getResource(parseString(
 					"flag_image", "images/flag.png")));
+			QUESTION_MARK_IMAGE = ImageIO.read(UiFacade.class.getResource(parseString(
+					"question_mark_image", "images/question_mark.png")));
 			SMILE_IMAGE = ImageIO.read(UiFacade.class.getResource(parseString(
 					"smile_image", "images/smile.png")));
 			SMILE_SAD_IMAGE = ImageIO.read(UiFacade.class

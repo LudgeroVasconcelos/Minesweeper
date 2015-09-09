@@ -34,15 +34,17 @@ public interface IMineFacade {
 	public void reveal(int x, int y);
 
 	/**
-	 * Marks the square at (x, y) or removes it depending on whether the square
-	 * is marked or not.
+	 * Toggles the square at (x, y) between normal, flagged or question mark
 	 * 
 	 * @param x
 	 *            The x coordinate of the square
 	 * @param y
 	 *            The y coordinate of the square
 	 */
-	public void toggleMark(int x, int y);
+	public void toggle(int x, int y);
+	
+
+	public void setToggleMode(boolean questioMarkActive);
 
 	/**
 	 * Sets a new predefined difficulty to the game. Changes the current size of

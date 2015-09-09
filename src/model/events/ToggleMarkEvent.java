@@ -1,5 +1,7 @@
 package model.events;
 
+import model.grid.SquareState;
+
 /**
  * The event representing the act of toggling the mark on a square.
  * 
@@ -9,25 +11,25 @@ package model.events;
 public class ToggleMarkEvent extends SquareEvent {
 
 	private int flaggedMines;
-	private boolean marked;
+	private SquareState state;
 
 	/**
-	 * Constructs a new toggle mark event initialized with the specified
+	 * Constructs a new toggle event initialized with the specified
 	 * coordinates and the number of current flagged mines.
 	 * 
 	 * @param x
 	 *            The x coordinate of the toggled square
 	 * @param y
 	 *            The y coordinate of the toggled square
-	 * @param marked
-	 *            If this square got marked or not
+	 * @param state
+	 *            The state of the toggled square. See {@link model.grid.SquareState}
 	 * @param flaggedMines
 	 *            The current number of flagged mines
 	 */
-	public ToggleMarkEvent(int x, int y, boolean marked, int flaggedMines) {
+	public ToggleMarkEvent(int x, int y, SquareState state, int flaggedMines) {
 		super(x, y);
 
-		this.marked = marked;
+		this.state = state;
 		this.flaggedMines = flaggedMines;
 	}
 
@@ -38,7 +40,7 @@ public class ToggleMarkEvent extends SquareEvent {
 		return flaggedMines;
 	}
 
-	public boolean isMarked() {
-		return marked;
+	public SquareState getState() {
+		return state;
 	}
 }

@@ -16,6 +16,7 @@ import com.shephertz.app42.paas.sdk.java.game.Game.Score;
 import minesweeper.MineProperties;
 import model.Difficulty;
 import model.events.CustomDifficultyListener;
+import model.grid.SquareState;
 import view.UiFacade;
 
 /**
@@ -58,7 +59,7 @@ public class MainWindow extends UiFacade {
 
 		grid = new GridPanel(dif.getRows(), dif.getColumns());
 		top = new TopPanel(dif.getMines());
-		menu = new Menu();
+		menu = new Menu(dif);
 		rankings = new RankingsFrame(grid);
 		custom = new CustomDifFrame(this);
 
@@ -76,8 +77,8 @@ public class MainWindow extends UiFacade {
 	}
 
 	@Override
-	public void toggleFlag(int x, int y, boolean flagged, int flaggedMines) {
-		grid.toggleFlag(x, y, flagged);
+	public void setState(int x, int y, SquareState state, int flaggedMines) {
+		grid.setState(x, y, state);
 		top.setRemainingMines(Difficulty.getCurrentDifficulty().getMines() - flaggedMines);
 	}
 
@@ -119,6 +120,7 @@ public class MainWindow extends UiFacade {
 
 	@Override
 	public void resizeGrid(int rows, int columns) {
+		menu.changeSelection(Difficulty.getCurrentDifficulty());
 		grid.resize(rows, columns);
 		pack();
 		setLocationRelativeTo(null);

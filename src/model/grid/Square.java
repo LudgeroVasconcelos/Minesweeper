@@ -10,8 +10,12 @@ import java.util.Observable;
  */
 public abstract class Square extends Observable {
 
-	private boolean marked;
 	private boolean revealed;
+	private SquareState currentState;
+	
+	public Square(){
+		currentState = SquareState.EMPTY;
+	}
 
 	/**
 	 * Reveals a square.
@@ -22,11 +26,21 @@ public abstract class Square extends Observable {
 
 	/**
 	 * Checks whether this square is marked or not.
+	 * A square is said to be marked if it is either flagged or question-marked.
 	 * 
 	 * @return true if this square is marked
 	 */
 	public boolean isMarked() {
-		return marked;
+		return currentState != SquareState.EMPTY;
+	}
+	
+	/**
+	 * Checks whether this square is flagged.
+	 * 
+	 * @return true if this square is flagged
+	 */
+	public boolean isFlagged() {
+		return currentState == SquareState.FLAGGED;
 	}
 
 	/**
@@ -37,12 +51,15 @@ public abstract class Square extends Observable {
 	public boolean isRevealed() {
 		return revealed;
 	}
+	
+	public void toggle(boolean questionMarkActive){
+		SquareState[] states = SquareState.values();
+		int next = (currentState.ordinal() + 1) % (questionMarkActive ? states.length : states.length - 1);
 
-	/**
-	 * Marks this square or removes the mark depending on whether it is marked
-	 * or not.
-	 */
-	public void toggleMark() {
-		marked = !marked;
+		currentState = states[next];
+	}
+
+	public SquareState getState() {
+		return currentState;
 	}
 }

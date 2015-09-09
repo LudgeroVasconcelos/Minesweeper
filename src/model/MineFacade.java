@@ -54,9 +54,15 @@ public class MineFacade implements IMineFacade {
 	}
 
 	@Override
-	public void toggleMark(int x, int y) {
+	public void toggle(int x, int y) {
 		if (grid.isFilled() && !grid.gameHasEnded())
-			grid.toggleMark(x, y);
+			grid.toggle(x, y);
+	}
+	
+	@Override
+	public void setToggleMode(boolean questioMarkActive) {
+		grid.setToggleMode(questioMarkActive);
+		
 	}
 
 	@Override

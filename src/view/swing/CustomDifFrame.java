@@ -104,8 +104,9 @@ public class CustomDifFrame extends JDialog implements ChangeListener, PropertyC
 		jop.addPropertyChangeListener(this);
 		setContentPane(jop);
 
-		pack();
+		setResizable(false);
 		setModalityType(ModalityType.APPLICATION_MODAL);
+		pack();
 	}
 
 	public void addPropertyListener(CustomDifficultyListener listener) {

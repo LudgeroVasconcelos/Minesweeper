@@ -41,6 +41,8 @@ public class Grid extends Observable {
 	private int flaggedSquares;
 	private int revealedSquares;
 
+	private boolean questionMarkActive;
+
 	/**
 	 * Constructs a new grid. Initializes the strategies used to fill the grid
 	 * and to reveal its squares.
@@ -104,7 +106,7 @@ public class Grid extends Observable {
 	 *            The y coordinate of the square to be revealed
 	 */
 	public void reveal(int x, int y) {
-		if (grid[x][y].isMarked() || grid[x][y].isRevealed())
+		if (grid[x][y].isFlagged() || grid[x][y].isRevealed())
 			return;
 
 		Event event;
@@ -133,15 +135,22 @@ public class Grid extends Observable {
 	 * @param y
 	 *            The y coordinate of the square
 	 */
-	public void toggleMark(int x, int y) {
+	public void toggle(int x, int y) {
 		if (!grid[x][y].isRevealed()) {
-			grid[x][y].toggleMark();
+			
+			flaggedSquares = grid[x][y].isFlagged() ? flaggedSquares - 1 : flaggedSquares;
+			
+			grid[x][y].toggle(questionMarkActive);
 
-			boolean marked = grid[x][y].isMarked();
-			flaggedSquares = marked ? flaggedSquares + 1 : flaggedSquares - 1;
+			flaggedSquares = grid[x][y].isFlagged() ? flaggedSquares + 1 : flaggedSquares;
 
-			fireChangedEvent(new ToggleMarkEvent(x, y, marked, flaggedSquares));
+			SquareState state = grid[x][y].getState();
+			fireChangedEvent(new ToggleMarkEvent(x, y, state, flaggedSquares));
 		}
+	}
+
+	public void setToggleMode(boolean questioMarkActive) {
+		this.questionMarkActive = questioMarkActive;
 	}
 
 	/**
@@ -171,13 +180,13 @@ public class Grid extends Observable {
 	}
 
 	public void setDifficulty(int rows, int columns, int mines) {
-		
+
 		filler = new FillRandom(rows, columns, mines);
 
 		fireChangedEvent(new ResizeEvent(rows, columns));
 		clearGrid();
 	}
-	
+
 	/**
 	 * Determines the squares that are not marked as a mine. It is used when all
 	 * safe squares are revealed, so the squares that are left to mark can be
@@ -197,8 +206,8 @@ public class Grid extends Observable {
 	}
 
 	/**
-	 * Determines the positions of the mines on the grid. Marked squares are not
-	 * considered. This method is only called when the game is lost.
+	 * Determines the positions of the mines on the grid. Flagged squares are
+	 * not considered. This method is only called when the game is lost.
 	 * 
 	 * @return a list containing the mines' positions
 	 */
@@ -207,14 +216,14 @@ public class Grid extends Observable {
 
 		for (int i = 0; i < grid.length; i++)
 			for (int j = 0; j < grid[i].length; j++)
-				if (grid[i][j] instanceof MinedSquare && !grid[i][j].isMarked())
+				if (grid[i][j] instanceof MinedSquare && !grid[i][j].isFlagged())
 					mines.add(new Point(i, j));
 
 		return mines;
 	}
 
 	/**
-	 * Determines the squares' positions that are marked but are not mined.
+	 * Determines the squares' positions that are flagged but are not mined.
 	 * 
 	 * @return a list as specified.
 	 */
@@ -223,7 +232,7 @@ public class Grid extends Observable {
 
 		for (int i = 0; i < grid.length; i++)
 			for (int j = 0; j < grid[i].length; j++)
-				if (grid[i][j] instanceof SafeSquare && grid[i][j].isMarked())
+				if (grid[i][j] instanceof SafeSquare && grid[i][j].isFlagged())
 					mistakes.add(new Point(i, j));
 
 		return mistakes;
@@ -256,8 +265,7 @@ public class Grid extends Observable {
 
 	private boolean hasWon() {
 		Difficulty dif = Difficulty.getCurrentDifficulty();
-		
+
 		return dif.getColumns() * dif.getRows() - revealedSquares == dif.getMines();
 	}
-
 }

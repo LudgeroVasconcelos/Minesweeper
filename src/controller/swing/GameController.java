@@ -23,6 +23,7 @@ import model.events.ResizeEvent;
 import model.events.RevealEvent;
 import model.events.SquareEvent;
 import model.events.ToggleMarkEvent;
+import model.grid.SquareState;
 import view.UiFacade;
 
 /**
@@ -64,7 +65,7 @@ public class GameController extends MouseAdapter implements Observer, ActionList
 	public void mousePressed(MouseEvent e) {
 		if (SwingUtilities.isRightMouseButton(e)) {
 			Point p = Util.getPoint(e.getX(), e.getY());
-			domainHandler.toggleMark(p.x, p.y);
+			domainHandler.toggle(p.x, p.y);
 
 		} else if (SwingUtilities.isLeftMouseButton(e)) {
 			uiHandler.mousePressed();
@@ -91,6 +92,10 @@ public class GameController extends MouseAdapter implements Observer, ActionList
 
 		case "difficulty":
 			setDifficulty(((JMenuItem) e.getSource()).getText().toUpperCase());
+			break;
+
+		case "question":
+			domainHandler.setToggleMode(((JMenuItem) e.getSource()).isSelected());
 			break;
 
 		case "quit":
@@ -131,20 +136,19 @@ public class GameController extends MouseAdapter implements Observer, ActionList
 	}
 
 	/**
-	 * Paints a flag over the square at (x, y) if the square is flagged,
-	 * otherwise, the flag is removed. Updates the number of mines left.
+	 * Sets the state of the square at (x, y).
 	 * 
 	 * @param x
 	 *            The x coordinate of the clicked square
 	 * @param y
 	 *            The y coordinate of the clicked square
-	 * @param flagged
-	 *            Is this square flagged?
+	 * @param state
+	 *            The state of the square to change
 	 * @param flaggedMines
 	 *            The number of flagged squares
 	 */
-	private void toggleFlag(int x, int y, boolean flagged, int flaggedMines) {
-		uiHandler.toggleFlag(x, y, flagged, flaggedMines);
+	private void setState(int x, int y, SquareState state, int flaggedMines) {
+		uiHandler.setState(x, y, state, flaggedMines);
 	}
 
 	/**
@@ -198,7 +202,7 @@ public class GameController extends MouseAdapter implements Observer, ActionList
 		if (hint instanceof SquareEvent) {
 			if (hint instanceof ToggleMarkEvent) {
 				ToggleMarkEvent tme = (ToggleMarkEvent) hint;
-				toggleFlag(tme.getX(), tme.getY(), tme.isMarked(), tme.getNumberOfFlaggedMines());
+				setState(tme.getX(), tme.getY(), tme.getState(), tme.getNumberOfFlaggedMines());
 
 			} else if (hint instanceof GameLostEvent) {
 				GameLostEvent goe = (GameLostEvent) hint;

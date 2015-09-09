@@ -29,6 +29,9 @@ import model.Difficulty;
 @SuppressWarnings("serial")
 public class TopPanel extends JPanel {
 
+	private static final int BUTTON_WIDTH = 35;
+	private static final int BUTTON_HEIGHT = 35;
+	
 	private boolean ended;
 
 	private JButton smile;
@@ -58,7 +61,7 @@ public class TopPanel extends JPanel {
 		JPanel smilePanel = new JPanel();
 		smile = new JButton();
 		smile.setBackground(new Color(210, 210, 210));
-		smile.setPreferredSize(new Dimension(35, 35));
+		smile.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 		smile.setBorderPainted(false);
 		smile.setActionCommand("new");
 		smile.setFocusPainted(false);
@@ -155,7 +158,7 @@ public class TopPanel extends JPanel {
 	 *            The image that will be painted.
 	 */
 	private void setFace(Image face) {
-		smile.setIcon(new ImageIcon(face.getScaledInstance(35, 35, Image.SCALE_SMOOTH)));
+		smile.setIcon(new ImageIcon(face.getScaledInstance(BUTTON_WIDTH - 2, BUTTON_HEIGHT - 2, Image.SCALE_SMOOTH)));
 	}
 
 	/**

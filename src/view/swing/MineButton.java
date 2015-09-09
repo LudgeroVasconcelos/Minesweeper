@@ -49,9 +49,9 @@ public class MineButton {
 	public void setFlag() {
 		drawImage(MineProperties.INSTANCE.FLAG_IMAGE);
 	}
-
-	public void removeFlag() {
-		paint();
+	
+	public void setQuestionMark() {
+		drawImage(MineProperties.INSTANCE.QUESTION_MARK_IMAGE);
 	}
 
 	/**

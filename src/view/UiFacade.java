@@ -8,6 +8,8 @@ import javax.swing.JFrame;
 
 import com.shephertz.app42.paas.sdk.java.game.Game.Score;
 
+import model.grid.SquareState;
+
 /**
  * The main UI class.
  * 
@@ -30,19 +32,18 @@ public abstract class UiFacade extends JFrame {
 	public abstract void revealButtons(Iterable<Entry<Point, Integer>> revealedSquares);
 
 	/**
-	 * Paints a flag over the square at (x, y) if it is not already flagged,
-	 * otherwise, the flag is erased.
+	 * Sets the state of the square at (x, y)
 	 * 
 	 * @param x
 	 *            The x coordinate of the square to be painted
 	 * @param y
 	 *            The y coordinate of the square to be painted
-	 * @param flagged
-	 *            Indicates whether the square at (x, y) is flagged or not
+	 * @param state
+	 *            The state of the square to change
 	 * @param flaggedMines
 	 *            The number of flags on the grid after the painting
 	 */
-	public abstract void toggleFlag(int x, int y, boolean flagged, int flaggedMines);
+	public abstract void setState(int x, int y, SquareState state, int flaggedMines);
 
 	/**
 	 * Clears the grid. Resets timer and the number of mines left.
